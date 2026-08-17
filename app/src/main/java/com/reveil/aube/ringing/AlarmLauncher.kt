@@ -45,6 +45,11 @@ fun launchAlarm(context: Context, dawnStartMillis: Long, dawnEndMillis: Long) {
         .setContentIntent(fullScreenPendingIntent)
         .setAutoCancel(true)
         .setOngoing(true)
+        // Defense in depth: if launchAlarm ever gets called a second time for an already-
+        // ringing alarm (a stray reschedule restarting the tracking service mid-cycle, say),
+        // re-posting this same notification ID should silently update it, not re-alert with
+        // sound/vibration/heads-up as if it were new.
+        .setOnlyAlertOnce(true)
         .build()
 
     if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {

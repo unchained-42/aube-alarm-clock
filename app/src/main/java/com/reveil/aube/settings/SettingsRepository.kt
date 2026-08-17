@@ -67,7 +67,15 @@ data class AlarmSettings(
      * once that date is in the past (no explicit "clear" step needed).
      */
     val oneTimeOverrideDate: LocalDate?,
-    val oneTimeOverrideWindow: WakeWindow?
+    val oneTimeOverrideWindow: WakeWindow?,
+    /**
+     * True from the moment [com.reveil.aube.ringing.AlarmRingingService] starts until a real
+     * dismiss. Anything that reacts to settings changes by rescheduling (see HomeScreen) must
+     * check this first: rescheduling while a ring/dawn ramp is already underway restarts
+     * [com.reveil.aube.tracking.SleepTrackingService] mid-cycle, which re-fires the whole
+     * launch sequence — a second notification and sound on top of the one already ringing.
+     */
+    val ringingUnresolved: Boolean
 ) {
     fun windowFor(dayOfWeekIsWeekend: Boolean): WakeWindow =
         if (dayOfWeekIsWeekend && useSeparateWeekend) weekendWindow else weekdayWindow
@@ -180,7 +188,8 @@ class SettingsRepository(private val context: Context) {
                 // HomeScreen's HeroNextAlarm) — sanitizing here too in case an old override
                 // was written before that pin existed.
                 sanitizeWindow(WakeWindow(prefs[KEY_OVERRIDE_EARLIEST]!!, prefs[KEY_OVERRIDE_LATEST]!!))
-            } else null
+            } else null,
+            ringingUnresolved = prefs[KEY_RINGING_UNRESOLVED] ?: false
         )
     }
 

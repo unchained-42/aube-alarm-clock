@@ -71,10 +71,18 @@ object PermissionsHelper {
      */
     fun oemAutostartIntent(context: Context): Intent? {
         val candidate = when (Build.MANUFACTURER.lowercase()) {
-            "xiaomi" -> Intent().setClassName(
-                "com.miui.securitycenter",
-                "com.miui.permcenter.autostart.AutoStartManagementActivity"
-            )
+            // The general MIUI permissions editor, not the narrower AutoStartManagementActivity:
+            // this is the screen that also exposes "display pop-up windows while running in the
+            // background", which is what actually lets the alarm draw over the lock screen on
+            // MIUI. AutoStartManagementActivity only toggles autostart itself and drops that
+            // second, load-bearing permission from view.
+            "xiaomi" -> Intent("miui.intent.action.APP_PERM_EDITOR").apply {
+                setClassName(
+                    "com.miui.securitycenter",
+                    "com.miui.permcenter.permissions.PermissionsEditorActivity"
+                )
+                putExtra("extra_pkgname", context.packageName)
+            }
             "huawei", "honor" -> Intent().setClassName(
                 "com.huawei.systemmanager",
                 "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"

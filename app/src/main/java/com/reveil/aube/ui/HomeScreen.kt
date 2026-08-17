@@ -74,6 +74,11 @@ fun HomeScreen(
     val checksIncomplete = remember(checksTick) { missingBlockingChecks(context).isNotEmpty() }
 
     LaunchedEffect(current, checksIncomplete) {
+        // A ring/dawn ramp already in progress owns its own lifecycle end to end — touching
+        // the schedule here would restart SleepTrackingService mid-cycle (any settings read,
+        // even an unrelated one, recomposes this effect) and re-fire the whole launch
+        // sequence: a second notification and sound on top of the one already ringing.
+        if (current.ringingUnresolved) return@LaunchedEffect
         val scheduler = AlarmScheduler(context)
         // Never schedule on an unreliable setup, even if alarmEnabled was somehow left on
         // from before the checks were introduced — the alarm simply won't go off silently
