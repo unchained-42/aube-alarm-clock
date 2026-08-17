@@ -1,25 +1,29 @@
-# Aube — Science-Based Smart Alarm Clock for Android
+# Aube: Science-Based Smart Alarm Clock for Android
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform: Android](https://img.shields.io/badge/Platform-Android%208.0%2B-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Kotlin](https://img.shields.io/badge/Kotlin-Jetpack%20Compose-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Languages](https://img.shields.io/badge/Languages-10-blue)](#languages)
 
-**Aube** is a free, open-source, science-based smart alarm clock for Android. No snooze button, a consistent wake time, gradual sunrise (dawn) simulation, light-sleep-aware wake timing, and a physical QR-code dismiss step — each backed by sleep research, not just UX taste.
+<p align="center">
+  <img src="docs/screenshots/banner.png" alt="Aube screenshots: onboarding, home screen, QR dismiss code, wake time editor" width="100%">
+</p>
+
+**Aube** is a free, open-source, science-based smart alarm clock for Android. No snooze button, a consistent wake time, gradual sunrise (dawn) simulation, light-sleep-aware wake timing, and a physical QR-code dismiss step. Each choice is backed by sleep research, not just UX taste.
 
 > ⚠️ Wellness tool, not a medical device. Not intended to diagnose, treat, or prevent any sleep disorder.
 
 ## Features
 
-- 🌅 Dawn simulation — screen ramps black → full brightness before the alarm sounds
+- 🌅 Dawn simulation: screen ramps from black to full brightness before the alarm sounds
 - 🔊 Volume ramp synced to the same window, instead of full blast on trigger
 - 🚫 No snooze button, anywhere, ever
 - 📆 One consistent wake-by time per day (optional separate weekday/weekend)
-- 🛌 Accelerometer-based light-sleep detection — can wake you up to 45 min early if you're already stirring
-- 📱 QR/barcode dismiss — scan a code placed somewhere you have to get out of bed to reach
+- 🛌 Accelerometer-based light-sleep detection: can wake you up to 45 min early if you're already stirring
+- 📱 QR/barcode dismiss: scan a code placed somewhere you have to get out of bed to reach
 - 🔐 Hard to bypass: screen pinning, full-screen overlay, volume-key lock, foreground service independent of the UI, boot-resume
 - 🆘 Emergency fallback: long randomized-string challenge if you don't have the code
-- ⏰ Bounded auto-stop: 1h ring, then pulses for a few hours, then gives up — doesn't run forever
+- ⏰ Bounded auto-stop: 1h ring, then pulses for a few hours, then gives up instead of running forever
 - ☀️ Optional post-wake reminders (water, light, breakfast)
 - 🌍 10 languages, follows system locale
 - 🆓 Free, open source, no ads, no tracking, no account
@@ -31,10 +35,10 @@
 | **No snooze** | Repeated fragmented awakenings extend sleep inertia (grogginess/impaired cognition after waking). [PMC study](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9804954/) · [Sleep Doctor](https://sleepdoctor.com/pages/health/sleep-inertia) |
 | **Same wake time daily** | Sleep regularity correlates with better mental/physical/cognitive health outcomes, often more than total duration. [Systematic review](https://www.sciencedirect.com/science/article/abs/pii/S108707922500156X) · [Review](https://cdnsciencepub.com/doi/10.1139/apnm-2020-0032) · [PMC study](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5468315/) |
 | **Dawn simulation** | Gradual light exposure before wake time signals reduced melatonin, easing the transition; shown to reduce time-to-wakefulness vs. an abrupt alarm. [Wikipedia](https://en.wikipedia.org/wiki/Dawn_simulation) · [Sleep Review](https://sleepreviewmag.com/sleep-treatments/therapy-devices/light-therapy/light-dawn-simulation/) · [Study](https://www.researchgate.net/publication/260130874_Effects_of_dawn_simulation_on_markers_of_sleep_inertia_and_post-waking_performance_in_humans) |
-| **Light-sleep wake window** | Waking from deep/slow-wave sleep produces more grogginess than waking from light sleep — same principle behind wearable "smart alarms." |
+| **Light-sleep wake window** | Waking from deep/slow-wave sleep produces more grogginess than waking from light sleep. Same principle behind wearable "smart alarms." |
 | **QR code, not a button** | A groggy brain can dismiss a notification on autopilot; getting up and scanning a code forces real motor planning. Behavioral reasoning, not a specific study. |
 
-Snooze research is genuinely mixed — some studies find it near-neutral. Aube's position: remove the trade-off, don't relitigate it every morning.
+Snooze research is genuinely mixed: some studies find it near-neutral. Aube's position is to remove the trade-off, not relitigate it every morning.
 
 ## How It Works
 
@@ -80,7 +84,7 @@ Issues and PRs welcome. UX/strictness changes should come with reasoning, ideall
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
 
 ---
 
