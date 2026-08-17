@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Aube</string>
+    <string name="notif_channel_tracking_name">नींद ट्रैकिंग</string>
+    <string name="notif_channel_tracking_desc">Aube आपकी हल्की नींद पर नज़र रखते समय एक हल्का सा सूचना संदेश</string>
+    <string name="notif_channel_alarm_name">अलार्म</string>
+    <string name="notif_channel_alarm_desc">Aube अलार्म बज रहा है</string>
+    <string name="notif_channel_routine_name">सुबह की दिनचर्या</string>
+    <string name="notif_channel_routine_desc">जागने के बाद पानी, रोशनी और नाश्ते के रिमाइंडर</string>
+    <string name="fgs_special_use_subtype">स्मार्ट अलार्म के लिए नींद के दौरान हलचल ट्रैकिंग</string>
+
+    <!-- Common -->
+    <string name="cd_back">वापस</string>
+    <string name="cd_settings">सेटिंग्स</string>
+    <string name="cd_delete_reminder">यह रिमाइंडर हटाएं</string>
+    <string name="cd_qr_card">प्रिंट करने के लिए Aube QR कोड</string>
+    <string name="action_allow">अनुमति दें</string>
+    <string name="action_check">जांचें</string>
+    <string name="action_continue">जारी रखें</string>
+    <string name="action_start">शुरू करें</string>
+    <string name="action_finish">पूर्ण करें</string>
+    <string name="action_validate">पुष्टि करें</string>
+    <string name="label_weekday">सप्ताह के दिन</string>
+    <string name="label_weekend">सप्ताहांत</string>
+    <string name="label_separate_weekend">सप्ताहांत पर अलग समय</string>
+    <string name="unit_minutes_short">मिनट</string>
+
+    <!-- Home -->
+    <string name="home_checks_incomplete">सक्रिय करने के लिए सेटिंग्स में सेटअप पूरा करें</string>
+    <string name="home_disabled">बंद</string>
+    <string name="home_exception_suffix">  ·  अपवाद</string>
+    <string name="home_revert_override">सामान्य समय पर वापस जाएं</string>
+    <string name="home_early_wake_hint">हल्की नींद होने पर %1$s से</string>
+    <string name="home_why_strict_link">यह अलार्म इतना सख्त क्यों है ›</string>
+    <string name="day_today">आज</string>
+    <string name="day_tomorrow">कल</string>
+
+    <!-- Wake window editor -->
+    <string name="wake_window_latest_label">देर से देर इस समय तक जागना</string>
+    <string name="wake_window_early_title">संभव हो तो जल्दी जगाएं</string>
+    <string name="wake_window_early_disabled">बंद — ठीक ऊपर दिए गए समय पर बजेगा।</string>
+    <string name="wake_window_early_enabled">यदि आप पहले से ही स्वाभाविक रूप से जाग रहे हैं, तो %2$s से शुरू होकर %1$s मिनट तक जल्दी।</string>
+
+    <!-- Settings -->
+    <string name="title_settings">सेटिंग्स</string>
+    <string name="settings_reliability_title">विश्वसनीयता</string>
+    <string name="settings_reliability_ok">सब कुछ ठीक है — अलार्म चालू किया जा सकता है</string>
+    <string name="settings_reliability_pending">जब तक ये सेटिंग्स पूरी नहीं होतीं, अलार्म बंद रहेगा</string>
+    <string name="settings_dawn_title">सूर्योदय सिमुलेशन</string>
+    <string name="settings_dawn_minutes_before">जागने से %1$s मिनट पहले</string>
+    <string name="settings_music_title">जागने की ध्वनि</string>
+    <string name="settings_music_none">कोई ध्वनि नहीं चुनी गई — फोन की डिफ़ॉल्ट रिंगटोन इस्तेमाल होगी</string>
+    <string name="settings_music_custom">कस्टम ध्वनि सक्रिय है</string>
+    <string name="settings_music_choose">एक ऑडियो फ़ाइल चुनें</string>
+    <string name="settings_music_change">फ़ाइल बदलें</string>
+    <string name="settings_vibration_label">बजते समय वाइब्रेशन</string>
+    <string name="settings_qr_label">बंद करने का QR कोड</string>
+    <string name="settings_qr_default">Aube (डिफ़ॉल्ट) ›</string>
+    <string name="settings_qr_custom">कस्टम QR कोड ›</string>
+    <string name="settings_routine_label">सुबह की दिनचर्या</string>
+    <string name="settings_routine_suffix">रिमाइंडर ›</string>
+    <string name="settings_language_label">भाषा</string>
+    <string name="settings_language_system">फ़ोन की भाषा</string>
+    <string name="settings_permissions_label">अनुमतियां</string>
+    <string name="settings_permissions_ok">सब ठीक है ›</string>
+    <string name="settings_permissions_pending">पूरा करना बाकी ›</string>
+
+    <!-- Reliability checks -->
+    <string name="check_exact_alarms">सटीक अलार्म</string>
+    <string name="check_notifications">सूचनाएं</string>
+    <string name="check_battery">बैटरी सेविंग</string>
+    <string name="check_battery_hint">सबसे अधिक अनुमति देने वाला विकल्प चुनें: \"कोई प्रतिबंध नहीं\" या \"ऑप्टिमाइज़ न करें\"।</string>
+    <string name="check_fullscreen">पूर्ण-स्क्रीन डिस्प्ले</string>
+    <string name="check_overlay">अन्य ऐप्स के ऊपर दिखाना</string>
+    <string name="check_overlay_hint">बजते समय भले ही आप कोई अन्य ऐप या सेटिंग्स खोल लें, अलार्म को दिखाई देते रहने देता है।</string>
+    <string name="check_oem_autostart">ऑटोस्टार्ट</string>
+    <string name="check_oem_autostart_hint">कुछ निर्माता (Xiaomi, Huawei, Oppo, Vivo, Samsung, OnePlus...) मूल Android से भी ज़्यादा बैकग्राउंड ऐप्स को सीमित करते हैं। अगली स्क्रीन पर ऑटोस्टार्ट चालू करें, या ऐप को स्लीप सूची से हटाएं, ताकि Aube रात भर चलता रहे।</string>
+
+    <!-- QR setup -->
+    <string name="qr_setup_scan_hint">अपने पास मौजूद किसी भी बारकोड या QR कोड पर कैमरा रखें — एक किताब, एक पैकेजिंग</string>
+    <string name="qr_setup_intro">आपको सच में उठाने के लिए, अलार्म केवल इस QR कोड को स्कैन करने पर ही रुकता है — बिस्तर से यह असंभव है।</string>
+    <string name="qr_setup_print_button">Aube QR कोड प्रिंट करें</string>
+    <string name="qr_setup_active_default">यह QR कोड सक्रिय है — इसे बिस्तर से दूर चिपकाएं।</string>
+    <string name="qr_setup_active_custom">इसके बजाय एक कस्टम QR कोड सक्रिय है।</string>
+    <string name="qr_setup_reset_default">डिफ़ॉल्ट Aube QR कोड पर वापस जाएं</string>
+    <string name="qr_setup_use_other">कोई अन्य QR कोड इस्तेमाल करें</string>
+
+    <!-- Routine settings -->
+    <string name="routine_intro">जागने के बाद हर उस चीज़ के लिए रिमाइंडर जिसे आप भूलना नहीं चाहते — स्वतंत्र रूप से जोड़ें, बदलें या हटाएं</string>
+    <string name="routine_delay_label">जागने के बाद देरी</string>
+    <string name="routine_add_button">रिमाइंडर जोड़ें</string>
+    <string name="routine_message_label">संदेश</string>
+    <string name="routine_message_placeholder">आप सूचना में क्या दिखाना चाहते हैं</string>
+
+    <!-- Why strict -->
+    <string name="why_strict_title">इतना सख्त क्यों?</string>
+    <string name="why_strict_intro">यह सब आपको परेशान करने के लिए नहीं है — हर पाबंदी की एक स्पष्ट वजह है।</string>
+    <string name="why_strict_point1_title">कोई स्नूज़ बटन नहीं</string>
+    <string name="why_strict_point1_body">कुछ मिनट फिर से सो जाना नींद को खंडित करता है और अगली बार जागने पर सुस्ती और बढ़ा देता है — स्नूज़ के बाद अक्सर पहले से ज़्यादा थकान महसूस होती है।</string>
+    <string name="why_strict_point2_title">हर दिन एक ही समय</string>
+    <string name="why_strict_point2_body">अनियमित जागने का समय आपकी शारीरिक घड़ी को कभी-कभार थोड़ी कम नींद से कहीं ज़्यादा बिगाड़ता है। नियमितता, सटीक अवधि से ज़्यादा मायने रखती है।</string>
+    <string name="why_strict_point3_title">बजने से पहले धीरे-धीरे बढ़ती रोशनी</string>
+    <string name="why_strict_point3_body">अलार्म से पहले धीरे-धीरे बढ़ती रोशनी आपके शरीर को जागने के लिए तैयार करती है, आंखों की संवेदनशीलता का उपयोग करके अलार्म बजने से पहले ही मेलाटोनिन को रोक देती है।</string>
+    <string name="why_strict_point4_title">अगर नींद पहले से ही हल्की है तो थोड़ा जल्दी</string>
+    <string name="why_strict_point4_body">गहरी नींद के बजाय हल्की नींद की अवस्था में जागना बहुत कम कठोर होता है — इसी वजह से \"हल्की नींद होने पर X से\" वाली विंडो है।</string>
+    <string name="why_strict_point5_title">स्कैन करने के लिए एक QR कोड, बटन नहीं</string>
+    <string name="why_strict_point5_body">फिर से सो जाने की इच्छा के खिलाफ एकमात्र असली बचाव एक ऐसी क्रिया है जिसके लिए आपको वाकई उठकर हिलना पड़े — बिस्तर में हाथ की पहुंच में कुछ नहीं।</string>
+    <string name="why_strict_closing">लक्ष्य: एक ऐसा अलार्म जो सच में काम करे, उन दिनों में भी जब आपका मन न हो।</string>
+
+    <!-- Onboarding: welcome -->
+    <string name="onboarding_welcome_headline">एक अलार्म जो आपके नींद विज्ञान का पालन करता है</string>
+    <string name="onboarding_welcome_subtitle">सिर्फ ज़ोर से बजने वाला समय नहीं।</string>
+    <string name="onboarding_feature_light_title">धीरे-धीरे बढ़ती रोशनी</string>
+    <string name="onboarding_feature_light_desc">अलार्म बजने से पहले स्क्रीन सूर्योदय जैसा दृश्य दिखाती है।</string>
+    <string name="onboarding_feature_sleep_title">हल्की नींद का पता लगाना</string>
+    <string name="onboarding_feature_sleep_desc">अगर आप पहले से जाग रहे हैं तो थोड़ा जल्दी बज सकता है।</string>
+    <string name="onboarding_feature_qr_title">नज़रअंदाज़ करना असंभव</string>
+    <string name="onboarding_feature_qr_desc">इसे रोकने के लिए स्कैन करने का QR कोड, बजते समय वॉल्यूम लॉक रहता है।</string>
+    <string name="onboarding_feature_routine_title">इसके बाद एक दिनचर्या</string>
+    <string name="onboarding_feature_routine_desc">अपनी गति से पानी, रोशनी, नाश्ते के रिमाइंडर।</string>
+
+    <!-- Onboarding: wake time -->
+    <string name="onboarding_wake_headline">आपको किस समय जागना है?</string>
+    <string name="onboarding_wake_subtitle">आप बाद में होम स्क्रीन से सब कुछ बदल सकते हैं।</string>
+
+    <!-- Onboarding: QR code -->
+    <string name="onboarding_qr_headline">आप वाकई कैसे उठेंगे</string>
+    <string name="onboarding_qr_subtitle">कोई \"मैंने देख लिया\" बटन नहीं, कोई स्नूज़ नहीं: अलार्म केवल एक भौतिक QR कोड को स्कैन करने पर रुकता है — इसे पाने के लिए आपको उठना होगा।</string>
+    <string name="onboarding_qr_body">यह QR कोड बिना कुछ सेट किए ही पहले से सक्रिय है। इसे अभी प्रिंट करें और बिस्तर से दूर चिपकाएं — या बाद में सेटिंग्स में कोई अन्य QR कोड चुनें।</string>
+    <string name="onboarding_qr_print_now">अभी प्रिंट करें</string>
+
+    <!-- Onboarding: reliability -->
+    <string name="onboarding_reliability_headline">ताकि आज रात यह सच में काम करे</string>
+    <string name="onboarding_reliability_subtitle">इसके बिना Android बैकग्राउंड में चल रहे अलार्म को चुपचाप बंद कर सकता है।</string>
+    <string name="onboarding_reliability_all_ok">सब कुछ ठीक है।</string>
+    <string name="onboarding_reliability_continue_partial">सब कुछ अनुमति दिए बिना जारी रखें</string>
+
+    <!-- Alarm ringing screen -->
+    <string name="alarm_light_message">दिन धीरे-धीरे उग रहा है…</string>
+    <string name="alarm_ringing_message">उठने का समय हो गया है</string>
+    <string name="alarm_mute_countdown">आवाज़ बंद — %1$s में फिर से शुरू</string>
+    <string name="alarm_already_awake_button">मैं पहले से जाग चुका हूं</string>
+    <string name="alarm_stop_button">अलार्म बंद करें</string>
+    <string name="alarm_mute_button">%1$s मिनट के लिए आवाज़ बंद करें</string>
+
+    <!-- QR dismiss -->
+    <string name="qr_dismiss_wrong_code">यह सही QR कोड नहीं है</string>
+    <string name="qr_dismiss_instruction">अलार्म बंद करने के लिए अपना QR कोड स्कैन करें</string>
+    <string name="qr_dismiss_no_code_link">मेरे पास मेरा QR कोड नहीं है</string>
+    <string name="emergency_title">हाथ में QR कोड नहीं है?</string>
+    <string name="emergency_subtitle">इस स्ट्रिंग को ठीक उसी तरह, अक्षर दर अक्षर फिर से टाइप करें — यह जानबूझकर लंबी रखी गई है।</string>
+    <string name="emergency_error">यह सटीक नहीं थी — नई स्ट्रिंग।</string>
+    <string name="emergency_back_to_scan">स्कैन पर वापस जाएं</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_required">कैमरे की अनुमति आवश्यक है</string>
+    <string name="camera_permission_allow">कैमरे की अनुमति दें</string>
+
+    <!-- Notifications -->
+    <string name="notif_missed_title">जागना पुष्ट नहीं हुआ</string>
+    <string name="notif_missed_text">बिना स्कैन किए अलार्म अपने आप बंद हो गया — शायद आप वहां नहीं थे।</string>
+    <string name="notif_tracking_title">Aube आपकी नींद पर नज़र रख रहा है</string>
+    <string name="notif_tracking_text">अभी से अंतिम समय के बीच शांत तरीके से जगाने की योजना है</string>
+
+    <!-- Overlay -->
+    <string name="overlay_still_ringing_title">अलार्म अभी भी बज रहा है</string>
+    <string name="overlay_still_ringing_subtitle">इसे बंद करने के लिए अपना QR कोड स्कैन करें।</string>
+    <string name="overlay_return_button">अलार्म पर वापस जाएं</string>
+
+    <!-- Printable QR card -->
+    <string name="qr_card_subtitle">आपकी सुबह की रस्म</string>
+    <string name="qr_card_instruction">अलार्म बंद करने के लिए हर सुबह इस QR कोड को स्कैन करें।</string>
+    <string name="qr_card_tagline">मुझे बिस्तर से दूर चिपकाएं — जहां मुझ तक पहुंचने के लिए आपको उठना पड़े।</string>
+    <string name="qr_card_print_job_title">Aube — बंद करने का QR कोड</string>
+
+    <!-- Default routine reminders (seeded once per install, then user-editable) -->
+    <string name="reminder_default_water">रात के बाद आपका शरीर निर्जलित होता है — इससे सतर्कता में सच में मदद मिलती है।</string>
+    <string name="reminder_default_light">एक असली खिड़की या बाहर, बस कुछ मिनट: आपकी शारीरिक घड़ी के लिए स्क्रीन से कहीं ज़्यादा असरदार।</string>
+    <string name="reminder_default_breakfast">सुबह की दिनचर्या का आखिरी चरण।</string>
+</resources>

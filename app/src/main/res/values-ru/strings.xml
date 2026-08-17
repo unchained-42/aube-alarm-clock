@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Aube</string>
+    <string name="notif_channel_tracking_name">Отслеживание сна</string>
+    <string name="notif_channel_tracking_desc">Незаметное уведомление, пока Aube отслеживает вашу фазу лёгкого сна</string>
+    <string name="notif_channel_alarm_name">Будильник</string>
+    <string name="notif_channel_alarm_desc">Звонит будильник Aube</string>
+    <string name="notif_channel_routine_name">Утренний ритуал</string>
+    <string name="notif_channel_routine_desc">Напоминания о воде, свете и завтраке после пробуждения</string>
+    <string name="fgs_special_use_subtype">Отслеживание движений во сне для умного будильника</string>
+
+    <!-- Common -->
+    <string name="cd_back">Назад</string>
+    <string name="cd_settings">Настройки</string>
+    <string name="cd_delete_reminder">Удалить это напоминание</string>
+    <string name="cd_qr_card">QR-код Aube для печати</string>
+    <string name="action_allow">Разрешить</string>
+    <string name="action_check">Проверить</string>
+    <string name="action_continue">Продолжить</string>
+    <string name="action_start">Начать</string>
+    <string name="action_finish">Готово</string>
+    <string name="action_validate">Подтвердить</string>
+    <string name="label_weekday">Будни</string>
+    <string name="label_weekend">Выходные</string>
+    <string name="label_separate_weekend">Другое расписание на выходные</string>
+    <string name="unit_minutes_short">мин</string>
+
+    <!-- Home -->
+    <string name="home_checks_incomplete">Завершите настройку в Настройках, чтобы включить</string>
+    <string name="home_disabled">Отключено</string>
+    <string name="home_exception_suffix">  ·  исключение</string>
+    <string name="home_revert_override">Вернуться к обычному расписанию</string>
+    <string name="home_early_wake_hint">С %1$s при лёгком сне</string>
+    <string name="home_why_strict_link">Почему этот будильник такой строгий ›</string>
+    <string name="day_today">Сегодня</string>
+    <string name="day_tomorrow">Завтра</string>
+
+    <!-- Wake window editor -->
+    <string name="wake_window_latest_label">Проснуться не позднее</string>
+    <string name="wake_window_early_title">Проснуться раньше, если возможно</string>
+    <string name="wake_window_early_disabled">Выключено — прозвенит точно в указанное выше время.</string>
+    <string name="wake_window_early_enabled">До %1$s мин раньше, начиная с %2$s, если вы уже просыпаетесь естественным образом.</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Настройки</string>
+    <string name="settings_reliability_title">Надёжность</string>
+    <string name="settings_reliability_ok">Всё в порядке — будильник можно включить</string>
+    <string name="settings_reliability_pending">Будильник останется выключенным, пока эти настройки не выполнены</string>
+    <string name="settings_dawn_title">Имитация рассвета</string>
+    <string name="settings_dawn_minutes_before">%1$s мин до пробуждения</string>
+    <string name="settings_music_title">Звук будильника</string>
+    <string name="settings_music_none">Звук не выбран — будет использован стандартный рингтон телефона</string>
+    <string name="settings_music_custom">Включён собственный звук</string>
+    <string name="settings_music_choose">Выбрать аудиофайл</string>
+    <string name="settings_music_change">Изменить файл</string>
+    <string name="settings_vibration_label">Вибрация во время звонка</string>
+    <string name="settings_qr_label">QR-код отключения</string>
+    <string name="settings_qr_default">Aube (по умолчанию) ›</string>
+    <string name="settings_qr_custom">Свой QR-код ›</string>
+    <string name="settings_routine_label">Утренний ритуал</string>
+    <string name="settings_routine_suffix">Напоминания ›</string>
+    <string name="settings_language_label">Язык</string>
+    <string name="settings_language_system">Язык телефона</string>
+    <string name="settings_permissions_label">Разрешения</string>
+    <string name="settings_permissions_ok">Всё готово ›</string>
+    <string name="settings_permissions_pending">Нужно завершить ›</string>
+
+    <!-- Reliability checks -->
+    <string name="check_exact_alarms">Точные будильники</string>
+    <string name="check_notifications">Уведомления</string>
+    <string name="check_battery">Экономия батареи</string>
+    <string name="check_battery_hint">Выберите самый разрешающий вариант: «Без ограничений» или «Не оптимизировать».</string>
+    <string name="check_fullscreen">Полноэкранный показ</string>
+    <string name="check_overlay">Отображение поверх других приложений</string>
+    <string name="check_overlay_hint">Позволяет будильнику оставаться видимым, даже если во время звонка вы откроете другое приложение или настройки.</string>
+    <string name="check_oem_autostart">Автозапуск</string>
+    <string name="check_oem_autostart_hint">Некоторые производители (Xiaomi, Huawei, Oppo, Vivo, Samsung, OnePlus...) ограничивают фоновые приложения сильнее, чем чистый Android. Включите автозапуск или исключите приложение из режима сна на следующем экране, чтобы Aube продолжал работать ночью.</string>
+
+    <!-- QR setup -->
+    <string name="qr_setup_scan_hint">Наведите камеру на любой имеющийся штрихкод или QR-код — книгу, упаковку</string>
+    <string name="qr_setup_intro">Чтобы вы действительно встали, будильник останавливается только сканированием этого QR-кода — сделать это лёжа в кровати невозможно.</string>
+    <string name="qr_setup_print_button">Распечатать QR-код Aube</string>
+    <string name="qr_setup_active_default">Этот QR-код активен — приклейте его подальше от кровати.</string>
+    <string name="qr_setup_active_custom">Вместо этого QR-кода активен собственный QR-код.</string>
+    <string name="qr_setup_reset_default">Вернуться к стандартному QR-коду Aube</string>
+    <string name="qr_setup_use_other">Использовать другой QR-код</string>
+
+    <!-- Routine settings -->
+    <string name="routine_intro">Напоминание после пробуждения обо всём, что вы не хотите забыть — добавляйте, редактируйте или удаляйте свободно</string>
+    <string name="routine_delay_label">Задержка после пробуждения</string>
+    <string name="routine_add_button">Добавить напоминание</string>
+    <string name="routine_message_label">Сообщение</string>
+    <string name="routine_message_placeholder">Что должно быть написано в уведомлении</string>
+
+    <!-- Why strict -->
+    <string name="why_strict_title">Почему так строго?</string>
+    <string name="why_strict_intro">Всё это здесь не для того, чтобы вас раздражать — у каждого ограничения есть конкретная причина.</string>
+    <string name="why_strict_point1_title">Без кнопки «отложить»</string>
+    <string name="why_strict_point1_body">Повторное засыпание на несколько минут дробит сон и усиливает вялость при следующем пробуждении — часто после откладывания вы чувствуете себя более уставшим, чем до этого.</string>
+    <string name="why_strict_point2_title">Одно и то же время каждый день</string>
+    <string name="why_strict_point2_body">Нерегулярное время пробуждения сбивает внутренние часы намного сильнее, чем немного меньше сна время от времени. Регулярность важнее точной продолжительности.</string>
+    <string name="why_strict_point3_title">Свет, нарастающий до звонка</string>
+    <string name="why_strict_point3_body">Постепенно нарастающий свет перед сигналом готовит тело к пробуждению, используя чувствительность глаз, чтобы сдержать выработку мелатонина ещё до самого звонка.</string>
+    <string name="why_strict_point4_title">Немного раньше, если сон уже лёгкий</string>
+    <string name="why_strict_point4_body">Пробуждение во время фазы лёгкого сна вместо глубокого делает подъём гораздо менее резким — отсюда и окно «с X при лёгком сне».</string>
+    <string name="why_strict_point5_title">QR-код для сканирования, а не кнопка</string>
+    <string name="why_strict_point5_body">Единственная настоящая защита от рефлекса снова заснуть — это действие, требующее по-настоящему встать и подвигаться, а не что-то доступное прямо в кровати.</string>
+    <string name="why_strict_closing">Цель: будильник, который действительно работает, даже в те дни, когда вставать совсем не хочется.</string>
+
+    <!-- Onboarding: welcome -->
+    <string name="onboarding_welcome_headline">Будильник, учитывающий науку о сне</string>
+    <string name="onboarding_welcome_subtitle">Не просто время, которое громко звонит.</string>
+    <string name="onboarding_feature_light_title">Постепенный свет</string>
+    <string name="onboarding_feature_light_desc">Экран имитирует рассвет перед тем, как зазвонит будильник.</string>
+    <string name="onboarding_feature_sleep_title">Определение лёгкого сна</string>
+    <string name="onboarding_feature_sleep_desc">Может прозвенеть немного раньше, если вы уже просыпаетесь.</string>
+    <string name="onboarding_feature_qr_title">Невозможно проигнорировать</string>
+    <string name="onboarding_feature_qr_desc">QR-код для сканирования, чтобы остановить, громкость заблокирована во время звонка.</string>
+    <string name="onboarding_feature_routine_title">Ритуал после пробуждения</string>
+    <string name="onboarding_feature_routine_desc">Напоминания о воде, свете, завтраке — в вашем темпе.</string>
+
+    <!-- Onboarding: wake time -->
+    <string name="onboarding_wake_headline">Во сколько вам нужно проснуться?</string>
+    <string name="onboarding_wake_subtitle">Позже вы сможете всё изменить на главном экране.</string>
+
+    <!-- Onboarding: QR code -->
+    <string name="onboarding_qr_headline">Как вы по-настоящему встанете</string>
+    <string name="onboarding_qr_subtitle">Без кнопки «я увидел», без откладывания: будильник останавливается только сканированием физического QR-кода — до него нужно дойти.</string>
+    <string name="onboarding_qr_body">Этот QR-код уже активен — ничего настраивать не нужно. Распечатайте его сейчас и приклейте подальше от кровати — или выберите другой QR-код позже в Настройках.</string>
+    <string name="onboarding_qr_print_now">Распечатать сейчас</string>
+
+    <!-- Onboarding: reliability -->
+    <string name="onboarding_reliability_headline">Чтобы это действительно сработало сегодня ночью</string>
+    <string name="onboarding_reliability_subtitle">Без этого Android может незаметно отключить будильник в фоне.</string>
+    <string name="onboarding_reliability_all_ok">Всё в порядке.</string>
+    <string name="onboarding_reliability_continue_partial">Продолжить, не разрешая всё</string>
+
+    <!-- Alarm ringing screen -->
+    <string name="alarm_light_message">День медленно наступает…</string>
+    <string name="alarm_ringing_message">Пора вставать</string>
+    <string name="alarm_mute_countdown">Звук выключен — возобновится через %1$s</string>
+    <string name="alarm_already_awake_button">Я уже проснулся</string>
+    <string name="alarm_stop_button">Остановить будильник</string>
+    <string name="alarm_mute_button">Выключить звук на %1$s мин</string>
+
+    <!-- QR dismiss -->
+    <string name="qr_dismiss_wrong_code">Это не тот QR-код</string>
+    <string name="qr_dismiss_instruction">Отсканируйте QR-код, чтобы остановить будильник</string>
+    <string name="qr_dismiss_no_code_link">У меня нет моего QR-кода</string>
+    <string name="emergency_title">Нет QR-кода под рукой?</string>
+    <string name="emergency_subtitle">Введите эту строку точно, символ за символом — она намеренно длинная.</string>
+    <string name="emergency_error">Неточно — новая строка.</string>
+    <string name="emergency_back_to_scan">Вернуться к сканированию</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_required">Требуется доступ к камере</string>
+    <string name="camera_permission_allow">Разрешить камеру</string>
+
+    <!-- Notifications -->
+    <string name="notif_missed_title">Пробуждение не подтверждено</string>
+    <string name="notif_missed_text">Будильник остановился сам, без сканирования — возможно, вас не было рядом.</string>
+    <string name="notif_tracking_title">Aube отслеживает ваш сон</string>
+    <string name="notif_tracking_text">Плавное пробуждение запланировано между текущим моментом и предельным временем</string>
+
+    <!-- Overlay -->
+    <string name="overlay_still_ringing_title">Будильник всё ещё звонит</string>
+    <string name="overlay_still_ringing_subtitle">Отсканируйте QR-код, чтобы остановить его.</string>
+    <string name="overlay_return_button">Вернуться к будильнику</string>
+
+    <!-- Printable QR card -->
+    <string name="qr_card_subtitle">ВАШ УТРЕННИЙ РИТУАЛ</string>
+    <string name="qr_card_instruction">Сканируйте этот QR-код каждое утро, чтобы остановить будильник.</string>
+    <string name="qr_card_tagline">Приклейте меня подальше от кровати — там, куда нужно встать, чтобы дотянуться.</string>
+    <string name="qr_card_print_job_title">Aube — QR-код отключения</string>
+
+    <!-- Default routine reminders (seeded once per install, then user-editable) -->
+    <string name="reminder_default_water">После ночи ваш организм обезвожен — это действительно помогает бодрости.</string>
+    <string name="reminder_default_light">Настоящее окно или улица, всего несколько минут: гораздо эффективнее экрана для ваших внутренних часов.</string>
+    <string name="reminder_default_breakfast">Последний шаг утреннего ритуала.</string>
+</resources>

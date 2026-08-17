@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Aube</string>
+    <string name="notif_channel_tracking_name">تتبع النوم</string>
+    <string name="notif_channel_tracking_desc">إشعار غير ملحوظ أثناء مراقبة Aube لنومك الخفيف</string>
+    <string name="notif_channel_alarm_name">المنبه</string>
+    <string name="notif_channel_alarm_desc">منبه Aube يرن</string>
+    <string name="notif_channel_routine_name">روتين الصباح</string>
+    <string name="notif_channel_routine_desc">تذكيرات بالماء والضوء والإفطار بعد الاستيقاظ</string>
+    <string name="fgs_special_use_subtype">تتبع الحركة أثناء النوم من أجل منبه ذكي</string>
+
+    <!-- Common -->
+    <string name="cd_back">رجوع</string>
+    <string name="cd_settings">الإعدادات</string>
+    <string name="cd_delete_reminder">حذف هذا التذكير</string>
+    <string name="cd_qr_card">رمز QR الخاص بـ Aube للطباعة</string>
+    <string name="action_allow">السماح</string>
+    <string name="action_check">تحقّق</string>
+    <string name="action_continue">متابعة</string>
+    <string name="action_start">ابدأ</string>
+    <string name="action_finish">إنهاء</string>
+    <string name="action_validate">تأكيد</string>
+    <string name="label_weekday">أيام الأسبوع</string>
+    <string name="label_weekend">عطلة نهاية الأسبوع</string>
+    <string name="label_separate_weekend">جدول مختلف في عطلة نهاية الأسبوع</string>
+    <string name="unit_minutes_short">د</string>
+
+    <!-- Home -->
+    <string name="home_checks_incomplete">أكمل الإعداد في الإعدادات لتفعيله</string>
+    <string name="home_disabled">معطّل</string>
+    <string name="home_exception_suffix">  ·  استثناء</string>
+    <string name="home_revert_override">العودة إلى الجدول المعتاد</string>
+    <string name="home_early_wake_hint">من %1$s في حال النوم الخفيف</string>
+    <string name="home_why_strict_link">لماذا هذا المنبه صارم إلى هذا الحد ›</string>
+    <string name="day_today">اليوم</string>
+    <string name="day_tomorrow">غدًا</string>
+
+    <!-- Wake window editor -->
+    <string name="wake_window_latest_label">الاستيقاظ في موعد أقصاه</string>
+    <string name="wake_window_early_title">الاستيقاظ مبكرًا إن أمكن</string>
+    <string name="wake_window_early_disabled">معطّل — سيرن تمامًا في الوقت المذكور أعلاه.</string>
+    <string name="wake_window_early_enabled">حتى %1$s دقيقة مبكرًا، ابتداءً من %2$s، إذا كنت تستيقظ بالفعل بشكل طبيعي.</string>
+
+    <!-- Settings -->
+    <string name="title_settings">الإعدادات</string>
+    <string name="settings_reliability_title">الموثوقية</string>
+    <string name="settings_reliability_ok">كل شيء جاهز — يمكن تفعيل المنبه</string>
+    <string name="settings_reliability_pending">سيبقى المنبه معطّلاً حتى إتمام هذه الإعدادات</string>
+    <string name="settings_dawn_title">محاكاة شروق الشمس</string>
+    <string name="settings_dawn_minutes_before">%1$s دقيقة قبل الاستيقاظ</string>
+    <string name="settings_music_title">صوت المنبه</string>
+    <string name="settings_music_none">لم يتم اختيار صوت — سيُستخدم نغمة الهاتف الافتراضية</string>
+    <string name="settings_music_custom">تم تفعيل صوت مخصص</string>
+    <string name="settings_music_choose">اختيار ملف صوتي</string>
+    <string name="settings_music_change">تغيير الملف</string>
+    <string name="settings_vibration_label">الاهتزاز أثناء الرنين</string>
+    <string name="settings_qr_label">رمز QR للإيقاف</string>
+    <string name="settings_qr_default">Aube (افتراضي) ›</string>
+    <string name="settings_qr_custom">رمز QR مخصص ›</string>
+    <string name="settings_routine_label">روتين الصباح</string>
+    <string name="settings_routine_suffix">التذكيرات ›</string>
+    <string name="settings_language_label">اللغة</string>
+    <string name="settings_language_system">لغة الهاتف</string>
+    <string name="settings_permissions_label">الأذونات</string>
+    <string name="settings_permissions_ok">كل شيء جاهز ›</string>
+    <string name="settings_permissions_pending">يحتاج إكمال ›</string>
+
+    <!-- Reliability checks -->
+    <string name="check_exact_alarms">المنبهات الدقيقة</string>
+    <string name="check_notifications">الإشعارات</string>
+    <string name="check_battery">توفير البطارية</string>
+    <string name="check_battery_hint">اختر الخيار الأكثر تساهلاً: «بلا قيود» أو «عدم التحسين».</string>
+    <string name="check_fullscreen">العرض بملء الشاشة</string>
+    <string name="check_overlay">العرض فوق التطبيقات الأخرى</string>
+    <string name="check_overlay_hint">يبقي المنبه ظاهرًا حتى لو تمكنت من فتح تطبيق آخر أو الإعدادات أثناء رنينه.</string>
+    <string name="check_oem_autostart">التشغيل التلقائي</string>
+    <string name="check_oem_autostart_hint">بعض الشركات المصنّعة (Xiaomi، Huawei، Oppo، Vivo، Samsung، OnePlus...) تقيّد التطبيقات العاملة في الخلفية أكثر من نظام Android الأساسي. فعّل التشغيل التلقائي، أو استبعد التطبيق من وضع السكون، في الشاشة التالية حتى يستمر Aube في العمل طوال الليل.</string>
+
+    <!-- QR setup -->
+    <string name="qr_setup_scan_hint">وجّه الكاميرا نحو أي رمز شريطي أو رمز QR لديك بالفعل — كتاب أو عبوة</string>
+    <string name="qr_setup_intro">حتى تنهض فعلاً، لا يتوقف المنبه إلا بمسح رمز QR هذا — وهو أمر مستحيل من السرير.</string>
+    <string name="qr_setup_print_button">طباعة رمز QR الخاص بـ Aube</string>
+    <string name="qr_setup_active_default">رمز QR هذا مفعّل — الصقه بعيدًا عن السرير.</string>
+    <string name="qr_setup_active_custom">هناك رمز QR مخصص مفعّل بدلاً من هذا الرمز.</string>
+    <string name="qr_setup_reset_default">العودة إلى رمز QR الافتراضي لـ Aube</string>
+    <string name="qr_setup_use_other">استخدام رمز QR آخر</string>
+
+    <!-- Routine settings -->
+    <string name="routine_intro">تذكير بعد الاستيقاظ بكل ما لا تريد نسيانه — أضف أو عدّل أو احذف بحرية</string>
+    <string name="routine_delay_label">التأخير بعد الاستيقاظ</string>
+    <string name="routine_add_button">إضافة تذكير</string>
+    <string name="routine_message_label">الرسالة</string>
+    <string name="routine_message_placeholder">ما تريد أن يظهر في الإشعار</string>
+
+    <!-- Why strict -->
+    <string name="why_strict_title">لماذا كل هذا الصرامة؟</string>
+    <string name="why_strict_intro">لا شيء من هذا موجود لإزعاجك — لكل قيد سبب محدد.</string>
+    <string name="why_strict_point1_title">لا يوجد زر «غفوة»</string>
+    <string name="why_strict_point1_body">العودة إلى النوم لبضع دقائق يجزّئ النوم ويترك خمولاً أكبر عند الاستيقاظ التالي — غالبًا ما تشعر بتعب أكبر بعد الغفوة مما كنت عليه قبلها.</string>
+    <string name="why_strict_point2_title">نفس الوقت كل يوم</string>
+    <string name="why_strict_point2_body">وقت الاستيقاظ غير المنتظم يُخلّ بساعتك البيولوجية أكثر بكثير من قلة النوم قليلاً من حين لآخر. الانتظام أهم من المدة الدقيقة.</string>
+    <string name="why_strict_point3_title">ضوء يتصاعد قبل الرنين</string>
+    <string name="why_strict_point3_body">الضوء المتصاعد تدريجيًا قبل الموعد يهيئ الجسم للاستيقاظ، مستفيدًا من حساسية العين لكبح إفراز الميلاتونين حتى قبل أن يرن المنبه فعليًا.</string>
+    <string name="why_strict_point4_title">أبكر قليلاً إذا كان النوم خفيفًا بالفعل</string>
+    <string name="why_strict_point4_body">الاستيقاظ خلال مرحلة نوم خفيف بدلاً من نوم عميق يجعل الاستيقاظ أقل قسوة بكثير — ومن هنا نافذة «من X في حال النوم الخفيف».</string>
+    <string name="why_strict_point5_title">رمز QR يُمسح، لا زر يُضغط</string>
+    <string name="why_strict_point5_body">الدفاع الحقيقي الوحيد ضد رغبة العودة إلى النوم هو حركة تتطلب منك النهوض والتحرك فعليًا — وليست شيئًا في متناول يدك في السرير.</string>
+    <string name="why_strict_closing">الهدف: منبه يعمل فعلاً، حتى في الأيام التي لا ترغب فيها بذلك.</string>
+
+    <!-- Onboarding: welcome -->
+    <string name="onboarding_welcome_headline">منبه يتّبع علم نومك</string>
+    <string name="onboarding_welcome_subtitle">ليس مجرد وقت يرن بصوت عالٍ.</string>
+    <string name="onboarding_feature_light_title">ضوء تدريجي</string>
+    <string name="onboarding_feature_light_desc">تحاكي الشاشة شروق الشمس قبل أن يرن المنبه.</string>
+    <string name="onboarding_feature_sleep_title">اكتشاف النوم الخفيف</string>
+    <string name="onboarding_feature_sleep_desc">قد يرن أبكر قليلاً إذا كنت تستيقظ بالفعل.</string>
+    <string name="onboarding_feature_qr_title">مستحيل تجاهله</string>
+    <string name="onboarding_feature_qr_desc">رمز QR يُمسح لإيقافه، ومستوى الصوت مقفل أثناء الرنين.</string>
+    <string name="onboarding_feature_routine_title">روتين بعد ذلك</string>
+    <string name="onboarding_feature_routine_desc">تذكيرات بالماء والضوء والإفطار، بالوتيرة التي تناسبك.</string>
+
+    <!-- Onboarding: wake time -->
+    <string name="onboarding_wake_headline">في أي ساعة يجب أن تكون مستيقظًا؟</string>
+    <string name="onboarding_wake_subtitle">يمكنك تغيير كل شيء لاحقًا من الشاشة الرئيسية.</string>
+
+    <!-- Onboarding: QR code -->
+    <string name="onboarding_qr_headline">كيف ستنهض فعلاً</string>
+    <string name="onboarding_qr_subtitle">لا زر «رأيته»، ولا غفوة: لا يتوقف المنبه إلا بمسح رمز QR فعلي — يجب أن تنهض للوصول إليه.</string>
+    <string name="onboarding_qr_body">رمز QR هذا مفعّل بالفعل دون أي إعداد. اطبعه الآن والصقه بعيدًا عن السرير — أو اختر رمز QR آخر لاحقًا من الإعدادات.</string>
+    <string name="onboarding_qr_print_now">طباعة الآن</string>
+
+    <!-- Onboarding: reliability -->
+    <string name="onboarding_reliability_headline">لكي ينجح الأمر فعلاً الليلة</string>
+    <string name="onboarding_reliability_subtitle">قد يوقف Android منبهًا يعمل في الخلفية بصمت دون هذا.</string>
+    <string name="onboarding_reliability_all_ok">كل شيء جاهز.</string>
+    <string name="onboarding_reliability_continue_partial">المتابعة دون السماح بكل شيء</string>
+
+    <!-- Alarm ringing screen -->
+    <string name="alarm_light_message">النهار يشرق ببطء…</string>
+    <string name="alarm_ringing_message">حان وقت النهوض</string>
+    <string name="alarm_mute_countdown">تم كتم الصوت — يُستأنف خلال %1$s</string>
+    <string name="alarm_already_awake_button">أنا مستيقظ بالفعل</string>
+    <string name="alarm_stop_button">إيقاف المنبه</string>
+    <string name="alarm_mute_button">كتم الصوت لمدة %1$s دقيقة</string>
+
+    <!-- QR dismiss -->
+    <string name="qr_dismiss_wrong_code">هذا ليس رمز QR الصحيح</string>
+    <string name="qr_dismiss_instruction">امسح رمز QR الخاص بك لإيقاف المنبه</string>
+    <string name="qr_dismiss_no_code_link">ليس لدي رمز QR الخاص بي</string>
+    <string name="emergency_title">لا يوجد رمز QR في متناول يدك؟</string>
+    <string name="emergency_subtitle">أعد كتابة هذه السلسلة بدقة تامة، حرفًا حرفًا — وهي طويلة عمدًا.</string>
+    <string name="emergency_error">لم تكن دقيقة — سلسلة جديدة.</string>
+    <string name="emergency_back_to_scan">العودة إلى المسح</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_required">إذن الكاميرا مطلوب</string>
+    <string name="camera_permission_allow">السماح باستخدام الكاميرا</string>
+
+    <!-- Notifications -->
+    <string name="notif_missed_title">لم يتم تأكيد الاستيقاظ</string>
+    <string name="notif_missed_text">توقف المنبه من تلقاء نفسه دون مسح — ربما لم تكن موجودًا.</string>
+    <string name="notif_tracking_title">Aube يراقب نومك</string>
+    <string name="notif_tracking_text">استيقاظ هادئ مخطط له بين الآن والوقت الأقصى</string>
+
+    <!-- Overlay -->
+    <string name="overlay_still_ringing_title">المنبه لا يزال يرن</string>
+    <string name="overlay_still_ringing_subtitle">امسح رمز QR الخاص بك لإيقافه.</string>
+    <string name="overlay_return_button">العودة إلى المنبه</string>
+
+    <!-- Printable QR card -->
+    <string name="qr_card_subtitle">طقسك الصباحي</string>
+    <string name="qr_card_instruction">امسح رمز QR هذا كل صباح لإيقاف المنبه.</string>
+    <string name="qr_card_tagline">الصقني بعيدًا عن السرير — حيث يجب أن تنهض لتصل إليّ.</string>
+    <string name="qr_card_print_job_title">Aube — رمز QR للإيقاف</string>
+
+    <!-- Default routine reminders (seeded once per install, then user-editable) -->
+    <string name="reminder_default_water">جسمك يعاني من الجفاف بعد الليل — وهذا يساعد اليقظة فعلاً.</string>
+    <string name="reminder_default_light">نافذة حقيقية أو الخروج للهواء الطلق، بضع دقائق فقط: أكثر فعالية بكثير من الشاشة لساعتك البيولوجية.</string>
+    <string name="reminder_default_breakfast">الخطوة الأخيرة من روتين الصباح.</string>
+</resources>

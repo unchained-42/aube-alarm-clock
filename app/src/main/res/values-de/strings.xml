@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Aube</string>
+    <string name="notif_channel_tracking_name">Schlafüberwachung</string>
+    <string name="notif_channel_tracking_desc">Dezente Benachrichtigung, während Aube deinen Leichtschlaf überwacht</string>
+    <string name="notif_channel_alarm_name">Wecker</string>
+    <string name="notif_channel_alarm_desc">Aube-Wecker klingelt</string>
+    <string name="notif_channel_routine_name">Morgenroutine</string>
+    <string name="notif_channel_routine_desc">Erinnerungen an Wasser, Licht und Frühstück nach dem Aufwachen</string>
+    <string name="fgs_special_use_subtype">Bewegungserkennung im Schlaf für einen intelligenten Wecker</string>
+
+    <!-- Common -->
+    <string name="cd_back">Zurück</string>
+    <string name="cd_settings">Einstellungen</string>
+    <string name="cd_delete_reminder">Diese Erinnerung löschen</string>
+    <string name="cd_qr_card">Aube-QR-Code zum Ausdrucken</string>
+    <string name="action_allow">Erlauben</string>
+    <string name="action_check">Prüfen</string>
+    <string name="action_continue">Weiter</string>
+    <string name="action_start">Loslegen</string>
+    <string name="action_finish">Fertig</string>
+    <string name="action_validate">Bestätigen</string>
+    <string name="label_weekday">Wochentage</string>
+    <string name="label_weekend">Wochenende</string>
+    <string name="label_separate_weekend">Anderer Zeitplan am Wochenende</string>
+    <string name="unit_minutes_short">Min.</string>
+
+    <!-- Home -->
+    <string name="home_checks_incomplete">In den Einstellungen abschließen, um zu aktivieren</string>
+    <string name="home_disabled">Deaktiviert</string>
+    <string name="home_exception_suffix">  ·  Ausnahme</string>
+    <string name="home_revert_override">Zum üblichen Zeitplan zurückkehren</string>
+    <string name="home_early_wake_hint">Ab %1$s bei Leichtschlaf</string>
+    <string name="home_why_strict_link">Warum dieser Wecker so streng ist ›</string>
+    <string name="day_today">Heute</string>
+    <string name="day_tomorrow">Morgen</string>
+
+    <!-- Wake window editor -->
+    <string name="wake_window_latest_label">Aufwachen spätestens um</string>
+    <string name="wake_window_early_title">Wenn möglich früher aufwachen</string>
+    <string name="wake_window_early_disabled">Aus — klingelt genau zur oben genannten Zeit.</string>
+    <string name="wake_window_early_enabled">Bis zu %1$s Min. früher, ab %2$s, wenn du bereits auf natürliche Weise aufwachst.</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Einstellungen</string>
+    <string name="settings_reliability_title">Zuverlässigkeit</string>
+    <string name="settings_reliability_ok">Alles in Ordnung — der Wecker kann aktiviert werden</string>
+    <string name="settings_reliability_pending">Der Wecker bleibt deaktiviert, bis diese Einstellungen erledigt sind</string>
+    <string name="settings_dawn_title">Sonnenaufgangs-Simulation</string>
+    <string name="settings_dawn_minutes_before">%1$s Min. vor dem Aufwachen</string>
+    <string name="settings_music_title">Wecktonwahl</string>
+    <string name="settings_music_none">Kein Ton ausgewählt — der Standardklingelton des Telefons wird verwendet</string>
+    <string name="settings_music_custom">Eigener Ton aktiviert</string>
+    <string name="settings_music_choose">Audiodatei auswählen</string>
+    <string name="settings_music_change">Datei ändern</string>
+    <string name="settings_vibration_label">Vibrieren während des Klingelns</string>
+    <string name="settings_qr_label">Stopp-QR-Code</string>
+    <string name="settings_qr_default">Aube (Standard) ›</string>
+    <string name="settings_qr_custom">Eigener QR-Code ›</string>
+    <string name="settings_routine_label">Morgenroutine</string>
+    <string name="settings_routine_suffix">Erinnerungen ›</string>
+    <string name="settings_language_label">Sprache</string>
+    <string name="settings_language_system">Sprache des Telefons</string>
+    <string name="settings_permissions_label">Berechtigungen</string>
+    <string name="settings_permissions_ok">OK ›</string>
+    <string name="settings_permissions_pending">Zu erledigen ›</string>
+
+    <!-- Reliability checks -->
+    <string name="check_exact_alarms">Exakte Alarme</string>
+    <string name="check_notifications">Benachrichtigungen</string>
+    <string name="check_battery">Akku-Optimierung</string>
+    <string name="check_battery_hint">Wähle die großzügigste Option: „Nicht eingeschränkt“ oder „Nicht optimieren“.</string>
+    <string name="check_fullscreen">Vollbildanzeige</string>
+    <string name="check_overlay">Über anderen Apps anzeigen</string>
+    <string name="check_overlay_hint">Hält den Wecker sichtbar, selbst wenn du während des Klingelns eine andere App oder die Einstellungen öffnest.</string>
+    <string name="check_oem_autostart">Autostart</string>
+    <string name="check_oem_autostart_hint">Manche Hersteller (Xiaomi, Huawei, Oppo, Vivo, Samsung, OnePlus …) schränken Hintergrund-Apps stärker ein als reines Android. Aktiviere auf dem nächsten Bildschirm den Autostart oder nimm die App vom Ruhezustand aus, damit Aube über Nacht weiterläuft.</string>
+
+    <!-- QR setup -->
+    <string name="qr_setup_scan_hint">Richte die Kamera auf einen beliebigen Barcode oder QR-Code, den du bereits hast — ein Buch, eine Verpackung</string>
+    <string name="qr_setup_intro">Damit du wirklich aufstehst, stoppt der Wecker nur durch Scannen dieses QR-Codes — vom Bett aus unmöglich.</string>
+    <string name="qr_setup_print_button">Aube-QR-Code drucken</string>
+    <string name="qr_setup_active_default">Dieser QR-Code ist aktiv — klebe ihn weit weg vom Bett.</string>
+    <string name="qr_setup_active_custom">Ein eigener QR-Code ist anstelle dieses hier aktiv.</string>
+    <string name="qr_setup_reset_default">Zum Standard-Aube-QR-Code zurückkehren</string>
+    <string name="qr_setup_use_other">Anderen QR-Code verwenden</string>
+
+    <!-- Routine settings -->
+    <string name="routine_intro">Eine Erinnerung nach dem Aufwachen für alles, was du nicht vergessen willst — frei hinzufügen, bearbeiten oder löschen</string>
+    <string name="routine_delay_label">Verzögerung nach dem Aufwachen</string>
+    <string name="routine_add_button">Erinnerung hinzufügen</string>
+    <string name="routine_message_label">Nachricht</string>
+    <string name="routine_message_placeholder">Was in der Benachrichtigung stehen soll</string>
+
+    <!-- Why strict -->
+    <string name="why_strict_title">Warum so streng?</string>
+    <string name="why_strict_intro">Nichts davon ist dazu da, dich zu nerven — jede Einschränkung hat einen konkreten Grund.</string>
+    <string name="why_strict_point1_title">Keine Schlummertaste</string>
+    <string name="why_strict_point1_body">Ein paar Minuten wieder einzuschlafen zerstückelt deinen Schlaf und macht dich beim nächsten Aufwachen benommener — oft fühlt man sich nach dem Schlummern müder als davor.</string>
+    <string name="why_strict_point2_title">Jeden Tag zur gleichen Zeit</string>
+    <string name="why_strict_point2_body">Eine unregelmäßige Aufwachzeit bringt deine innere Uhr weit stärker durcheinander als gelegentlich etwas weniger Schlaf. Regelmäßigkeit zählt mehr als die genaue Dauer.</string>
+    <string name="why_strict_point3_title">Licht, das vor dem Klingeln aufgeht</string>
+    <string name="why_strict_point3_body">Allmählich zunehmendes Licht vor dem Wecker bereitet deinen Körper aufs Aufwachen vor, indem es die Lichtempfindlichkeit deiner Augen nutzt, um Melatonin schon vor dem eigentlichen Klingeln zu drosseln.</string>
+    <string name="why_strict_point4_title">Etwas früher bei bereits leichtem Schlaf</string>
+    <string name="why_strict_point4_body">Während einer Leichtschlafphase statt im Tiefschlaf aufzuwachen macht das Aufwachen viel sanfter — daher das Fenster „ab X bei Leichtschlaf“.</string>
+    <string name="why_strict_point5_title">Ein QR-Code zum Scannen, kein Knopf</string>
+    <string name="why_strict_point5_body">Der einzige echte Schutz gegen den Reflex, wieder einzuschlafen, ist eine Handlung, die dich wirklich zum Aufstehen und Bewegen zwingt — nicht etwas in Reichweite im Bett.</string>
+    <string name="why_strict_closing">Ziel: ein Wecker, der wirklich funktioniert — auch an den Tagen, an denen du keine Lust dazu hast.</string>
+
+    <!-- Onboarding: welcome -->
+    <string name="onboarding_welcome_headline">Ein Wecker, der deiner Schlafwissenschaft folgt</string>
+    <string name="onboarding_welcome_subtitle">Nicht nur eine Uhrzeit, die laut klingelt.</string>
+    <string name="onboarding_feature_light_title">Allmähliches Licht</string>
+    <string name="onboarding_feature_light_desc">Der Bildschirm simuliert einen Sonnenaufgang, bevor der Wecker klingelt.</string>
+    <string name="onboarding_feature_sleep_title">Leichtschlaf erkannt</string>
+    <string name="onboarding_feature_sleep_desc">Kann etwas früher klingeln, wenn du bereits am Aufwachen bist.</string>
+    <string name="onboarding_feature_qr_title">Unmöglich zu ignorieren</string>
+    <string name="onboarding_feature_qr_desc">Ein QR-Code zum Scannen zum Stoppen, Lautstärke gesperrt während des Klingelns.</string>
+    <string name="onboarding_feature_routine_title">Danach eine Routine</string>
+    <string name="onboarding_feature_routine_desc">Erinnerungen an Wasser, Licht, Frühstück, in deinem Tempo.</string>
+
+    <!-- Onboarding: wake time -->
+    <string name="onboarding_wake_headline">Um wie viel Uhr musst du wach sein?</string>
+    <string name="onboarding_wake_subtitle">Du kannst später alles von der Startseite aus ändern.</string>
+
+    <!-- Onboarding: QR code -->
+    <string name="onboarding_qr_headline">So wirst du wirklich aufstehen</string>
+    <string name="onboarding_qr_subtitle">Kein „Ich hab\'s gesehen“-Knopf, kein Schlummern: Der Wecker stoppt nur durch Scannen eines physischen QR-Codes — du musst aufstehen, um ihn zu erreichen.</string>
+    <string name="onboarding_qr_body">Dieser QR-Code ist bereits aktiv, ohne etwas einzurichten. Drucke ihn jetzt aus und klebe ihn weit weg vom Bett — oder wähle später in den Einstellungen einen anderen QR-Code.</string>
+    <string name="onboarding_qr_print_now">Jetzt drucken</string>
+
+    <!-- Onboarding: reliability -->
+    <string name="onboarding_reliability_headline">Damit es heute Nacht wirklich funktioniert</string>
+    <string name="onboarding_reliability_subtitle">Android kann einen Wecker im Hintergrund sonst stillschweigend beenden.</string>
+    <string name="onboarding_reliability_all_ok">Alles in Ordnung.</string>
+    <string name="onboarding_reliability_continue_partial">Weiter, ohne alles zu erlauben</string>
+
+    <!-- Alarm ringing screen -->
+    <string name="alarm_light_message">Der Tag bricht langsam an…</string>
+    <string name="alarm_ringing_message">Zeit aufzustehen</string>
+    <string name="alarm_already_awake_button">Ich bin schon wach</string>
+    <string name="alarm_mute_countdown">Ton stummgeschaltet — weiter in %1$s</string>
+    <string name="alarm_stop_button">Wecker stoppen</string>
+    <string name="alarm_mute_button">Ton für %1$s Min. stummschalten</string>
+
+    <!-- QR dismiss -->
+    <string name="qr_dismiss_wrong_code">Das ist nicht der richtige QR-Code</string>
+    <string name="qr_dismiss_instruction">Scanne deinen QR-Code, um den Wecker zu stoppen</string>
+    <string name="qr_dismiss_no_code_link">Ich habe meinen QR-Code nicht</string>
+    <string name="emergency_title">Kein QR-Code zur Hand?</string>
+    <string name="emergency_subtitle">Tippe diese Zeichenfolge exakt ab, Zeichen für Zeichen — sie ist absichtlich lang.</string>
+    <string name="emergency_error">Das war nicht exakt — neue Zeichenfolge.</string>
+    <string name="emergency_back_to_scan">Zurück zum Scannen</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_required">Kamerazugriff erforderlich</string>
+    <string name="camera_permission_allow">Kamera erlauben</string>
+
+    <!-- Notifications -->
+    <string name="notif_missed_title">Aufwachen nicht bestätigt</string>
+    <string name="notif_missed_text">Der Wecker hat sich von selbst ohne Scan beendet — vielleicht warst du nicht da.</string>
+    <string name="notif_tracking_title">Aube überwacht deinen Schlaf</string>
+    <string name="notif_tracking_text">Sanftes Wecken zwischen jetzt und der spätesten Zeit geplant</string>
+
+    <!-- Overlay -->
+    <string name="overlay_still_ringing_title">Der Wecker klingelt noch</string>
+    <string name="overlay_still_ringing_subtitle">Scanne deinen QR-Code, um ihn zu stoppen.</string>
+    <string name="overlay_return_button">Zurück zum Wecker</string>
+
+    <!-- Printable QR card -->
+    <string name="qr_card_subtitle">DEIN MORGENRITUAL</string>
+    <string name="qr_card_instruction">Scanne diesen QR-Code jeden Morgen, um den Wecker zu stoppen.</string>
+    <string name="qr_card_tagline">Klebe mich weit weg vom Bett — dorthin, wo du aufstehen musst, um mich zu erreichen.</string>
+    <string name="qr_card_print_job_title">Aube — Stopp-QR-Code</string>
+
+    <!-- Default routine reminders (seeded once per install, then user-editable) -->
+    <string name="reminder_default_water">Dein Körper ist nach der Nacht dehydriert — das hilft wirklich der Wachheit.</string>
+    <string name="reminder_default_light">Ein echtes Fenster oder draußen, nur ein paar Minuten: viel wirksamer als ein Bildschirm für deine innere Uhr.</string>
+    <string name="reminder_default_breakfast">Letzter Schritt der Morgenroutine.</string>
+</resources>

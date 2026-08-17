@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Aube</string>
+    <string name="notif_channel_tracking_name">Seguimiento del sueño</string>
+    <string name="notif_channel_tracking_desc">Notificación discreta mientras Aube controla tu sueño ligero</string>
+    <string name="notif_channel_alarm_name">Alarma</string>
+    <string name="notif_channel_alarm_desc">La alarma de Aube está sonando</string>
+    <string name="notif_channel_routine_name">Rutina matutina</string>
+    <string name="notif_channel_routine_desc">Recordatorios de agua, luz y desayuno después de despertar</string>
+    <string name="fgs_special_use_subtype">Seguimiento del movimiento durante el sueño para una alarma inteligente</string>
+
+    <!-- Common -->
+    <string name="cd_back">Atrás</string>
+    <string name="cd_settings">Ajustes</string>
+    <string name="cd_delete_reminder">Eliminar este recordatorio</string>
+    <string name="cd_qr_card">Código QR de Aube para imprimir</string>
+    <string name="action_allow">Permitir</string>
+    <string name="action_check">Comprobar</string>
+    <string name="action_continue">Continuar</string>
+    <string name="action_start">Empezar</string>
+    <string name="action_finish">Finalizar</string>
+    <string name="action_validate">Confirmar</string>
+    <string name="label_weekday">Entre semana</string>
+    <string name="label_weekend">Fin de semana</string>
+    <string name="label_separate_weekend">Horario distinto el fin de semana</string>
+    <string name="unit_minutes_short">min</string>
+
+    <!-- Home -->
+    <string name="home_checks_incomplete">Termina la configuración en Ajustes para activarla</string>
+    <string name="home_disabled">Desactivada</string>
+    <string name="home_exception_suffix">  ·  excepción</string>
+    <string name="home_revert_override">Volver al horario habitual</string>
+    <string name="home_early_wake_hint">Desde las %1$s si el sueño es ligero</string>
+    <string name="home_why_strict_link">Por qué esta alarma es tan estricta ›</string>
+    <string name="day_today">Hoy</string>
+    <string name="day_tomorrow">Mañana</string>
+
+    <!-- Wake window editor -->
+    <string name="wake_window_latest_label">Despertar como muy tarde a las</string>
+    <string name="wake_window_early_title">Despertar antes si es posible</string>
+    <string name="wake_window_early_disabled">Desactivado — suena justo a la hora indicada arriba.</string>
+    <string name="wake_window_early_enabled">Hasta %1$s min antes, desde las %2$s, si ya te estás despertando de forma natural.</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Ajustes</string>
+    <string name="settings_reliability_title">Fiabilidad</string>
+    <string name="settings_reliability_ok">Todo en orden — la alarma se puede activar</string>
+    <string name="settings_reliability_pending">La alarma seguirá desactivada hasta completar estos ajustes</string>
+    <string name="settings_dawn_title">Simulación del amanecer</string>
+    <string name="settings_dawn_minutes_before">%1$s min antes de despertar</string>
+    <string name="settings_music_title">Sonido de la alarma</string>
+    <string name="settings_music_none">No se ha elegido ningún sonido — se usará el tono predeterminado del teléfono</string>
+    <string name="settings_music_custom">Sonido personalizado activado</string>
+    <string name="settings_music_choose">Elegir un archivo de audio</string>
+    <string name="settings_music_change">Cambiar el archivo</string>
+    <string name="settings_vibration_label">Vibrar mientras suena</string>
+    <string name="settings_qr_label">Código QR para detenerla</string>
+    <string name="settings_qr_default">Aube (predeterminado) ›</string>
+    <string name="settings_qr_custom">Personalizado ›</string>
+    <string name="settings_routine_label">Rutina matutina</string>
+    <string name="settings_routine_suffix">Recordatorios ›</string>
+    <string name="settings_language_label">Idioma</string>
+    <string name="settings_language_system">Idioma del teléfono</string>
+    <string name="settings_permissions_label">Permisos</string>
+    <string name="settings_permissions_ok">OK ›</string>
+    <string name="settings_permissions_pending">Por completar ›</string>
+
+    <!-- Reliability checks -->
+    <string name="check_exact_alarms">Alarmas exactas</string>
+    <string name="check_notifications">Notificaciones</string>
+    <string name="check_battery">Ahorro de batería</string>
+    <string name="check_battery_hint">Elige la opción más permisiva: «Sin restricciones» o «No optimizar».</string>
+    <string name="check_fullscreen">Visualización a pantalla completa</string>
+    <string name="check_overlay">Mostrar sobre otras aplicaciones</string>
+    <string name="check_overlay_hint">Mantiene la alarma visible aunque consigas abrir otra app o los ajustes mientras suena.</string>
+    <string name="check_oem_autostart">Inicio automático</string>
+    <string name="check_oem_autostart_hint">Algunos fabricantes (Xiaomi, Huawei, Oppo, Vivo, Samsung, OnePlus...) restringen las apps en segundo plano más allá de Android puro. Activa el inicio automático, o excluye la app del modo de reposo, en la siguiente pantalla para que Aube siga funcionando toda la noche.</string>
+
+    <!-- QR setup -->
+    <string name="qr_setup_scan_hint">Apunta a cualquier código de barras o QR que ya tengas — un libro, un envase</string>
+    <string name="qr_setup_intro">Para que de verdad te levantes, la alarma solo se detiene escaneando este código QR — imposible desde la cama.</string>
+    <string name="qr_setup_print_button">Imprimir el código QR de Aube</string>
+    <string name="qr_setup_active_default">Este código QR está activo — pégalo lejos de la cama.</string>
+    <string name="qr_setup_active_custom">Hay un código QR personalizado activo en lugar de este.</string>
+    <string name="qr_setup_reset_default">Volver al código QR de Aube predeterminado</string>
+    <string name="qr_setup_use_other">Usar otro código QR</string>
+
+    <!-- Routine settings -->
+    <string name="routine_intro">Un recordatorio después de despertar para todo lo que no quieras olvidar — añade, edita o elimina libremente</string>
+    <string name="routine_delay_label">Retraso tras despertar</string>
+    <string name="routine_add_button">Añadir un recordatorio</string>
+    <string name="routine_message_label">Mensaje</string>
+    <string name="routine_message_placeholder">Lo que quieras que diga la notificación</string>
+
+    <!-- Why strict -->
+    <string name="why_strict_title">¿Por qué tan estricta?</string>
+    <string name="why_strict_intro">Nada de esto está aquí para molestarte — cada restricción tiene una razón concreta.</string>
+    <string name="why_strict_point1_title">Sin botón de posponer</string>
+    <string name="why_strict_point1_body">Volver a dormirte unos minutos fragmenta el sueño y deja más inercia en el siguiente despertar — a menudo te sientes más cansado tras posponer que antes.</string>
+    <string name="why_strict_point2_title">La misma hora cada día</string>
+    <string name="why_strict_point2_body">Un horario de despertar irregular altera el reloj interno mucho más que dormir un poco menos de vez en cuando. La regularidad importa más que la duración exacta.</string>
+    <string name="why_strict_point3_title">Una luz que sube antes de sonar</string>
+    <string name="why_strict_point3_body">Una luz progresiva antes de la hora prepara al cuerpo para despertar, aprovechando la sensibilidad del ojo para frenar la melatonina incluso antes de que suene la alarma.</string>
+    <string name="why_strict_point4_title">Un poco antes si el sueño ya es ligero</string>
+    <string name="why_strict_point4_body">Despertar durante una fase de sueño ligero en vez de en pleno sueño profundo hace que el despertar sea mucho menos brusco — de ahí la ventana «desde X si el sueño es ligero».</string>
+    <string name="why_strict_point5_title">Un código QR para escanear, no un botón</string>
+    <string name="why_strict_point5_body">El único freno real contra el reflejo de volver a dormirte es un gesto que te obligue a levantarte y moverte de verdad — no algo al alcance de la mano en la cama.</string>
+    <string name="why_strict_closing">Objetivo: que esta alarma funcione de verdad, incluso los días en los que no te apetece.</string>
+
+    <!-- Onboarding: welcome -->
+    <string name="onboarding_welcome_headline">Una alarma que sigue tu ciencia del sueño</string>
+    <string name="onboarding_welcome_subtitle">No solo una hora que suena fuerte.</string>
+    <string name="onboarding_feature_light_title">Luz progresiva</string>
+    <string name="onboarding_feature_light_desc">La pantalla simula un amanecer antes de que suene la alarma.</string>
+    <string name="onboarding_feature_sleep_title">Sueño ligero detectado</string>
+    <string name="onboarding_feature_sleep_desc">Puede sonar un poco antes si ya te estás despertando.</string>
+    <string name="onboarding_feature_qr_title">Imposible de ignorar</string>
+    <string name="onboarding_feature_qr_desc">Un código QR para escanear y detenerla, volumen bloqueado mientras suena.</string>
+    <string name="onboarding_feature_routine_title">Una rutina después</string>
+    <string name="onboarding_feature_routine_desc">Recordatorios de agua, luz y desayuno, a tu ritmo.</string>
+
+    <!-- Onboarding: wake time -->
+    <string name="onboarding_wake_headline">¿A qué hora necesitas estar despierto?</string>
+    <string name="onboarding_wake_subtitle">Podrás cambiarlo todo más tarde desde la pantalla principal.</string>
+
+    <!-- Onboarding: QR code -->
+    <string name="onboarding_qr_headline">Cómo vas a levantarte de verdad</string>
+    <string name="onboarding_qr_subtitle">Sin botón de «lo he visto», sin posponer: la alarma solo se detiene escaneando un código QR físico — tienes que levantarte para alcanzarlo.</string>
+    <string name="onboarding_qr_body">Este código QR ya está activo, sin configurar nada. Imprímelo ahora y pégalo lejos de la cama — o elige otro código QR más tarde en Ajustes.</string>
+    <string name="onboarding_qr_print_now">Imprimir ahora</string>
+
+    <!-- Onboarding: reliability -->
+    <string name="onboarding_reliability_headline">Para que funcione de verdad esta noche</string>
+    <string name="onboarding_reliability_subtitle">Sin esto, Android puede cerrar una alarma en segundo plano sin avisar.</string>
+    <string name="onboarding_reliability_all_ok">Todo en orden.</string>
+    <string name="onboarding_reliability_continue_partial">Continuar sin permitirlo todo</string>
+
+    <!-- Alarm ringing screen -->
+    <string name="alarm_light_message">El día está amaneciendo despacio…</string>
+    <string name="alarm_ringing_message">Es hora de levantarse</string>
+    <string name="alarm_mute_countdown">Sonido silenciado — se reanuda en %1$s</string>
+    <string name="alarm_already_awake_button">Ya estoy despierto</string>
+    <string name="alarm_stop_button">Detener la alarma</string>
+    <string name="alarm_mute_button">Silenciar sonido %1$s min</string>
+
+    <!-- QR dismiss -->
+    <string name="qr_dismiss_wrong_code">Ese no es el código QR correcto</string>
+    <string name="qr_dismiss_instruction">Escanea tu código QR para detener la alarma</string>
+    <string name="qr_dismiss_no_code_link">No tengo mi código QR</string>
+    <string name="emergency_title">¿No tienes el código QR a mano?</string>
+    <string name="emergency_subtitle">Vuelve a escribir esta cadena exactamente, carácter por carácter — es larga a propósito.</string>
+    <string name="emergency_error">No era exacta — nueva cadena.</string>
+    <string name="emergency_back_to_scan">Volver a escanear</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_required">Se requiere permiso de cámara</string>
+    <string name="camera_permission_allow">Permitir la cámara</string>
+
+    <!-- Notifications -->
+    <string name="notif_missed_title">Despertar no confirmado</string>
+    <string name="notif_missed_text">La alarma se detuvo sola sin escanear — puede que no estuvieras allí.</string>
+    <string name="notif_tracking_title">Aube está controlando tu sueño</string>
+    <string name="notif_tracking_text">Despertar discreto previsto entre ahora y la hora límite</string>
+
+    <!-- Overlay -->
+    <string name="overlay_still_ringing_title">La alarma sigue sonando</string>
+    <string name="overlay_still_ringing_subtitle">Escanea tu código QR para detenerla.</string>
+    <string name="overlay_return_button">Volver a la alarma</string>
+
+    <!-- Printable QR card -->
+    <string name="qr_card_subtitle">TU RITUAL MATUTINO</string>
+    <string name="qr_card_instruction">Escanea este código QR cada mañana para detener la alarma.</string>
+    <string name="qr_card_tagline">Pégame lejos de la cama — donde tengas que levantarte para alcanzarme.</string>
+    <string name="qr_card_print_job_title">Aube — código QR para detenerla</string>
+
+    <!-- Default routine reminders (seeded once per install, then user-editable) -->
+    <string name="reminder_default_water">Tu cuerpo está deshidratado tras la noche — ayuda de verdad a la vigilancia.</string>
+    <string name="reminder_default_light">Una ventana real o el exterior, solo unos minutos: mucho más eficaz que la pantalla para tu reloj interno.</string>
+    <string name="reminder_default_breakfast">Último paso de la rutina matutina.</string>
+</resources>

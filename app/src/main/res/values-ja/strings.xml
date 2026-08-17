@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Aube</string>
+    <string name="notif_channel_tracking_name">睡眠トラッキング</string>
+    <string name="notif_channel_tracking_desc">Aubeが浅い眠りを監視している間の控えめな通知</string>
+    <string name="notif_channel_alarm_name">アラーム</string>
+    <string name="notif_channel_alarm_desc">Aubeアラームが鳴っています</string>
+    <string name="notif_channel_routine_name">朝のルーティン</string>
+    <string name="notif_channel_routine_desc">起床後の水分補給・光・朝食のリマインダー</string>
+    <string name="fgs_special_use_subtype">スマートアラームのための睡眠中の動きの検知</string>
+
+    <!-- Common -->
+    <string name="cd_back">戻る</string>
+    <string name="cd_settings">設定</string>
+    <string name="cd_delete_reminder">このリマインダーを削除</string>
+    <string name="cd_qr_card">印刷用のAube QRコード</string>
+    <string name="action_allow">許可</string>
+    <string name="action_check">確認</string>
+    <string name="action_continue">続ける</string>
+    <string name="action_start">はじめる</string>
+    <string name="action_finish">完了</string>
+    <string name="action_validate">確定</string>
+    <string name="label_weekday">平日</string>
+    <string name="label_weekend">週末</string>
+    <string name="label_separate_weekend">週末は別のスケジュールにする</string>
+    <string name="unit_minutes_short">分</string>
+
+    <!-- Home -->
+    <string name="home_checks_incomplete">有効にするには設定を完了してください</string>
+    <string name="home_disabled">無効</string>
+    <string name="home_exception_suffix">  ·  例外</string>
+    <string name="home_revert_override">通常のスケジュールに戻す</string>
+    <string name="home_early_wake_hint">浅い眠りなら%1$sから</string>
+    <string name="home_why_strict_link">このアラームがこれほど厳しい理由 ›</string>
+    <string name="day_today">今日</string>
+    <string name="day_tomorrow">明日</string>
+
+    <!-- Wake window editor -->
+    <string name="wake_window_latest_label">遅くともこの時刻に起床</string>
+    <string name="wake_window_early_title">可能なら早めに起こす</string>
+    <string name="wake_window_early_disabled">オフ — 上記の時刻ちょうどに鳴ります。</string>
+    <string name="wake_window_early_enabled">すでに自然に目覚めつつある場合、%2$sから最大%1$s分早く鳴ります。</string>
+
+    <!-- Settings -->
+    <string name="title_settings">設定</string>
+    <string name="settings_reliability_title">信頼性</string>
+    <string name="settings_reliability_ok">準備完了 — アラームを有効にできます</string>
+    <string name="settings_reliability_pending">これらの設定が完了するまでアラームは無効のままです</string>
+    <string name="settings_dawn_title">日の出シミュレーション</string>
+    <string name="settings_dawn_minutes_before">起床の%1$s分前から</string>
+    <string name="settings_music_title">起床音</string>
+    <string name="settings_music_none">音が選択されていません — スマートフォンの標準着信音が使用されます</string>
+    <string name="settings_music_custom">カスタムサウンドが有効です</string>
+    <string name="settings_music_choose">オーディオファイルを選択</string>
+    <string name="settings_music_change">ファイルを変更</string>
+    <string name="settings_vibration_label">鳴動中にバイブレーション</string>
+    <string name="settings_qr_label">停止QRコード</string>
+    <string name="settings_qr_default">Aube（デフォルト）›</string>
+    <string name="settings_qr_custom">カスタム ›</string>
+    <string name="settings_routine_label">朝のルーティン</string>
+    <string name="settings_routine_suffix">リマインダー ›</string>
+    <string name="settings_language_label">言語</string>
+    <string name="settings_language_system">端末の言語に従う</string>
+    <string name="settings_permissions_label">権限</string>
+    <string name="settings_permissions_ok">問題なし ›</string>
+    <string name="settings_permissions_pending">要設定 ›</string>
+
+    <!-- Reliability checks -->
+    <string name="check_exact_alarms">正確なアラーム</string>
+    <string name="check_notifications">通知</string>
+    <string name="check_battery">バッテリー最適化</string>
+    <string name="check_battery_hint">最も制限の少ないオプションを選んでください：「制限なし」または「最適化しない」。</string>
+    <string name="check_fullscreen">全画面表示</string>
+    <string name="check_overlay">他のアプリの上に重ねて表示</string>
+    <string name="check_overlay_hint">鳴動中に別のアプリや設定画面を開いても、アラーム画面を表示し続けます。</string>
+    <string name="check_oem_autostart">自動起動</string>
+    <string name="check_oem_autostart_hint">一部のメーカー（Xiaomi、Huawei、Oppo、Vivo、Samsung、OnePlusなど）は素のAndroidよりも厳しくバックグラウンドアプリを制限しています。次の画面で自動起動を有効にするか、スリープ対象からAubeを除外して、夜間も動作し続けるようにしてください。</string>
+
+    <!-- QR setup -->
+    <string name="qr_setup_scan_hint">すでに持っているバーコードやQRコードにカメラを向けてください — 本や商品パッケージなど</string>
+    <string name="qr_setup_intro">本当に起き上がってもらうため、アラームはこのQRコードをスキャンした時だけ停止します — ベッドの中からは不可能です。</string>
+    <string name="qr_setup_print_button">Aube QRコードを印刷</string>
+    <string name="qr_setup_active_default">このQRコードは有効です — ベッドから離れた場所に貼ってください。</string>
+    <string name="qr_setup_active_custom">このQRコードの代わりにカスタムQRコードが有効になっています。</string>
+    <string name="qr_setup_reset_default">デフォルトのAube QRコードに戻す</string>
+    <string name="qr_setup_use_other">別のQRコードを使う</string>
+
+    <!-- Routine settings -->
+    <string name="routine_intro">忘れたくないことを起床後に思い出すためのリマインダー — 自由に追加・編集・削除できます</string>
+    <string name="routine_delay_label">起床後の遅延</string>
+    <string name="routine_add_button">リマインダーを追加</string>
+    <string name="routine_message_label">メッセージ</string>
+    <string name="routine_message_placeholder">通知に表示したい内容</string>
+
+    <!-- Why strict -->
+    <string name="why_strict_title">なぜこんなに厳しいのか？</string>
+    <string name="why_strict_intro">これらはあなたを困らせるためのものではありません — それぞれの制約には明確な理由があります。</string>
+    <string name="why_strict_point1_title">スヌーズボタンがない理由</string>
+    <string name="why_strict_point1_body">数分間二度寝すると睡眠が断片化し、次に目覚めるときの寝ぼけがひどくなります — スヌーズ後の方が前より疲れていると感じることがよくあります。</string>
+    <string name="why_strict_point2_title">毎日同じ時刻に起きる理由</string>
+    <string name="why_strict_point2_body">不規則な起床時刻は、たまに睡眠時間が少し短くなることよりも、体内時計を大きく乱します。正確な睡眠時間よりも規則性の方が重要です。</string>
+    <string name="why_strict_point3_title">鳴る前に少しずつ明るくなる光の理由</string>
+    <string name="why_strict_point3_body">鳴る前に徐々に強くなる光は、目の光への感度を利用してアラームが鳴る前からメラトニンの分泌を抑え、体を起床に向けて準備させます。</string>
+    <string name="why_strict_point4_title">すでに浅い眠りなら少し早く起こす理由</string>
+    <string name="why_strict_point4_body">深い眠りではなく浅い眠りの時に起きる方が、目覚めがはるかに穏やかになります — これが「浅い眠りならX時から」というウィンドウの理由です。</string>
+    <string name="why_strict_point5_title">ボタンではなくQRコードをスキャンする理由</string>
+    <string name="why_strict_point5_body">二度寝したい衝動に対する唯一の本当の防御は、実際に起き上がって動くことを求める動作です — ベッドの中で手が届くものではありません。</string>
+    <string name="why_strict_closing">目標：起きたくない日でも、本当に機能するアラームであること。</string>
+
+    <!-- Onboarding: welcome -->
+    <string name="onboarding_welcome_headline">睡眠科学にもとづいたアラーム</string>
+    <string name="onboarding_welcome_subtitle">ただ大きな音で鳴る時刻ではありません。</string>
+    <string name="onboarding_feature_light_title">段階的な光</string>
+    <string name="onboarding_feature_light_desc">アラームが鳴る前に、画面が日の出をシミュレートします。</string>
+    <string name="onboarding_feature_sleep_title">浅い眠りを検知</string>
+    <string name="onboarding_feature_sleep_desc">すでに目覚めかけている場合、少し早く鳴ることがあります。</string>
+    <string name="onboarding_feature_qr_title">無視できない</string>
+    <string name="onboarding_feature_qr_desc">停止にはQRコードのスキャンが必要で、鳴動中は音量がロックされます。</string>
+    <string name="onboarding_feature_routine_title">その後のルーティン</string>
+    <string name="onboarding_feature_routine_desc">自分のペースで水分・光・朝食のリマインダー。</string>
+
+    <!-- Onboarding: wake time -->
+    <string name="onboarding_wake_headline">何時に起きる必要がありますか？</string>
+    <string name="onboarding_wake_subtitle">後からホーム画面ですべて変更できます。</string>
+
+    <!-- Onboarding: QR code -->
+    <string name="onboarding_qr_headline">本当に起き上がる方法</string>
+    <string name="onboarding_qr_subtitle">「見た」ボタンもスヌーズもありません。アラームは物理的なQRコードをスキャンした時だけ停止します — 届く場所まで起き上がる必要があります。</string>
+    <string name="onboarding_qr_body">このQRコードは何も設定せずにすでに有効です。今すぐ印刷してベッドから離れた場所に貼るか、後で設定から別のQRコードを選んでください。</string>
+    <string name="onboarding_qr_print_now">今すぐ印刷</string>
+
+    <!-- Onboarding: reliability -->
+    <string name="onboarding_reliability_headline">今夜、本当に機能させるために</string>
+    <string name="onboarding_reliability_subtitle">これがないと、Androidがバックグラウンドのアラームを静かに終了させることがあります。</string>
+    <string name="onboarding_reliability_all_ok">準備完了です。</string>
+    <string name="onboarding_reliability_continue_partial">すべて許可せずに続ける</string>
+
+    <!-- Alarm ringing screen -->
+    <string name="alarm_light_message">ゆっくりと夜が明けていきます…</string>
+    <string name="alarm_ringing_message">起きる時間です</string>
+    <string name="alarm_mute_countdown">ミュート中 — %1$s後に再開</string>
+    <string name="alarm_already_awake_button">もう起きています</string>
+    <string name="alarm_stop_button">アラームを止める</string>
+    <string name="alarm_mute_button">%1$s分間ミュート</string>
+
+    <!-- QR dismiss -->
+    <string name="qr_dismiss_wrong_code">正しいQRコードではありません</string>
+    <string name="qr_dismiss_instruction">QRコードをスキャンしてアラームを止めてください</string>
+    <string name="qr_dismiss_no_code_link">QRコードを持っていません</string>
+    <string name="emergency_title">QRコードが手元にありませんか？</string>
+    <string name="emergency_subtitle">この文字列を一字一句正確に入力し直してください — 意図的に長くしてあります。</string>
+    <string name="emergency_error">正確ではありませんでした — 新しい文字列です。</string>
+    <string name="emergency_back_to_scan">スキャンに戻る</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_required">カメラの権限が必要です</string>
+    <string name="camera_permission_allow">カメラを許可</string>
+
+    <!-- Notifications -->
+    <string name="notif_missed_title">起床が確認されませんでした</string>
+    <string name="notif_missed_text">スキャンされないままアラームが自動停止しました — その場にいなかった可能性があります。</string>
+    <string name="notif_tracking_title">Aubeが睡眠をモニタリング中です</string>
+    <string name="notif_tracking_text">今から最終時刻までの間に穏やかに起こします</string>
+
+    <!-- Overlay -->
+    <string name="overlay_still_ringing_title">アラームはまだ鳴っています</string>
+    <string name="overlay_still_ringing_subtitle">QRコードをスキャンして止めてください。</string>
+    <string name="overlay_return_button">アラームに戻る</string>
+
+    <!-- Printable QR card -->
+    <string name="qr_card_subtitle">あなたの朝の習慣</string>
+    <string name="qr_card_instruction">毎朝このQRコードをスキャンしてアラームを止めてください。</string>
+    <string name="qr_card_tagline">ベッドから離れた場所に貼ってください — 起き上がらないと届かない場所に。</string>
+    <string name="qr_card_print_job_title">Aube — 停止QRコード</string>
+
+    <!-- Default routine reminders (seeded once per install, then user-editable) -->
+    <string name="reminder_default_water">夜の間に体は水分不足になっています — 水分補給は覚醒に本当に役立ちます。</string>
+    <string name="reminder_default_light">数分でいいので本物の窓の光か外に出ること：体内時計にとって画面よりずっと効果的です。</string>
+    <string name="reminder_default_breakfast">朝のルーティンの最後のステップです。</string>
+</resources>

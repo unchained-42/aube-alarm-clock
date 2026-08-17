@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Aube</string>
+    <string name="notif_channel_tracking_name">睡眠监测</string>
+    <string name="notif_channel_tracking_desc">Aube 监测你的浅睡眠时的低调通知</string>
+    <string name="notif_channel_alarm_name">闹钟</string>
+    <string name="notif_channel_alarm_desc">Aube 闹钟正在响</string>
+    <string name="notif_channel_routine_name">晨间流程</string>
+    <string name="notif_channel_routine_desc">起床后的喝水、光照和早餐提醒</string>
+    <string name="fgs_special_use_subtype">睡眠期间的运动监测，用于智能闹钟</string>
+
+    <!-- Common -->
+    <string name="cd_back">返回</string>
+    <string name="cd_settings">设置</string>
+    <string name="cd_delete_reminder">删除此提醒</string>
+    <string name="cd_qr_card">可打印的 Aube 二维码</string>
+    <string name="action_allow">允许</string>
+    <string name="action_check">检查</string>
+    <string name="action_continue">继续</string>
+    <string name="action_start">开始</string>
+    <string name="action_finish">完成</string>
+    <string name="action_validate">确认</string>
+    <string name="label_weekday">工作日</string>
+    <string name="label_weekend">周末</string>
+    <string name="label_separate_weekend">周末使用不同时间</string>
+    <string name="unit_minutes_short">分钟</string>
+
+    <!-- Home -->
+    <string name="home_checks_incomplete">前往设置完成配置以启用</string>
+    <string name="home_disabled">已关闭</string>
+    <string name="home_exception_suffix">  ·  例外</string>
+    <string name="home_revert_override">恢复常规时间</string>
+    <string name="home_early_wake_hint">若处于浅睡眠，最早 %1$s</string>
+    <string name="home_why_strict_link">为什么这个闹钟这么严格 ›</string>
+    <string name="day_today">今天</string>
+    <string name="day_tomorrow">明天</string>
+
+    <!-- Wake window editor -->
+    <string name="wake_window_latest_label">最晚起床时间</string>
+    <string name="wake_window_early_title">可能的话提前唤醒</string>
+    <string name="wake_window_early_disabled">已关闭 — 将准时在上方时间响铃。</string>
+    <string name="wake_window_early_enabled">如果你已在自然醒来，最多可提前 %1$s 分钟，从 %2$s 起。</string>
+
+    <!-- Settings -->
+    <string name="title_settings">设置</string>
+    <string name="settings_reliability_title">可靠性</string>
+    <string name="settings_reliability_ok">一切就绪 — 可以启用闹钟</string>
+    <string name="settings_reliability_pending">在完成以下设置前，闹钟将保持关闭</string>
+    <string name="settings_dawn_title">日出模拟</string>
+    <string name="settings_dawn_minutes_before">起床前 %1$s 分钟开始</string>
+    <string name="settings_music_title">起床铃声</string>
+    <string name="settings_music_none">尚未选择铃声 — 将使用手机默认铃声</string>
+    <string name="settings_music_custom">已启用自定义铃声</string>
+    <string name="settings_music_choose">选择音频文件</string>
+    <string name="settings_music_change">更换文件</string>
+    <string name="settings_vibration_label">响铃时震动</string>
+    <string name="settings_qr_label">解除二维码</string>
+    <string name="settings_qr_default">Aube（默认）›</string>
+    <string name="settings_qr_custom">自定义 ›</string>
+    <string name="settings_routine_label">晨间流程</string>
+    <string name="settings_routine_suffix">提醒 ›</string>
+    <string name="settings_language_label">语言</string>
+    <string name="settings_language_system">跟随手机语言</string>
+    <string name="settings_permissions_label">权限</string>
+    <string name="settings_permissions_ok">正常 ›</string>
+    <string name="settings_permissions_pending">待完成 ›</string>
+
+    <!-- Reliability checks -->
+    <string name="check_exact_alarms">精确闹钟</string>
+    <string name="check_notifications">通知</string>
+    <string name="check_battery">电池优化</string>
+    <string name="check_battery_hint">选择最宽松的选项：「无限制」或「不优化」。</string>
+    <string name="check_fullscreen">全屏显示</string>
+    <string name="check_overlay">在其他应用上层显示</string>
+    <string name="check_overlay_hint">即使闹钟响铃时你打开了其他应用或设置，也能保持闹钟界面可见。</string>
+    <string name="check_oem_autostart">自启动</string>
+    <string name="check_oem_autostart_hint">部分手机厂商（小米、华为、OPPO、vivo、三星、一加等）在原生 Android 之外还会额外限制后台应用。请在下一页开启自启动，或将本应用从休眠列表中移除，以便 Aube 能在夜间持续运行。</string>
+
+    <!-- QR setup -->
+    <string name="qr_setup_scan_hint">对准你已有的任意条形码或二维码 — 一本书、一个包装盒</string>
+    <string name="qr_setup_intro">为了让你真正起床，闹钟只能通过扫描这个二维码停止 — 在床上无法完成。</string>
+    <string name="qr_setup_print_button">打印 Aube 二维码</string>
+    <string name="qr_setup_active_default">此二维码已生效 — 请贴在远离床铺的地方。</string>
+    <string name="qr_setup_active_custom">已启用自定义二维码，替代此二维码。</string>
+    <string name="qr_setup_reset_default">恢复默认 Aube 二维码</string>
+    <string name="qr_setup_use_other">使用其他二维码</string>
+
+    <!-- Routine settings -->
+    <string name="routine_intro">起床后为你不想忘记的每件事设置提醒 — 可自由添加、编辑或删除</string>
+    <string name="routine_delay_label">起床后延迟</string>
+    <string name="routine_add_button">添加提醒</string>
+    <string name="routine_message_label">消息</string>
+    <string name="routine_message_placeholder">你希望通知显示的内容</string>
+
+    <!-- Why strict -->
+    <string name="why_strict_title">为什么这么严格？</string>
+    <string name="why_strict_intro">这一切都不是为了刁难你 — 每个限制都有明确的理由。</string>
+    <string name="why_strict_point1_title">没有贪睡按钮</string>
+    <string name="why_strict_point1_body">再睡几分钟会打乱你的睡眠，让下一次醒来时更加昏沉 — 贪睡后往往比之前更累。</string>
+    <string name="why_strict_point2_title">每天同一时间</string>
+    <string name="why_strict_point2_body">不规律的起床时间对生物钟的影响，远大于偶尔少睡一点。规律性比睡眠时长本身更重要。</string>
+    <string name="why_strict_point3_title">响铃前逐渐变亮的光线</string>
+    <string name="why_strict_point3_body">响铃前逐渐增强的光线能让身体做好醒来的准备，利用眼睛对光的敏感性，在闹钟响起前就开始抑制褪黑素。</string>
+    <string name="why_strict_point4_title">若已处于浅睡眠，会提早一点</string>
+    <string name="why_strict_point4_body">在浅睡眠阶段醒来比在深睡眠中醒来要温和得多 — 这就是「若处于浅睡眠，最早从 X 开始」这个窗口的原因。</string>
+    <string name="why_strict_point5_title">扫描二维码，而不是按按钮</string>
+    <string name="why_strict_point5_body">对抗重新入睡冲动的唯一真正办法，是一个要求你真正起身走动的动作 — 而不是躺在床上就能完成的事。</string>
+    <string name="why_strict_closing">目标：让这个闹钟真正起作用，即使在你不想起床的日子里也一样。</string>
+
+    <!-- Onboarding: welcome -->
+    <string name="onboarding_welcome_headline">一个遵循睡眠科学的闹钟</string>
+    <string name="onboarding_welcome_subtitle">不只是一个大声响铃的时间点。</string>
+    <string name="onboarding_feature_light_title">渐变光线</string>
+    <string name="onboarding_feature_light_desc">屏幕会在闹钟响起前模拟日出。</string>
+    <string name="onboarding_feature_sleep_title">检测浅睡眠</string>
+    <string name="onboarding_feature_sleep_desc">如果你已经在醒来，闹钟可以提早响铃。</string>
+    <string name="onboarding_feature_qr_title">无法忽略</string>
+    <string name="onboarding_feature_qr_desc">需扫描二维码才能停止，响铃期间音量被锁定。</string>
+    <string name="onboarding_feature_routine_title">之后的晨间流程</string>
+    <string name="onboarding_feature_routine_desc">按你的节奏提醒喝水、光照、早餐。</string>
+
+    <!-- Onboarding: wake time -->
+    <string name="onboarding_wake_headline">你需要几点起床？</string>
+    <string name="onboarding_wake_subtitle">之后你可以随时在主屏幕上修改所有设置。</string>
+
+    <!-- Onboarding: QR code -->
+    <string name="onboarding_qr_headline">你将如何真正起床</string>
+    <string name="onboarding_qr_subtitle">没有「我看到了」按钮，没有贪睡：闹钟只能通过扫描实体二维码停止 — 你必须起身才能够到它。</string>
+    <string name="onboarding_qr_body">此二维码无需任何设置即已生效。现在打印出来，贴在远离床铺的地方 — 或者稍后在设置中选择其他二维码。</string>
+    <string name="onboarding_qr_print_now">立即打印</string>
+
+    <!-- Onboarding: reliability -->
+    <string name="onboarding_reliability_headline">为了今晚真正生效</string>
+    <string name="onboarding_reliability_subtitle">没有这些设置，Android 可能会悄悄关闭后台运行的闹钟。</string>
+    <string name="onboarding_reliability_all_ok">一切就绪。</string>
+    <string name="onboarding_reliability_continue_partial">不全部允许，继续</string>
+
+    <!-- Alarm ringing screen -->
+    <string name="alarm_light_message">天正在慢慢亮起…</string>
+    <string name="alarm_ringing_message">该起床了</string>
+    <string name="alarm_mute_countdown">已静音 — %1$s 后恢复</string>
+    <string name="alarm_already_awake_button">我已经醒了</string>
+    <string name="alarm_stop_button">停止闹钟</string>
+    <string name="alarm_mute_button">静音 %1$s 分钟</string>
+
+    <!-- QR dismiss -->
+    <string name="qr_dismiss_wrong_code">这不是正确的二维码</string>
+    <string name="qr_dismiss_instruction">扫描你的二维码以停止闹钟</string>
+    <string name="qr_dismiss_no_code_link">我没有我的二维码</string>
+    <string name="emergency_title">手边没有二维码？</string>
+    <string name="emergency_subtitle">请逐字符准确重新输入这段字符串 — 它是故意设计得很长的。</string>
+    <string name="emergency_error">输入不准确 — 已生成新字符串。</string>
+    <string name="emergency_back_to_scan">返回扫描</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_required">需要相机权限</string>
+    <string name="camera_permission_allow">允许使用相机</string>
+
+    <!-- Notifications -->
+    <string name="notif_missed_title">未确认起床</string>
+    <string name="notif_missed_text">闹钟在没有扫描的情况下自行停止 — 你可能不在附近。</string>
+    <string name="notif_tracking_title">Aube 正在监测你的睡眠</string>
+    <string name="notif_tracking_text">将在现在到最晚时间之间温和唤醒</string>
+
+    <!-- Overlay -->
+    <string name="overlay_still_ringing_title">闹钟仍在响</string>
+    <string name="overlay_still_ringing_subtitle">扫描你的二维码以停止它。</string>
+    <string name="overlay_return_button">返回闹钟界面</string>
+
+    <!-- Printable QR card -->
+    <string name="qr_card_subtitle">你的晨间仪式</string>
+    <string name="qr_card_instruction">每天早上扫描此二维码以停止闹钟。</string>
+    <string name="qr_card_tagline">把我贴在远离床铺的地方 — 你必须起身才能够到我。</string>
+    <string name="qr_card_print_job_title">Aube — 解除二维码</string>
+
+    <!-- Default routine reminders (seeded once per install, then user-editable) -->
+    <string name="reminder_default_water">经过一夜，你的身体处于缺水状态 — 补水真的有助于清醒。</string>
+    <string name="reminder_default_light">哪怕只是靠近窗户或到户外待几分钟：这对调节你的生物钟比看屏幕有效得多。</string>
+    <string name="reminder_default_breakfast">晨间流程的最后一步。</string>
+</resources>
