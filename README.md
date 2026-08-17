@@ -93,8 +93,8 @@ Aube is a native Android app written in **Kotlin** with **Jetpack Compose**, wit
 Aube isn't published on the Play Store yet — build it from source:
 
 ```bash
-git clone https://github.com/<your-username>/aube.git
-cd aube
+git clone https://github.com/unchained-42/aube-alarm-clock.git
+cd aube-alarm-clock
 ./gradlew assembleDebug
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
