@@ -16,13 +16,15 @@
     <string name="action_allow">Allow</string>
     <string name="action_check">Check</string>
     <string name="action_continue">Continue</string>
+    <string name="action_skip">Skip</string>
     <string name="action_start">Get started</string>
     <string name="action_finish">Finish</string>
-    <string name="action_validate">Confirm</string>
     <string name="label_weekday">Weekdays</string>
     <string name="label_weekend">Weekend</string>
     <string name="label_separate_weekend">Different weekend schedule</string>
     <string name="unit_minutes_short">min</string>
+    <string name="duration_hours">%1$s h</string>
+    <string name="duration_hours_minutes">%1$s h %2$s min</string>
 
     <!-- Home -->
     <string name="home_checks_incomplete">Finish setup in Settings to enable</string>
@@ -30,6 +32,9 @@
     <string name="home_exception_suffix">  ·  exception</string>
     <string name="home_revert_override">Back to usual schedule</string>
     <string name="home_early_wake_hint">From %1$s if in light sleep</string>
+    <string name="home_countdown_hours_minutes">Rings in %1$s h %2$s min</string>
+    <string name="home_countdown_minutes">Rings in %1$s min</string>
+    <string name="home_sleep_lock_message">Locked for the night. No changing your mind once you\'re supposed to be asleep.</string>
     <string name="home_why_strict_link">Why this alarm is so strict ›</string>
     <string name="day_today">Today</string>
     <string name="day_tomorrow">Tomorrow</string>
@@ -63,6 +68,22 @@
     <string name="settings_permissions_label">Permissions</string>
     <string name="settings_permissions_ok">OK ›</string>
     <string name="settings_permissions_pending">To complete ›</string>
+    <string name="settings_accountability_label">Accountability contacts</string>
+    <string name="settings_accountability_suffix">SMS if missed ›</string>
+
+    <!-- Accountability contacts -->
+    <string name="accountability_intro">If you don\'t get up, whether the phone is off through the deadline or the alarm just rings for hours with no dismiss, Aube texts these numbers.</string>
+    <string name="accountability_permission_missing">SMS permission required</string>
+    <string name="accountability_add_hint">Phone number</string>
+    <string name="accountability_pick_contact_button">Choose from contacts</string>
+    <string name="accountability_manual_entry_label">Or type a number by hand</string>
+    <string name="accountability_add_button">Add contact</string>
+    <string name="accountability_message_label">Message</string>
+    <string name="accountability_message_placeholder">I didn\'t wake up on time.</string>
+    <string name="accountability_signature_note">Always ends with: \"%1$s\"</string>
+    <string name="accountability_default_message">I didn\'t wake up on time.</string>
+    <string name="accountability_sms_signature">— sent automatically by the %1$s app</string>
+    <string name="cd_delete_contact">Remove this contact</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Exact alarms</string>
@@ -117,16 +138,28 @@
     <string name="onboarding_feature_qr_desc">A QR code to scan to stop it, volume locked while it rings.</string>
     <string name="onboarding_feature_routine_title">A routine afterward</string>
     <string name="onboarding_feature_routine_desc">Water, light, breakfast reminders, at your own pace.</string>
+    <string name="onboarding_feature_accountability_title">Accountability contacts</string>
+    <string name="onboarding_feature_accountability_desc">Texts someone you trust if you don\'t get up.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">What time do you need to be up?</string>
     <string name="onboarding_wake_subtitle">You can change everything later from the home screen.</string>
+
+    <!-- Onboarding: sleep duration -->
+    <string name="onboarding_sleep_headline">How much sleep do you want?</string>
+    <string name="onboarding_sleep_subtitle">Locks the alarm once you\'re within this window before wake time, so a half-asleep you can\'t quietly turn it off or push it back.</string>
 
     <!-- Onboarding: QR code -->
     <string name="onboarding_qr_headline">How you\'ll really get up</string>
     <string name="onboarding_qr_subtitle">No \"I saw it\" button, no snooze: the alarm only stops by scanning a physical QR code — you need to get up to reach it.</string>
     <string name="onboarding_qr_body">This QR code is already active, with nothing to set up. Print it now and stick it far from your bed — or choose a different QR code later in Settings.</string>
     <string name="onboarding_qr_print_now">Print now</string>
+
+    <!-- Onboarding: accountability -->
+    <string name="onboarding_accountability_headline">If you don\'t get up, someone finds out</string>
+    <string name="onboarding_accountability_subtitle">Phone off through the deadline, or the alarm ringing for hours with no dismiss: Aube can text someone you trust either way.</string>
+    <string name="onboarding_accountability_body">Optional, and off by default. Add it anytime later from Settings.</string>
+    <string name="onboarding_accountability_setup_button">Set up contacts</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">To make it really work tonight</string>
@@ -147,8 +180,8 @@
     <string name="qr_dismiss_instruction">Scan your QR code to stop the alarm</string>
     <string name="qr_dismiss_no_code_link">I don\'t have my QR code</string>
     <string name="emergency_title">No QR code on hand?</string>
-    <string name="emergency_subtitle">Retype this exact string, character for character — it\'s deliberately long.</string>
-    <string name="emergency_error">That wasn\'t exact — new string.</string>
+    <string name="emergency_subtitle">Type it exactly, one character at a time. One mistake restarts with a new, longer string.</string>
+    <string name="emergency_error">Wrong character. Restarting with a new, longer string.</string>
     <string name="emergency_back_to_scan">Back to scanning</string>
 
     <!-- Camera -->

@@ -16,13 +16,15 @@
     <string name="action_allow">許可</string>
     <string name="action_check">確認</string>
     <string name="action_continue">続ける</string>
+    <string name="action_skip">スキップ</string>
     <string name="action_start">はじめる</string>
     <string name="action_finish">完了</string>
-    <string name="action_validate">確定</string>
     <string name="label_weekday">平日</string>
     <string name="label_weekend">週末</string>
     <string name="label_separate_weekend">週末は別のスケジュールにする</string>
     <string name="unit_minutes_short">分</string>
+    <string name="duration_hours">%1$s時間</string>
+    <string name="duration_hours_minutes">%1$s時間%2$s分</string>
 
     <!-- Home -->
     <string name="home_checks_incomplete">有効にするには設定を完了してください</string>
@@ -30,6 +32,9 @@
     <string name="home_exception_suffix">  ·  例外</string>
     <string name="home_revert_override">通常のスケジュールに戻す</string>
     <string name="home_early_wake_hint">浅い眠りなら%1$sから</string>
+    <string name="home_countdown_hours_minutes">%1$s時間%2$s分後に鳴ります</string>
+    <string name="home_countdown_minutes">%1$s分後に鳴ります</string>
+    <string name="home_sleep_lock_message">夜の間はロックされます。寝ているはずの時間に気が変わっても変更できません。</string>
     <string name="home_why_strict_link">このアラームがこれほど厳しい理由 ›</string>
     <string name="day_today">今日</string>
     <string name="day_tomorrow">明日</string>
@@ -63,6 +68,22 @@
     <string name="settings_permissions_label">権限</string>
     <string name="settings_permissions_ok">問題なし ›</string>
     <string name="settings_permissions_pending">要設定 ›</string>
+    <string name="settings_accountability_label">連絡先（未起床時通知）</string>
+    <string name="settings_accountability_suffix">未解除でSMS ›</string>
+
+    <!-- Accountability contacts -->
+    <string name="accountability_intro">期限を過ぎても解除されない場合（電源オフで何も実行できない状態）、Aubeはこれらの番号にSMSを送ります。電源が切れた後も有効な唯一の対策です。</string>
+    <string name="accountability_permission_missing">SMSの権限が必要です</string>
+    <string name="accountability_add_hint">電話番号</string>
+    <string name="accountability_pick_contact_button">連絡先から選択</string>
+    <string name="accountability_manual_entry_label">または番号を手入力</string>
+    <string name="accountability_add_button">連絡先を追加</string>
+    <string name="accountability_message_label">メッセージ</string>
+    <string name="accountability_message_placeholder">時間通りに起きられませんでした。</string>
+    <string name="accountability_signature_note">末尾に必ず追加されます：「%1$s」</string>
+    <string name="accountability_default_message">時間通りに起きられませんでした。</string>
+    <string name="accountability_sms_signature">— %1$sアプリから自動送信</string>
+    <string name="cd_delete_contact">この連絡先を削除</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">正確なアラーム</string>
@@ -117,16 +138,28 @@
     <string name="onboarding_feature_qr_desc">停止にはQRコードのスキャンが必要で、鳴動中は音量がロックされます。</string>
     <string name="onboarding_feature_routine_title">その後のルーティン</string>
     <string name="onboarding_feature_routine_desc">自分のペースで水分・光・朝食のリマインダー。</string>
+    <string name="onboarding_feature_accountability_title">連絡先（未起床時通知）</string>
+    <string name="onboarding_feature_accountability_desc">起きなければ信頼できる人にSMSを送ります。</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">何時に起きる必要がありますか？</string>
     <string name="onboarding_wake_subtitle">後からホーム画面ですべて変更できます。</string>
+
+    <!-- Onboarding: sleep duration -->
+    <string name="onboarding_sleep_headline">何時間眠りたいですか？</string>
+    <string name="onboarding_sleep_subtitle">起床時刻前のこの時間帯に入るとアラームがロックされ、半分眠ったままの自分がこっそりオフにしたり時間をずらしたりできなくなります。</string>
 
     <!-- Onboarding: QR code -->
     <string name="onboarding_qr_headline">本当に起き上がる方法</string>
     <string name="onboarding_qr_subtitle">「見た」ボタンもスヌーズもありません。アラームは物理的なQRコードをスキャンした時だけ停止します — 届く場所まで起き上がる必要があります。</string>
     <string name="onboarding_qr_body">このQRコードは何も設定せずにすでに有効です。今すぐ印刷してベッドから離れた場所に貼るか、後で設定から別のQRコードを選んでください。</string>
     <string name="onboarding_qr_print_now">今すぐ印刷</string>
+
+    <!-- Onboarding: accountability -->
+    <string name="onboarding_accountability_headline">電源を切っても逃れられない対策</string>
+    <string name="onboarding_accountability_subtitle">期限を完全に過ぎてしまった場合（電源オフで何も実行できない状態）、Aubeは信頼できる人にSMSを送れます。</string>
+    <string name="onboarding_accountability_body">任意機能で、初期状態ではオフです。後からいつでも設定で追加できます。</string>
+    <string name="onboarding_accountability_setup_button">連絡先を設定</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">今夜、本当に機能させるために</string>
@@ -147,8 +180,8 @@
     <string name="qr_dismiss_instruction">QRコードをスキャンしてアラームを止めてください</string>
     <string name="qr_dismiss_no_code_link">QRコードを持っていません</string>
     <string name="emergency_title">QRコードが手元にありませんか？</string>
-    <string name="emergency_subtitle">この文字列を一字一句正確に入力し直してください — 意図的に長くしてあります。</string>
-    <string name="emergency_error">正確ではありませんでした — 新しい文字列です。</string>
+    <string name="emergency_subtitle">一文字ずつ正確に入力してください。一つでも間違えると、より長い新しい文字列で最初からやり直しになります。</string>
+    <string name="emergency_error">文字が違います。より長い新しい文字列に変わりました。</string>
     <string name="emergency_back_to_scan">スキャンに戻る</string>
 
     <!-- Camera -->

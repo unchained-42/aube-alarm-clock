@@ -1,6 +1,8 @@
 package com.reveil.aube.settings
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -69,13 +71,28 @@ data class AlarmSettings(
     val oneTimeOverrideDate: LocalDate?,
     val oneTimeOverrideWindow: WakeWindow?,
     /**
-     * True from the moment [com.reveil.aube.ringing.AlarmRingingService] starts until a real
-     * dismiss. Anything that reacts to settings changes by rescheduling (see HomeScreen) must
-     * check this first: rescheduling while a ring/dawn ramp is already underway restarts
-     * [com.reveil.aube.tracking.SleepTrackingService] mid-cycle, which re-fires the whole
-     * launch sequence — a second notification and sound on top of the one already ringing.
+     * Phone numbers texted a "didn't wake up" message when the deadline is missed — see
+     * [com.reveil.aube.alarm.AccountabilityNotifier]. The device being off has no software
+     * remedy (nothing runs while it's powered down), so this trades a technical fix for a
+     * social one: a real person finding out is a consequence turning the phone back on late,
+     * at your own pace, otherwise has none of.
      */
-    val ringingUnresolved: Boolean
+    val emergencyContacts: List<String>,
+    /**
+     * Null/blank means the built-in default text. Whatever the user types here is always
+     * followed by [com.reveil.aube.alarm.AccountabilityNotifier]'s signature line when actually
+     * sent — enforced in code at send time, not stored as part of this editable text, so it
+     * can't be edited away.
+     */
+    val accountabilityMessage: String?,
+    /**
+     * Set during onboarding: how long before the hard deadline the alarm locks itself.
+     * [com.reveil.aube.ui.HomeScreen] disables the enable/disable switch, the one-time time
+     * edit, and both weekday/weekend sliders once now falls inside this window, so a
+     * half-asleep decision to turn the alarm off or push it later isn't available in the one
+     * stretch of time it would actually get used.
+     */
+    val targetSleepMinutes: Int
 ) {
     fun windowFor(dayOfWeekIsWeekend: Boolean): WakeWindow =
         if (dayOfWeekIsWeekend && useSeparateWeekend) weekendWindow else weekdayWindow
@@ -108,6 +125,10 @@ private val KEY_OVERRIDE_DATE = stringPreferencesKey("override_date")
 private val KEY_OVERRIDE_EARLIEST = intPreferencesKey("override_earliest")
 private val KEY_OVERRIDE_LATEST = intPreferencesKey("override_latest")
 private val KEY_RINGING_UNRESOLVED = booleanPreferencesKey("ringing_unresolved")
+private val KEY_EMERGENCY_CONTACTS = stringPreferencesKey("emergency_contacts")
+private val KEY_ACCOUNTABILITY_MESSAGE = stringPreferencesKey("accountability_message")
+private val KEY_TARGET_SLEEP_MINUTES = intPreferencesKey("target_sleep_minutes")
+private const val DEFAULT_TARGET_SLEEP_MINUTES = 480 // 8h
 
 // Plain-text field/record separators rather than JSON, to avoid pulling in a serialization
 // dependency for what's really just a short local list. These control characters can't be
@@ -138,6 +159,13 @@ private fun decodeReminders(raw: String?, context: Context): List<CustomReminder
     }
 }
 
+private fun encodeContacts(contacts: List<String>): String = contacts.joinToString(RECORD_SEP.toString())
+
+private fun decodeContacts(raw: String?): List<String> {
+    if (raw.isNullOrEmpty()) return emptyList()
+    return raw.split(RECORD_SEP).filter { it.isNotBlank() }
+}
+
 /**
  * The UI never lets you create more than a 45-minute early-wake gap (see the slider range in
  * [com.reveil.aube.ui.WakeWindowEditor]), but earlier app versions had bugs that could persist
@@ -155,9 +183,17 @@ private fun sanitizeWindow(window: WakeWindow): WakeWindow =
         window
     }
 
-class SettingsRepository(private val context: Context) {
+class SettingsRepository(
+    private val context: Context,
+    // Defaults to the real per-process DataStore singleton every production call site gets
+    // for free. Tests inject their own isolated instance instead — `Context.dataStore` is a
+    // single JVM-wide delegate (the first Context to touch it wins, for every Context after
+    // that, regardless of which one asked), so without this seam, state written by one test
+    // leaks into whichever test happens to run next in the same JVM.
+    private val dataStore: DataStore<Preferences> = context.dataStore
+) {
 
-    val settings: Flow<AlarmSettings> = context.dataStore.data.map { prefs ->
+    val settings: Flow<AlarmSettings> = dataStore.data.map { prefs ->
         AlarmSettings(
             // Defaults to off: a fresh install shouldn't silently schedule an alarm before
             // the reliability checks (exact alarms, battery, MIUI autostart...) are done.
@@ -189,66 +225,80 @@ class SettingsRepository(private val context: Context) {
                 // was written before that pin existed.
                 sanitizeWindow(WakeWindow(prefs[KEY_OVERRIDE_EARLIEST]!!, prefs[KEY_OVERRIDE_LATEST]!!))
             } else null,
-            ringingUnresolved = prefs[KEY_RINGING_UNRESOLVED] ?: false
+            emergencyContacts = decodeContacts(prefs[KEY_EMERGENCY_CONTACTS]),
+            accountabilityMessage = prefs[KEY_ACCOUNTABILITY_MESSAGE],
+            targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES
         )
     }
 
     suspend fun setAlarmEnabled(enabled: Boolean) {
-        context.dataStore.edit { it[KEY_ALARM_ENABLED] = enabled }
+        dataStore.edit { it[KEY_ALARM_ENABLED] = enabled }
     }
 
     suspend fun setWeekdayWindow(window: WakeWindow) {
-        context.dataStore.edit {
+        dataStore.edit {
             it[KEY_WD_EARLIEST] = window.earliestMinute
             it[KEY_WD_LATEST] = window.latestMinute
         }
     }
 
     suspend fun setWeekendWindow(window: WakeWindow) {
-        context.dataStore.edit {
+        dataStore.edit {
             it[KEY_WE_EARLIEST] = window.earliestMinute
             it[KEY_WE_LATEST] = window.latestMinute
         }
     }
 
     suspend fun setUseSeparateWeekend(use: Boolean) {
-        context.dataStore.edit { it[KEY_USE_WEEKEND] = use }
+        dataStore.edit { it[KEY_USE_WEEKEND] = use }
     }
 
     suspend fun setDawnDurationMinutes(minutes: Int) {
-        context.dataStore.edit { it[KEY_DAWN_MINUTES] = minutes }
+        dataStore.edit { it[KEY_DAWN_MINUTES] = minutes }
     }
 
     suspend fun setQrPayload(payload: String?) {
-        context.dataStore.edit {
+        dataStore.edit {
             if (payload == null) it.remove(KEY_QR_PAYLOAD) else it[KEY_QR_PAYLOAD] = payload
         }
     }
 
     suspend fun setMusicUri(uri: String?) {
-        context.dataStore.edit {
+        dataStore.edit {
             if (uri == null) it.remove(KEY_MUSIC_URI) else it[KEY_MUSIC_URI] = uri
         }
     }
 
     suspend fun setLastHandledDate(date: LocalDate) {
-        context.dataStore.edit { it[KEY_LAST_HANDLED_DATE] = date.toString() }
+        dataStore.edit { it[KEY_LAST_HANDLED_DATE] = date.toString() }
     }
 
     suspend fun setVibrationEnabled(enabled: Boolean) {
-        context.dataStore.edit { it[KEY_VIBRATION_ENABLED] = enabled }
+        dataStore.edit { it[KEY_VIBRATION_ENABLED] = enabled }
     }
 
     suspend fun setReminders(reminders: List<CustomReminder>) {
-        context.dataStore.edit { it[KEY_REMINDERS] = encodeReminders(reminders) }
+        dataStore.edit { it[KEY_REMINDERS] = encodeReminders(reminders) }
+    }
+
+    suspend fun setEmergencyContacts(contacts: List<String>) {
+        dataStore.edit { it[KEY_EMERGENCY_CONTACTS] = encodeContacts(contacts) }
+    }
+
+    suspend fun setAccountabilityMessage(message: String) {
+        dataStore.edit { it[KEY_ACCOUNTABILITY_MESSAGE] = message }
+    }
+
+    suspend fun setTargetSleepMinutes(minutes: Int) {
+        dataStore.edit { it[KEY_TARGET_SLEEP_MINUTES] = minutes }
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {
-        context.dataStore.edit { it[KEY_ONBOARDING_COMPLETED] = completed }
+        dataStore.edit { it[KEY_ONBOARDING_COMPLETED] = completed }
     }
 
     suspend fun setOneTimeOverride(date: LocalDate, window: WakeWindow) {
-        context.dataStore.edit {
+        dataStore.edit {
             it[KEY_OVERRIDE_DATE] = date.toString()
             it[KEY_OVERRIDE_EARLIEST] = window.earliestMinute
             it[KEY_OVERRIDE_LATEST] = window.latestMinute
@@ -256,7 +306,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     suspend fun clearOneTimeOverride() {
-        context.dataStore.edit {
+        dataStore.edit {
             it.remove(KEY_OVERRIDE_DATE)
             it.remove(KEY_OVERRIDE_EARLIEST)
             it.remove(KEY_OVERRIDE_LATEST)
@@ -272,11 +322,11 @@ class SettingsRepository(private val context: Context) {
      * this flag and resumes ringing immediately instead, if it's still true after boot.
      */
     suspend fun setAlarmRinging(active: Boolean) {
-        context.dataStore.edit { it[KEY_RINGING_UNRESOLVED] = active }
+        dataStore.edit { it[KEY_RINGING_UNRESOLVED] = active }
     }
 
     suspend fun isAlarmRingingUnresolved(): Boolean =
-        context.dataStore.data.map { it[KEY_RINGING_UNRESOLVED] ?: false }.first()
+        dataStore.data.map { it[KEY_RINGING_UNRESOLVED] ?: false }.first()
 
     companion object {
         fun newReminderId(): String = UUID.randomUUID().toString()

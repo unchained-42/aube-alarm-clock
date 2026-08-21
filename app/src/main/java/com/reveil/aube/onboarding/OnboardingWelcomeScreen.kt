@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Button
@@ -79,6 +80,11 @@ fun OnboardingWelcomeScreen(onContinue: () -> Unit) {
                 icon = Icons.Filled.WaterDrop,
                 title = stringResource(R.string.onboarding_feature_routine_title),
                 description = stringResource(R.string.onboarding_feature_routine_desc)
+            )
+            FeatureRow(
+                icon = Icons.Filled.Sms,
+                title = stringResource(R.string.onboarding_feature_accountability_title),
+                description = stringResource(R.string.onboarding_feature_accountability_desc)
             )
         }
 

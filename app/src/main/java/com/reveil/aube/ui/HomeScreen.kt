@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -43,8 +44,11 @@ import com.reveil.aube.permissions.missingBlockingChecks
 import com.reveil.aube.settings.AlarmSettings
 import com.reveil.aube.settings.SettingsRepository
 import com.reveil.aube.settings.WakeWindow
+import com.reveil.aube.ringing.AlarmRingingService
 import com.reveil.aube.ui.theme.AubeType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.Duration
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -73,12 +77,40 @@ fun HomeScreen(
     }
     val checksIncomplete = remember(checksTick) { missingBlockingChecks(context).isNotEmpty() }
 
+    // Ticks on its own so the lock below engages/releases automatically as the clock crosses
+    // the threshold, without needing Home to be reopened — same pattern as countdownText.
+    var now by remember { mutableStateOf(ZonedDateTime.now()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            now = ZonedDateTime.now()
+            delay(60_000L)
+        }
+    }
+    val alarmActive = current.alarmEnabled && !checksIncomplete
+    val nextLatest = remember(current, checksIncomplete, now) {
+        if (alarmActive) AlarmScheduler(context).previewNextWindow(current).second else null
+    }
+    // Once inside the target-sleep-duration window before the hard deadline, editing the
+    // schedule or turning the alarm off is exactly the half-asleep decision this whole app
+    // exists to prevent — see AlarmSettings.targetSleepMinutes.
+    val sleepLockActive = remember(nextLatest, current.targetSleepMinutes, now) {
+        nextLatest != null && run {
+            val lockStart = nextLatest.minusMinutes(current.targetSleepMinutes.toLong())
+            !now.isBefore(lockStart) && now.isBefore(nextLatest)
+        }
+    }
+
     LaunchedEffect(current, checksIncomplete) {
         // A ring/dawn ramp already in progress owns its own lifecycle end to end — touching
         // the schedule here would restart SleepTrackingService mid-cycle (any settings read,
         // even an unrelated one, recomposes this effect) and re-fire the whole launch
         // sequence: a second notification and sound on top of the one already ringing.
-        if (current.ringingUnresolved) return@LaunchedEffect
+        // Checked live against the Service itself, not a persisted flag: a persisted "ring in
+        // progress" flag can outlive the ring it described (a crash, a reinstall, a
+        // force-stop all skip the real dismiss that would clear it) and then never gets
+        // cleared by anything — which silently disables scheduling forever, worse than the
+        // bug this guard exists to prevent.
+        if (AlarmRingingService.isActive) return@LaunchedEffect
         val scheduler = AlarmScheduler(context)
         // Never schedule on an unreliable setup, even if alarmEnabled was somehow left on
         // from before the checks were introduced — the alarm simply won't go off silently
@@ -105,6 +137,7 @@ fun HomeScreen(
             HeroNextAlarm(
                 settings = current,
                 blocked = checksIncomplete,
+                locked = sleepLockActive,
                 onToggle = { scope.launch { settingsRepository.setAlarmEnabled(it) } },
                 onBlocked = onOpenSettings,
                 onEditWindow = { date, newWindow ->
@@ -121,6 +154,14 @@ fun HomeScreen(
                     modifier = Modifier.clickable(onClick = onOpenSettings)
                 )
             }
+            if (sleepLockActive) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    stringResource(R.string.home_sleep_lock_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
             Spacer(Modifier.height(32.dp))
         }
 
@@ -129,7 +170,8 @@ fun HomeScreen(
             Spacer(Modifier.height(8.dp))
             WakeWindowEditor(
                 window = current.weekdayWindow,
-                onChange = { scope.launch { settingsRepository.setWeekdayWindow(it) } }
+                onChange = { scope.launch { settingsRepository.setWeekdayWindow(it) } },
+                enabled = !sleepLockActive
             )
             Spacer(Modifier.height(8.dp))
             HorizontalDivider(color = MaterialTheme.colorScheme.outline)
@@ -147,7 +189,8 @@ fun HomeScreen(
                 Spacer(Modifier.height(8.dp))
                 WakeWindowEditor(
                     window = current.weekendWindow,
-                    onChange = { scope.launch { settingsRepository.setWeekendWindow(it) } }
+                    onChange = { scope.launch { settingsRepository.setWeekendWindow(it) } },
+                    enabled = !sleepLockActive
                 )
             }
             Spacer(Modifier.height(8.dp))
@@ -171,6 +214,7 @@ fun HomeScreen(
 private fun HeroNextAlarm(
     settings: AlarmSettings,
     blocked: Boolean,
+    locked: Boolean,
     onToggle: (Boolean) -> Unit,
     onBlocked: () -> Unit,
     onEditWindow: (date: java.time.LocalDate, newWindow: WakeWindow) -> Unit,
@@ -219,7 +263,7 @@ private fun HeroNextAlarm(
                     // rule to learn ("orange time = tappable"), applied everywhere instead
                     // of a one-off hint on the number people instinctively tap first.
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable {
+                    modifier = if (locked) Modifier else Modifier.clickable {
                         showTimePicker(context, effectiveWindow.latestMinute) { picked ->
                             // Editing this time only ever creates a just-this-date exception
                             // — it never touches the recurring Semaine/Week-end schedule. It's
@@ -238,6 +282,11 @@ private fun HeroNextAlarm(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                Text(
+                    text = countdownText(window.second),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 if (isException) {
                     Text(
                         text = stringResource(R.string.home_revert_override),
@@ -256,11 +305,39 @@ private fun HeroNextAlarm(
         }
         Switch(
             checked = alarmActive,
+            enabled = !locked,
             onCheckedChange = { checked ->
                 if (checked && blocked) onBlocked() else onToggle(checked)
             },
             colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary)
         )
+    }
+}
+
+/**
+ * "Rings in Xh Ymin" below the big time, ticking on its own so it stays right without
+ * needing Home to be reopened. [target] is the hard deadline (`window.second`), the actual
+ * moment the safety-net alarm is scheduled for — not the light-sleep earliest bound, which
+ * may never trigger at all.
+ */
+@Composable
+private fun countdownText(target: ZonedDateTime): String {
+    var now by remember(target) { mutableStateOf(ZonedDateTime.now(target.zone)) }
+    LaunchedEffect(target) {
+        while (true) {
+            now = ZonedDateTime.now(target.zone)
+            delay(30_000L)
+        }
+    }
+    // Built with plain Int.toString(), not a resource's %d — that can render native digit
+    // systems (Arabic-Indic, Devanagari) for some locales, which %s sidesteps entirely.
+    val totalMinutes = Duration.between(now, target).toMinutes().coerceAtLeast(0)
+    val hours = (totalMinutes / 60).toString()
+    val minutes = (totalMinutes % 60).toString()
+    return if (totalMinutes >= 60) {
+        stringResource(R.string.home_countdown_hours_minutes, hours, minutes)
+    } else {
+        stringResource(R.string.home_countdown_minutes, minutes)
     }
 }
 

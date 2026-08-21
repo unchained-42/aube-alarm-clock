@@ -95,7 +95,7 @@ fun QrDismissScreen(expectedPayload: String, onDismissed: () -> Unit) {
     }
 }
 
-private const val CHALLENGE_LENGTH = 30
+private const val CHALLENGE_LENGTH = 45
 private const val LOWER = "abcdefghijklmnopqrstuvwxyz"
 private const val UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 private const val DIGITS = "0123456789"
@@ -148,7 +148,25 @@ private fun EmergencyChallengeScreen(onDismissed: () -> Unit, onBackToScan: () -
             Spacer(Modifier.height(24.dp))
             OutlinedTextField(
                 value = input,
-                onValueChange = { input = it },
+                // Checked character by character as you type, not on submit: a single wrong
+                // character anywhere restarts the whole thing with a fresh, longer code. A
+                // submit-then-check model lets you fix typos before they count, which turns
+                // "retype this exactly" into "retype this eventually" — the opposite of the
+                // point. A pasted string that doesn't match from the very first character
+                // hits the same restart, so pasting can't shortcut it either.
+                onValueChange = { newValue ->
+                    if (newValue.length <= challenge.length && challenge.startsWith(newValue)) {
+                        input = newValue
+                        showError = false
+                        if (newValue.length == challenge.length) {
+                            onDismissed()
+                        }
+                    } else {
+                        showError = true
+                        challenge = generateChallenge()
+                        input = ""
+                    }
+                },
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.None,
@@ -171,17 +189,6 @@ private fun EmergencyChallengeScreen(onDismissed: () -> Unit, onBackToScan: () -
                 )
             }
             Spacer(Modifier.height(24.dp))
-            TextButton(onClick = {
-                if (input == challenge) {
-                    onDismissed()
-                } else {
-                    showError = true
-                    challenge = generateChallenge()
-                    input = ""
-                }
-            }) {
-                Text(stringResource(R.string.action_validate), color = Color.White)
-            }
             TextButton(onClick = onBackToScan) {
                 Text(stringResource(R.string.emergency_back_to_scan), color = Color.White.copy(alpha = 0.6f))
             }

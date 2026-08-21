@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.reveil.aube.NotifChannels
 import com.reveil.aube.R
+import com.reveil.aube.alarm.AccountabilityNotifier
 import com.reveil.aube.alarm.AlarmScheduler
 import com.reveil.aube.settings.LocaleHelper
 import com.reveil.aube.settings.SettingsRepository
@@ -26,6 +27,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 /**
@@ -71,6 +73,7 @@ class AlarmRingingService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        isActive = true
         startForegroundNotification()
         // Marks the alarm as "ringing, not yet dismissed" — see setAlarmRinging's doc for why
         // this is what lets a reboot get caught instead of quietly ending everything.
@@ -145,9 +148,14 @@ class AlarmRingingService : Service() {
         postMissedNotification()
         scope.launch {
             val settingsRepository = SettingsRepository(applicationContext)
+            val settings = settingsRepository.settings.first()
+            // Rang for hours, on a phone that stayed on, with no one ever dismissing it —
+            // exactly the failure AccountabilityNotifier exists for, same as the boot-time
+            // missed-window case in BootReceiver.
+            AccountabilityNotifier.notifyMissedWakeup(applicationContext, settings)
             settingsRepository.setAlarmRinging(false)
             settingsRepository.setLastHandledDate(LocalDate.now())
-            AlarmScheduler(applicationContext).scheduleNext(settingsRepository.settings.first())
+            AlarmScheduler(applicationContext).scheduleNext(settings)
         }
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
@@ -175,6 +183,28 @@ class AlarmRingingService : Service() {
             dawnStartMillis = intent.getLongExtra(EXTRA_DAWN_START_MILLIS, dawnStartMillis)
             dawnEndMillis = intent.getLongExtra(EXTRA_DAWN_END_MILLIS, dawnEndMillis)
         }
+
+        // START_STICKY (below) means a process kill mid-ring — this service getting killed
+        // for memory, not the whole device rebooting — brings the service back with a null
+        // Intent and a brand new instance, so every field above is back at its declared
+        // default: dawnEndMillis is 0, sound/vibration are freshly-created and not playing,
+        // and the auto-stop watchdog's `if (end <= 0L) continue` guard means it never fires
+        // again. Left alone, that's a silent, no-sound "Time to get up" notification stuck
+        // in the tray for good, with no ceiling — confirmed on a real device via `dumpsys
+        // activity services`: isForeground=true hours after the deadline, with no alarm
+        // screen or sound anywhere. dawnEndMillis == 0L can only mean "this instance never
+        // learned a real window" (a legitimate one is always a huge epoch-millis value), so
+        // it's a safe, unambiguous signal that this is that restart, not a normal command —
+        // recovering means exactly what BootReceiver already does for a reboot mid-ring:
+        // relaunch the alarm from scratch instead of leaving it stuck.
+        if (dawnEndMillis <= 0L) {
+            val now = System.currentTimeMillis()
+            dawnStartMillis = now
+            dawnEndMillis = now
+            launchAlarm(applicationContext, now, now)
+            return START_STICKY
+        }
+
         when (intent?.action) {
             ACTION_START_SOUND -> {
                 lastMusicUri = intent.getStringExtra(EXTRA_URI)
@@ -200,6 +230,25 @@ class AlarmRingingService : Service() {
                 soundPlayer.stop()
                 alarmVibrator.stop()
                 overlay.hide()
+                // Cancelled here, synchronously, rather than left to AlarmActivity's
+                // lifecycleScope coroutine: that scope dies the moment the activity reaches
+                // DESTROYED, which finish() (called right after this) can trigger before the
+                // coroutine gets to AlarmScheduler.scheduleNext(). If that races and loses,
+                // today's now-stale safety-net alarm (AlarmReceiver.ACTION_FIRE_ALARM, which
+                // fires unconditionally with no "already dismissed" check of its own) is still
+                // sitting in AlarmManager and goes off later — a second, un-swipeable "Time to
+                // get up" notification with no dismiss screen anyone asked for. A Service's
+                // onStartCommand isn't tied to that lifecycle, so this cancellation always
+                // completes.
+                AlarmScheduler(applicationContext).cancelAll()
+                // Same reasoning as the cancellation above, and blocked on rather than merely
+                // launched for the same reason: this used to be set only from AlarmActivity's
+                // lifecycleScope, which can die before it runs. Left stuck true, it doesn't
+                // just risk one bad reboot — BootReceiver treats it as "a ring is still in
+                // progress" forever, and nothing else was ever going to clear it, since a real
+                // dismiss is the only thing that does. A tiny local DataStore write, blocked
+                // on here, is a small one-time cost for never leaving that possible again.
+                runBlocking { SettingsRepository(applicationContext).setAlarmRinging(false) }
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
             }
@@ -243,6 +292,7 @@ class AlarmRingingService : Service() {
     }
 
     override fun onDestroy() {
+        isActive = false
         soundPlayer.stop()
         alarmVibrator.stop()
         overlay.hide()
@@ -257,6 +307,20 @@ class AlarmRingingService : Service() {
     }
 
     companion object {
+        /**
+         * True only while this Service object is actually alive in this process — unlike the
+         * `ringing_unresolved` DataStore flag (which is deliberately permanent, surviving a
+         * reboot, so [BootReceiver][com.reveil.aube.alarm.BootReceiver] can resume a ring that
+         * a reboot interrupted), this resets to false for free whenever the process restarts:
+         * a reinstall, a crash, a force-stop. HomeScreen's reschedule guard reads this instead
+         * of the persisted flag for exactly that reason — a persisted "don't reschedule" flag
+         * that outlives the process it described nearly bricked scheduling entirely once,
+         * stuck true with no ring actually in progress and nothing left to ever clear it.
+         */
+        @Volatile
+        var isActive: Boolean = false
+            private set
+
         private const val NOTIF_ID = 43
         private const val MISSED_NOTIF_ID = 44
 

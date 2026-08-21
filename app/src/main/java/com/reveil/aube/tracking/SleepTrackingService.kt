@@ -164,6 +164,14 @@ class SleepTrackingService : Service(), SensorEventListener {
     }
 
     override fun onDestroy() {
+        // stopSelf() alone (from beginDawnSequence, every normal morning) or an external
+        // stopService() (AlarmReceiver's safety net, when the deadline hits before any
+        // stirring was seen) both end this service without ever removing the foreground
+        // notification on their own — Android only demotes it out of the foreground state,
+        // it doesn't cancel it. Left alone, "Aube surveille ton sommeil" sits in the tray
+        // forever after the alarm's already been dismissed. Doing it here, in onDestroy(),
+        // covers every stop path instead of duplicating the call at each one.
+        stopForeground(STOP_FOREGROUND_REMOVE)
         sensorManager?.unregisterListener(this)
         wakeLock?.let { if (it.isHeld) it.release() }
         running = false

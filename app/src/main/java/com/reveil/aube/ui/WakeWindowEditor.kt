@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,26 +29,33 @@ import com.reveil.aube.ui.theme.AubeType
  * first. Dragging the slider to 0 is exactly "just wake me at that time, nothing smart."
  */
 @Composable
-fun WakeWindowEditor(window: WakeWindow, onChange: (WakeWindow) -> Unit, modifier: Modifier = Modifier) {
+fun WakeWindowEditor(window: WakeWindow, onChange: (WakeWindow) -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     val context = LocalContext.current
     val advance = (window.latestMinute - window.earliestMinute).coerceIn(0, 45)
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth().alpha(if (enabled) 1f else 0.5f)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    showTimePicker(context, window.latestMinute) { picked ->
-                        // Keeps the current "wake up to X min early" gap relative to the new
-                        // time, rather than the old absolute earliestMinute — that used to
-                        // leave a stale, unrelated "dès 07:00" hanging around under a target
-                        // moved somewhere completely different, e.g. 15:30 in the afternoon.
-                        onChange(
-                            window.copy(
-                                latestMinute = picked,
-                                earliestMinute = (picked - advance).coerceAtLeast(0)
-                            )
-                        )
+                .let { base ->
+                    if (enabled) {
+                        base.clickable {
+                            showTimePicker(context, window.latestMinute) { picked ->
+                                // Keeps the current "wake up to X min early" gap relative to
+                                // the new time, rather than the old absolute earliestMinute —
+                                // that used to leave a stale, unrelated "dès 07:00" hanging
+                                // around under a target moved somewhere completely different,
+                                // e.g. 15:30 in the afternoon.
+                                onChange(
+                                    window.copy(
+                                        latestMinute = picked,
+                                        earliestMinute = (picked - advance).coerceAtLeast(0)
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        base
                     }
                 }
                 .padding(vertical = 10.dp),
@@ -87,6 +95,7 @@ fun WakeWindowEditor(window: WakeWindow, onChange: (WakeWindow) -> Unit, modifie
                 val newAdvance = value.toInt()
                 onChange(window.copy(earliestMinute = (window.latestMinute - newAdvance).coerceAtLeast(0)))
             },
+            enabled = enabled,
             valueRange = 0f..45f,
             steps = 8,
             colors = SliderDefaults.colors(

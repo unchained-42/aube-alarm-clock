@@ -18,11 +18,13 @@
 - 🌅 Dawn simulation: screen ramps from black to full brightness before the alarm sounds
 - 🔊 Volume ramp synced to the same window, instead of full blast on trigger
 - 🚫 No snooze button, anywhere, ever
+- 🔒 Sleep-duration lock: set how much sleep you want during onboarding, and the alarm switch/wake time can't be touched once you're inside that window before the deadline
 - 📆 One consistent wake-by time per day (optional separate weekday/weekend)
 - 🛌 Accelerometer-based light-sleep detection: can wake you up to 45 min early if you're already stirring
 - 📱 QR/barcode dismiss: scan a code placed somewhere you have to get out of bed to reach
 - 🔐 Hard to bypass: screen pinning, full-screen overlay, volume-key lock, foreground service independent of the UI, boot-resume
-- 🆘 Emergency fallback: long randomized-string challenge if you don't have the code
+- 🆘 Emergency fallback: long randomized-string challenge if you don't have the code, restarts from scratch on the first wrong character
+- 📵 Accountability contacts: texts someone you trust if the phone is powered off through the deadline, the one loophole no on-device fix can close
 - ⏰ Bounded auto-stop: 1h ring, then pulses for a few hours, then gives up instead of running forever
 - ☀️ Optional post-wake reminders (water, light, breakfast)
 - 🌍 10 languages, follows system locale
@@ -37,8 +39,13 @@
 | **Dawn simulation** | Gradual light exposure before wake time signals reduced melatonin, easing the transition; shown to reduce time-to-wakefulness vs. an abrupt alarm. [Wikipedia](https://en.wikipedia.org/wiki/Dawn_simulation) · [Sleep Review](https://sleepreviewmag.com/sleep-treatments/therapy-devices/light-therapy/light-dawn-simulation/) · [Study](https://www.researchgate.net/publication/260130874_Effects_of_dawn_simulation_on_markers_of_sleep_inertia_and_post-waking_performance_in_humans) |
 | **Light-sleep wake window** | Waking from deep/slow-wave sleep produces more grogginess than waking from light sleep. Same principle behind wearable "smart alarms." |
 | **QR code, not a button** | A groggy brain can dismiss a notification on autopilot; getting up and scanning a code forces real motor planning. Behavioral reasoning, not a specific study. |
+| **Sleep-duration lock** | The alarm's own settings are as bypassable as anything else at 3am, half-asleep. Locking edits during the sleep window you set removes that decision entirely, a commitment-device pattern rather than a specific sleep study. |
 
 Snooze research is genuinely mixed: some studies find it near-neutral. Aube's position is to remove the trade-off, not relitigate it every morning.
+
+### Why accountability contacts exist
+
+Powering the phone off defeats every on-device protection at once: no code runs while a device is off, and no third-party app can force it back on or block the power menu (Android reserves both to the OS, and OEM alarm apps that briefly exploited accessibility-service workarounds for this had the technique closed as of Android 12). So the one loophole software can't close, Aube hands to a person instead: if the deadline passes with the phone off, or the alarm rings for hours with no dismiss, it texts your configured contacts. Off by default, requires the standard Android SMS permission, numbers stay on-device.
 
 ## How It Works
 
@@ -48,6 +55,7 @@ Kotlin + Jetpack Compose, no backend, everything on-device.
 - **Sleep tracking**: foreground `Service`, accelerometer, movement scoring
 - **Ringing**: separate foreground `Service` owns sound/vibration, independent of the UI activity
 - **Hardening**: screen pinning, `SYSTEM_ALERT_WINDOW` overlay, volume-key interception, volume watchdog, boot-resume receiver
+- **Accountability**: `SmsManager`, triggered from the boot receiver (missed deadline) and the ringing service (auto-stop after hours of no dismiss)
 - **QR/barcode**: [ZXing](https://github.com/zxing/zxing) + CameraX, auto-torch for dark rooms
 - **Storage**: Jetpack DataStore, local only
 
@@ -73,6 +81,7 @@ Requires Android 8.0 (API 26)+.
 | Display over other apps | Powers the "still ringing" overlay |
 | Camera | Scans the dismiss code |
 | Accelerometer | Light-sleep detection, on-device only, never transmitted |
+| SMS | Optional: texts your accountability contacts if the deadline is missed entirely |
 
 ## Languages
 
