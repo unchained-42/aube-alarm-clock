@@ -302,6 +302,20 @@ private fun AlarmScreen(
         }
     }
 
+    // Walking to wherever the code is printed, then scanning it, takes real time — and until
+    // now the only way to get quiet for that walk was to notice and tap the mute button
+    // *before* leaving the ringing screen. Opening the scan screen itself now spends the same
+    // one-time, two-minute budget automatically, so the trip to the code doesn't have to
+    // happen with the alarm still blaring. A no-op if it was already used (button or a
+    // previous scan-screen visit) — it only ever fires once, same as before.
+    LaunchedEffect(showDismiss) {
+        if (showDismiss && !muteUsed) {
+            muteUsed = true
+            isMuting = true
+            onStopSound()
+        }
+    }
+
     LaunchedEffect(isMuting) {
         if (isMuting) {
             var remaining = MUTE_DURATION_SECONDS

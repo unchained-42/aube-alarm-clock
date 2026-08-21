@@ -61,6 +61,32 @@ class AlarmScheduler(private val context: Context) {
     fun previewNextWindow(settings: AlarmSettings): Pair<ZonedDateTime, ZonedDateTime> =
         nextWindow(settings, ZonedDateTime.now())
 
+    /**
+     * True if an unhandled day's deadline has already passed as of [now] — the device was off
+     * (or otherwise unable to fire the exact alarm) straight through it. [BootReceiver] calls
+     * this before falling back to a plain reschedule: without it, powering the phone off before
+     * the alarm and back on after simply finds "next window still in the future" and quietly
+     * re-arms for the following day, with nothing having ever rung. Bounded to the last day
+     * (not scanning back to [AlarmSettings.lastHandledDate] indefinitely) so a phone left off
+     * for a week doesn't try to catch up on every missed day at once — one ring on the next
+     * boot is the point, not a backlog.
+     */
+    fun missedWindowSinceLastHandled(settings: AlarmSettings, now: ZonedDateTime): Boolean {
+        if (!settings.alarmEnabled) return false
+        val today = now.toLocalDate()
+        val start = maxOf(today.minusDays(1), (settings.lastHandledDate?.plusDays(1)) ?: today.minusDays(1))
+        var date = start
+        while (!date.isAfter(today)) {
+            val isWeekend = date.dayOfWeek == DayOfWeek.SATURDAY || date.dayOfWeek == DayOfWeek.SUNDAY
+            val window = settings.windowFor(date, isWeekend)
+            val dayStart = date.atStartOfDay(now.zone)
+            val latest = dayStart.plusMinutes(window.latestMinute.toLong())
+            if (latest.isBefore(now)) return true
+            date = date.plusDays(1)
+        }
+        return false
+    }
+
     fun cancelAll() {
         alarmManager.cancel(trackingPendingIntent(0L, 0L, 0))
         alarmManager.cancel(safetyNetPendingIntent(0L))

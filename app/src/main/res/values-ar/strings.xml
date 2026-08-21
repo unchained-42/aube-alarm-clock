@@ -16,13 +16,15 @@
     <string name="action_allow">السماح</string>
     <string name="action_check">تحقّق</string>
     <string name="action_continue">متابعة</string>
+    <string name="action_skip">تخطي</string>
     <string name="action_start">ابدأ</string>
     <string name="action_finish">إنهاء</string>
-    <string name="action_validate">تأكيد</string>
     <string name="label_weekday">أيام الأسبوع</string>
     <string name="label_weekend">عطلة نهاية الأسبوع</string>
     <string name="label_separate_weekend">جدول مختلف في عطلة نهاية الأسبوع</string>
     <string name="unit_minutes_short">د</string>
+    <string name="duration_hours">%1$s س</string>
+    <string name="duration_hours_minutes">%1$s س %2$s د</string>
 
     <!-- Home -->
     <string name="home_checks_incomplete">أكمل الإعداد في الإعدادات لتفعيله</string>
@@ -30,6 +32,9 @@
     <string name="home_exception_suffix">  ·  استثناء</string>
     <string name="home_revert_override">العودة إلى الجدول المعتاد</string>
     <string name="home_early_wake_hint">من %1$s في حال النوم الخفيف</string>
+    <string name="home_countdown_hours_minutes">يرن خلال %1$s س %2$s د</string>
+    <string name="home_countdown_minutes">يرن خلال %1$s د</string>
+    <string name="home_sleep_lock_message">مقفل لهذه الليلة. لا يمكن تغيير رأيك بمجرد أن يُفترض أنك نائم.</string>
     <string name="home_why_strict_link">لماذا هذا المنبه صارم إلى هذا الحد ›</string>
     <string name="day_today">اليوم</string>
     <string name="day_tomorrow">غدًا</string>
@@ -63,6 +68,22 @@
     <string name="settings_permissions_label">الأذونات</string>
     <string name="settings_permissions_ok">كل شيء جاهز ›</string>
     <string name="settings_permissions_pending">يحتاج إكمال ›</string>
+    <string name="settings_accountability_label">جهات اتصال للمساءلة</string>
+    <string name="settings_accountability_suffix">رسالة عند الفوات ›</string>
+
+    <!-- Accountability contacts -->
+    <string name="accountability_intro">إذا مر الموعد النهائي دون إيقاف (الهاتف مطفأ، لا شيء يعمل)، يرسل Aube رسالة نصية لهذه الأرقام. إنها العاقبة الوحيدة التي تبقى فعّالة بعد إطفاء الهاتف.</string>
+    <string name="accountability_permission_missing">إذن الرسائل النصية مطلوب</string>
+    <string name="accountability_add_hint">رقم الهاتف</string>
+    <string name="accountability_pick_contact_button">اختيار من جهات الاتصال</string>
+    <string name="accountability_manual_entry_label">أو أدخل رقمًا يدويًا</string>
+    <string name="accountability_add_button">إضافة جهة اتصال</string>
+    <string name="accountability_message_label">الرسالة</string>
+    <string name="accountability_message_placeholder">لم أستيقظ في الوقت المحدد.</string>
+    <string name="accountability_signature_note">تنتهي دائمًا بـ: «%1$s»</string>
+    <string name="accountability_default_message">لم أستيقظ في الوقت المحدد.</string>
+    <string name="accountability_sms_signature">— أُرسلت تلقائيًا بواسطة تطبيق %1$s</string>
+    <string name="cd_delete_contact">إزالة جهة الاتصال هذه</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">المنبهات الدقيقة</string>
@@ -117,16 +138,28 @@
     <string name="onboarding_feature_qr_desc">رمز QR يُمسح لإيقافه، ومستوى الصوت مقفل أثناء الرنين.</string>
     <string name="onboarding_feature_routine_title">روتين بعد ذلك</string>
     <string name="onboarding_feature_routine_desc">تذكيرات بالماء والضوء والإفطار، بالوتيرة التي تناسبك.</string>
+    <string name="onboarding_feature_accountability_title">جهات اتصال للمساءلة</string>
+    <string name="onboarding_feature_accountability_desc">يرسل رسالة نصية لشخص تثق به إذا لم تستيقظ.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">في أي ساعة يجب أن تكون مستيقظًا؟</string>
     <string name="onboarding_wake_subtitle">يمكنك تغيير كل شيء لاحقًا من الشاشة الرئيسية.</string>
+
+    <!-- Onboarding: sleep duration -->
+    <string name="onboarding_sleep_headline">كم ساعة تريد أن تنام؟</string>
+    <string name="onboarding_sleep_subtitle">يقفل المنبه بمجرد دخولك في هذه الفترة قبل وقت الاستيقاظ، حتى لا تتمكن نسختك النعسانة من إيقافه أو تأجيله بهدوء.</string>
 
     <!-- Onboarding: QR code -->
     <string name="onboarding_qr_headline">كيف ستنهض فعلاً</string>
     <string name="onboarding_qr_subtitle">لا زر «رأيته»، ولا غفوة: لا يتوقف المنبه إلا بمسح رمز QR فعلي — يجب أن تنهض للوصول إليه.</string>
     <string name="onboarding_qr_body">رمز QR هذا مفعّل بالفعل دون أي إعداد. اطبعه الآن والصقه بعيدًا عن السرير — أو اختر رمز QR آخر لاحقًا من الإعدادات.</string>
     <string name="onboarding_qr_print_now">طباعة الآن</string>
+
+    <!-- Onboarding: accountability -->
+    <string name="onboarding_accountability_headline">عاقبة لا يفلت منها الهاتف حتى وهو مطفأ</string>
+    <string name="onboarding_accountability_subtitle">إذا فات الموعد النهائي تمامًا (الهاتف مطفأ، لا شيء يعمل)، يمكن لـ Aube إرسال رسالة نصية لشخص تثق به.</string>
+    <string name="onboarding_accountability_body">اختياري ومعطّل افتراضيًا. يمكن إعداده في أي وقت لاحقًا من الإعدادات.</string>
+    <string name="onboarding_accountability_setup_button">إعداد جهات الاتصال</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">لكي ينجح الأمر فعلاً الليلة</string>
@@ -147,8 +180,8 @@
     <string name="qr_dismiss_instruction">امسح رمز QR الخاص بك لإيقاف المنبه</string>
     <string name="qr_dismiss_no_code_link">ليس لدي رمز QR الخاص بي</string>
     <string name="emergency_title">لا يوجد رمز QR في متناول يدك؟</string>
-    <string name="emergency_subtitle">أعد كتابة هذه السلسلة بدقة تامة، حرفًا حرفًا — وهي طويلة عمدًا.</string>
-    <string name="emergency_error">لم تكن دقيقة — سلسلة جديدة.</string>
+    <string name="emergency_subtitle">أعد كتابتها بدقة، حرفًا بحرف. أي خطأ واحد يعيد البدء بسلسلة جديدة وأطول.</string>
+    <string name="emergency_error">حرف خاطئ. سلسلة جديدة وأطول.</string>
     <string name="emergency_back_to_scan">العودة إلى المسح</string>
 
     <!-- Camera -->

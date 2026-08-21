@@ -52,7 +52,8 @@ fun SettingsScreen(
     onOpenRoutineSettings: () -> Unit,
     onOpenQrSetup: () -> Unit,
     onOpenLanguageSettings: () -> Unit,
-    onOpenPermissions: () -> Unit
+    onOpenPermissions: () -> Unit,
+    onOpenAccountabilityContacts: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -207,6 +208,16 @@ fun SettingsScreen(
                 ?: stringResource(R.string.settings_language_system)
             Text(stringResource(R.string.settings_language_label), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
             Text("$currentLanguageLabel ›", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
+        }
+
+        Spacer(Modifier.height(4.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().clickable(onClick = onOpenAccountabilityContacts).padding(vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(stringResource(R.string.settings_accountability_label), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
+            Text(stringResource(R.string.settings_accountability_suffix), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
         }
     }
 }

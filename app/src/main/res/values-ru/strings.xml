@@ -16,13 +16,15 @@
     <string name="action_allow">Разрешить</string>
     <string name="action_check">Проверить</string>
     <string name="action_continue">Продолжить</string>
+    <string name="action_skip">Пропустить</string>
     <string name="action_start">Начать</string>
     <string name="action_finish">Готово</string>
-    <string name="action_validate">Подтвердить</string>
     <string name="label_weekday">Будни</string>
     <string name="label_weekend">Выходные</string>
     <string name="label_separate_weekend">Другое расписание на выходные</string>
     <string name="unit_minutes_short">мин</string>
+    <string name="duration_hours">%1$s ч</string>
+    <string name="duration_hours_minutes">%1$s ч %2$s мин</string>
 
     <!-- Home -->
     <string name="home_checks_incomplete">Завершите настройку в Настройках, чтобы включить</string>
@@ -30,6 +32,9 @@
     <string name="home_exception_suffix">  ·  исключение</string>
     <string name="home_revert_override">Вернуться к обычному расписанию</string>
     <string name="home_early_wake_hint">С %1$s при лёгком сне</string>
+    <string name="home_countdown_hours_minutes">Прозвенит через %1$s ч %2$s мин</string>
+    <string name="home_countdown_minutes">Прозвенит через %1$s мин</string>
+    <string name="home_sleep_lock_message">Заблокировано на ночь. Никаких изменений, когда ты уже должен спать.</string>
     <string name="home_why_strict_link">Почему этот будильник такой строгий ›</string>
     <string name="day_today">Сегодня</string>
     <string name="day_tomorrow">Завтра</string>
@@ -63,6 +68,22 @@
     <string name="settings_permissions_label">Разрешения</string>
     <string name="settings_permissions_ok">Всё готово ›</string>
     <string name="settings_permissions_pending">Нужно завершить ›</string>
+    <string name="settings_accountability_label">Контакты подстраховки</string>
+    <string name="settings_accountability_suffix">SMS при пропуске ›</string>
+
+    <!-- Accountability contacts -->
+    <string name="accountability_intro">Если срок истёк без подтверждения (телефон выключен, выполнять уже нечего), Aube отправит SMS этим номерам. Это единственное, что ещё сработает после выключения телефона.</string>
+    <string name="accountability_permission_missing">Требуется разрешение на SMS</string>
+    <string name="accountability_add_hint">Номер телефона</string>
+    <string name="accountability_pick_contact_button">Выбрать из контактов</string>
+    <string name="accountability_manual_entry_label">Или введите номер вручную</string>
+    <string name="accountability_add_button">Добавить контакт</string>
+    <string name="accountability_message_label">Сообщение</string>
+    <string name="accountability_message_placeholder">Я не проснулся вовремя.</string>
+    <string name="accountability_signature_note">Всегда заканчивается на: «%1$s»</string>
+    <string name="accountability_default_message">Я не проснулся вовремя.</string>
+    <string name="accountability_sms_signature">— отправлено автоматически приложением %1$s</string>
+    <string name="cd_delete_contact">Удалить этот контакт</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Точные будильники</string>
@@ -117,16 +138,28 @@
     <string name="onboarding_feature_qr_desc">QR-код для сканирования, чтобы остановить, громкость заблокирована во время звонка.</string>
     <string name="onboarding_feature_routine_title">Ритуал после пробуждения</string>
     <string name="onboarding_feature_routine_desc">Напоминания о воде, свете, завтраке — в вашем темпе.</string>
+    <string name="onboarding_feature_accountability_title">Контакты подстраховки</string>
+    <string name="onboarding_feature_accountability_desc">Отправляет SMS доверенному человеку, если ты не встаёшь.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">Во сколько вам нужно проснуться?</string>
     <string name="onboarding_wake_subtitle">Позже вы сможете всё изменить на главном экране.</string>
+
+    <!-- Onboarding: sleep duration -->
+    <string name="onboarding_sleep_headline">Сколько часов сна ты хочешь?</string>
+    <string name="onboarding_sleep_subtitle">Блокирует будильник, как только ты оказываешься в этом окне перед временем подъёма, чтобы полусонный ты не мог тихо его выключить или отложить.</string>
 
     <!-- Onboarding: QR code -->
     <string name="onboarding_qr_headline">Как вы по-настоящему встанете</string>
     <string name="onboarding_qr_subtitle">Без кнопки «я увидел», без откладывания: будильник останавливается только сканированием физического QR-кода — до него нужно дойти.</string>
     <string name="onboarding_qr_body">Этот QR-код уже активен — ничего настраивать не нужно. Распечатайте его сейчас и приклейте подальше от кровати — или выберите другой QR-код позже в Настройках.</string>
     <string name="onboarding_qr_print_now">Распечатать сейчас</string>
+
+    <!-- Onboarding: accountability -->
+    <string name="onboarding_accountability_headline">Последствие, которого не избежать даже выключив телефон</string>
+    <string name="onboarding_accountability_subtitle">Если срок истёк полностью (телефон выключен, выполнять нечего), Aube может отправить SMS доверенному человеку.</string>
+    <string name="onboarding_accountability_body">Необязательно и отключено по умолчанию. Настроить можно в любой момент в Настройках.</string>
+    <string name="onboarding_accountability_setup_button">Настроить контакты</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">Чтобы это действительно сработало сегодня ночью</string>
@@ -147,8 +180,8 @@
     <string name="qr_dismiss_instruction">Отсканируйте QR-код, чтобы остановить будильник</string>
     <string name="qr_dismiss_no_code_link">У меня нет моего QR-кода</string>
     <string name="emergency_title">Нет QR-кода под рукой?</string>
-    <string name="emergency_subtitle">Введите эту строку точно, символ за символом — она намеренно длинная.</string>
-    <string name="emergency_error">Неточно — новая строка.</string>
+    <string name="emergency_subtitle">Введите точно, символ за символом. Одна ошибка — и всё начинается заново с новой, более длинной строкой.</string>
+    <string name="emergency_error">Неверный символ. Новая, более длинная строка.</string>
     <string name="emergency_back_to_scan">Вернуться к сканированию</string>
 
     <!-- Camera -->

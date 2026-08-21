@@ -14,14 +14,23 @@ const val EXTRA_DAWN_END_MILLIS = "extra_dawn_end_millis"
 
 /**
  * Wakes the device and shows [AlarmActivity]. Uses both a full-screen-intent notification
- * (the documented, reliable way to reach the lock screen on modern Android) and a direct
- * activity launch as a belt-and-suspenders fallback for OEMs that behave inconsistently.
+ * (the documented, reliable way to reach the lock screen on modern Android) and, by default,
+ * a direct activity launch as a belt-and-suspenders fallback for OEMs that behave
+ * inconsistently.
  *
  * [dawnStartMillis]/[dawnEndMillis] describe the screen's warm-to-white light ramp: the
  * loud alarm sound and forced dismiss only kick in once [dawnEndMillis] is reached, so a
  * ramp already in the past (start == end) means "ring immediately, no light phase".
+ *
+ * [directLaunch] exists for [com.reveil.aube.alarm.BootReceiver], the one caller that runs
+ * this moments after boot: `startActivity()` there raced the lock screen's own window still
+ * initializing and lost, an "Input dispatching timed out... Waited 8000ms for
+ * FocusEvent(hasFocus=false)" ANR confirmed via the actual trace — not a guess. Skipping the
+ * direct call there and leaning on the notification's full-screen intent alone sidesteps that
+ * race: it's the OS's own documented mechanism for this exact "reach the lock screen safely"
+ * job, and it waits for the system to actually be ready rather than forcing the window now.
  */
-fun launchAlarm(context: Context, dawnStartMillis: Long, dawnEndMillis: Long) {
+fun launchAlarm(context: Context, dawnStartMillis: Long, dawnEndMillis: Long, directLaunch: Boolean = true) {
     val fullScreenIntent = Intent(context, AlarmActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or
             Intent.FLAG_ACTIVITY_NO_USER_ACTION or
@@ -56,7 +65,9 @@ fun launchAlarm(context: Context, dawnStartMillis: Long, dawnEndMillis: Long) {
         NotificationManagerCompat.from(context).notify(FULL_SCREEN_NOTIF_ID, notification)
     }
 
-    context.startActivity(fullScreenIntent)
+    if (directLaunch) {
+        context.startActivity(fullScreenIntent)
+    }
 }
 
 fun dismissAlarmNotification(context: Context) {

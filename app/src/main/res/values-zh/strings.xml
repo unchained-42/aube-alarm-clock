@@ -16,13 +16,15 @@
     <string name="action_allow">允许</string>
     <string name="action_check">检查</string>
     <string name="action_continue">继续</string>
+    <string name="action_skip">跳过</string>
     <string name="action_start">开始</string>
     <string name="action_finish">完成</string>
-    <string name="action_validate">确认</string>
     <string name="label_weekday">工作日</string>
     <string name="label_weekend">周末</string>
     <string name="label_separate_weekend">周末使用不同时间</string>
     <string name="unit_minutes_short">分钟</string>
+    <string name="duration_hours">%1$s 小时</string>
+    <string name="duration_hours_minutes">%1$s 小时 %2$s 分钟</string>
 
     <!-- Home -->
     <string name="home_checks_incomplete">前往设置完成配置以启用</string>
@@ -30,6 +32,9 @@
     <string name="home_exception_suffix">  ·  例外</string>
     <string name="home_revert_override">恢复常规时间</string>
     <string name="home_early_wake_hint">若处于浅睡眠，最早 %1$s</string>
+    <string name="home_countdown_hours_minutes">%1$s 小时 %2$s 分钟后响铃</string>
+    <string name="home_countdown_minutes">%1$s 分钟后响铃</string>
+    <string name="home_sleep_lock_message">今晚已锁定，一旦你该睡觉了就无法反悔修改。</string>
     <string name="home_why_strict_link">为什么这个闹钟这么严格 ›</string>
     <string name="day_today">今天</string>
     <string name="day_tomorrow">明天</string>
@@ -63,6 +68,22 @@
     <string name="settings_permissions_label">权限</string>
     <string name="settings_permissions_ok">正常 ›</string>
     <string name="settings_permissions_pending">待完成 ›</string>
+    <string name="settings_accountability_label">紧急联系人</string>
+    <string name="settings_accountability_suffix">未起床时发短信 ›</string>
+
+    <!-- Accountability contacts -->
+    <string name="accountability_intro">如果截止时间已过且未解除闹钟（手机关机，无法运行任何程序），Aube 会给这些号码发短信。这是手机关机后唯一还能生效的后果。</string>
+    <string name="accountability_permission_missing">需要短信权限</string>
+    <string name="accountability_add_hint">电话号码</string>
+    <string name="accountability_pick_contact_button">从联系人中选择</string>
+    <string name="accountability_manual_entry_label">或手动输入号码</string>
+    <string name="accountability_add_button">添加联系人</string>
+    <string name="accountability_message_label">短信内容</string>
+    <string name="accountability_message_placeholder">我没有按时起床。</string>
+    <string name="accountability_signature_note">结尾始终会附加：“%1$s”</string>
+    <string name="accountability_default_message">我没有按时起床。</string>
+    <string name="accountability_sms_signature">— 由 %1$s 应用自动发送</string>
+    <string name="cd_delete_contact">删除此联系人</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">精确闹钟</string>
@@ -117,16 +138,28 @@
     <string name="onboarding_feature_qr_desc">需扫描二维码才能停止，响铃期间音量被锁定。</string>
     <string name="onboarding_feature_routine_title">之后的晨间流程</string>
     <string name="onboarding_feature_routine_desc">按你的节奏提醒喝水、光照、早餐。</string>
+    <string name="onboarding_feature_accountability_title">紧急联系人</string>
+    <string name="onboarding_feature_accountability_desc">如果你没起床，会给信任的人发短信。</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">你需要几点起床？</string>
     <string name="onboarding_wake_subtitle">之后你可以随时在主屏幕上修改所有设置。</string>
+
+    <!-- Onboarding: sleep duration -->
+    <string name="onboarding_sleep_headline">你希望睡多久？</string>
+    <string name="onboarding_sleep_subtitle">在起床时间前的这段时间内，闹钟会被锁定，这样半睡半醒的你就无法悄悄关掉或推迟它。</string>
 
     <!-- Onboarding: QR code -->
     <string name="onboarding_qr_headline">你将如何真正起床</string>
     <string name="onboarding_qr_subtitle">没有「我看到了」按钮，没有贪睡：闹钟只能通过扫描实体二维码停止 — 你必须起身才能够到它。</string>
     <string name="onboarding_qr_body">此二维码无需任何设置即已生效。现在打印出来，贴在远离床铺的地方 — 或者稍后在设置中选择其他二维码。</string>
     <string name="onboarding_qr_print_now">立即打印</string>
+
+    <!-- Onboarding: accountability -->
+    <string name="onboarding_accountability_headline">关机也无法躲开的后果</string>
+    <string name="onboarding_accountability_subtitle">如果截止时间完全错过（手机关机，无法运行任何程序），Aube 可以给你信任的人发短信。</string>
+    <string name="onboarding_accountability_body">此功能可选，默认关闭。你可以随时在设置中配置。</string>
+    <string name="onboarding_accountability_setup_button">设置联系人</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">为了今晚真正生效</string>
@@ -147,8 +180,8 @@
     <string name="qr_dismiss_instruction">扫描你的二维码以停止闹钟</string>
     <string name="qr_dismiss_no_code_link">我没有我的二维码</string>
     <string name="emergency_title">手边没有二维码？</string>
-    <string name="emergency_subtitle">请逐字符准确重新输入这段字符串 — 它是故意设计得很长的。</string>
-    <string name="emergency_error">输入不准确 — 已生成新字符串。</string>
+    <string name="emergency_subtitle">请逐字符准确输入。任何一个错误都会重新生成一段更长的字符串,从头开始。</string>
+    <string name="emergency_error">字符错误,已生成新的更长字符串,请重新输入。</string>
     <string name="emergency_back_to_scan">返回扫描</string>
 
     <!-- Camera -->

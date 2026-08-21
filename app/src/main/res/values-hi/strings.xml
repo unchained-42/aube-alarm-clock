@@ -16,13 +16,15 @@
     <string name="action_allow">अनुमति दें</string>
     <string name="action_check">जांचें</string>
     <string name="action_continue">जारी रखें</string>
+    <string name="action_skip">छोड़ें</string>
     <string name="action_start">शुरू करें</string>
     <string name="action_finish">पूर्ण करें</string>
-    <string name="action_validate">पुष्टि करें</string>
     <string name="label_weekday">सप्ताह के दिन</string>
     <string name="label_weekend">सप्ताहांत</string>
     <string name="label_separate_weekend">सप्ताहांत पर अलग समय</string>
     <string name="unit_minutes_short">मिनट</string>
+    <string name="duration_hours">%1$s घंटे</string>
+    <string name="duration_hours_minutes">%1$s घंटे %2$s मिनट</string>
 
     <!-- Home -->
     <string name="home_checks_incomplete">सक्रिय करने के लिए सेटिंग्स में सेटअप पूरा करें</string>
@@ -30,6 +32,9 @@
     <string name="home_exception_suffix">  ·  अपवाद</string>
     <string name="home_revert_override">सामान्य समय पर वापस जाएं</string>
     <string name="home_early_wake_hint">हल्की नींद होने पर %1$s से</string>
+    <string name="home_countdown_hours_minutes">%1$s घंटे %2$s मिनट में बजेगा</string>
+    <string name="home_countdown_minutes">%1$s मिनट में बजेगा</string>
+    <string name="home_sleep_lock_message">रात भर के लिए लॉक। सोने का समय होने के बाद मन नहीं बदला जा सकता।</string>
     <string name="home_why_strict_link">यह अलार्म इतना सख्त क्यों है ›</string>
     <string name="day_today">आज</string>
     <string name="day_tomorrow">कल</string>
@@ -63,6 +68,22 @@
     <string name="settings_permissions_label">अनुमतियां</string>
     <string name="settings_permissions_ok">सब ठीक है ›</string>
     <string name="settings_permissions_pending">पूरा करना बाकी ›</string>
+    <string name="settings_accountability_label">जवाबदेही संपर्क</string>
+    <string name="settings_accountability_suffix">न उठने पर SMS ›</string>
+
+    <!-- Accountability contacts -->
+    <string name="accountability_intro">अगर समय-सीमा बिना बंद किए निकल जाए (फ़ोन बंद, कुछ भी चलाना संभव नहीं), तो Aube इन नंबरों पर SMS भेजता है। फ़ोन बंद होने के बाद भी लागू होने वाला यही एकमात्र असर है।</string>
+    <string name="accountability_permission_missing">SMS अनुमति आवश्यक है</string>
+    <string name="accountability_add_hint">फ़ोन नंबर</string>
+    <string name="accountability_pick_contact_button">संपर्कों से चुनें</string>
+    <string name="accountability_manual_entry_label">या नंबर खुद टाइप करें</string>
+    <string name="accountability_add_button">संपर्क जोड़ें</string>
+    <string name="accountability_message_label">संदेश</string>
+    <string name="accountability_message_placeholder">मैं समय पर नहीं उठा/उठी।</string>
+    <string name="accountability_signature_note">हमेशा इसके साथ खत्म होता है: "%1$s"</string>
+    <string name="accountability_default_message">मैं समय पर नहीं उठा/उठी।</string>
+    <string name="accountability_sms_signature">— %1$s ऐप द्वारा स्वचालित रूप से भेजा गया</string>
+    <string name="cd_delete_contact">यह संपर्क हटाएं</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">सटीक अलार्म</string>
@@ -117,16 +138,28 @@
     <string name="onboarding_feature_qr_desc">इसे रोकने के लिए स्कैन करने का QR कोड, बजते समय वॉल्यूम लॉक रहता है।</string>
     <string name="onboarding_feature_routine_title">इसके बाद एक दिनचर्या</string>
     <string name="onboarding_feature_routine_desc">अपनी गति से पानी, रोशनी, नाश्ते के रिमाइंडर।</string>
+    <string name="onboarding_feature_accountability_title">जवाबदेही संपर्क</string>
+    <string name="onboarding_feature_accountability_desc">अगर आप नहीं उठे तो किसी भरोसेमंद व्यक्ति को SMS भेजता है।</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">आपको किस समय जागना है?</string>
     <string name="onboarding_wake_subtitle">आप बाद में होम स्क्रीन से सब कुछ बदल सकते हैं।</string>
+
+    <!-- Onboarding: sleep duration -->
+    <string name="onboarding_sleep_headline">आप कितने घंटे सोना चाहते हैं?</string>
+    <string name="onboarding_sleep_subtitle">जागने के समय से पहले इस अवधि में आते ही अलार्म लॉक हो जाता है, ताकि आधी नींद में आप इसे चुपके से बंद या टाल न सकें।</string>
 
     <!-- Onboarding: QR code -->
     <string name="onboarding_qr_headline">आप वाकई कैसे उठेंगे</string>
     <string name="onboarding_qr_subtitle">कोई \"मैंने देख लिया\" बटन नहीं, कोई स्नूज़ नहीं: अलार्म केवल एक भौतिक QR कोड को स्कैन करने पर रुकता है — इसे पाने के लिए आपको उठना होगा।</string>
     <string name="onboarding_qr_body">यह QR कोड बिना कुछ सेट किए ही पहले से सक्रिय है। इसे अभी प्रिंट करें और बिस्तर से दूर चिपकाएं — या बाद में सेटिंग्स में कोई अन्य QR कोड चुनें।</string>
     <string name="onboarding_qr_print_now">अभी प्रिंट करें</string>
+
+    <!-- Onboarding: accountability -->
+    <string name="onboarding_accountability_headline">एक ऐसा असर जिससे बंद फ़ोन भी नहीं बच सकता</string>
+    <string name="onboarding_accountability_subtitle">अगर समय-सीमा पूरी तरह निकल जाए (फ़ोन बंद, कुछ भी चलाना संभव नहीं), तो Aube किसी भरोसेमंद व्यक्ति को SMS भेज सकता है।</string>
+    <string name="onboarding_accountability_body">यह वैकल्पिक है और डिफ़ॉल्ट रूप से बंद रहता है। इसे बाद में कभी भी सेटिंग्स से जोड़ा जा सकता है।</string>
+    <string name="onboarding_accountability_setup_button">संपर्क सेट करें</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">ताकि आज रात यह सच में काम करे</string>
@@ -147,8 +180,8 @@
     <string name="qr_dismiss_instruction">अलार्म बंद करने के लिए अपना QR कोड स्कैन करें</string>
     <string name="qr_dismiss_no_code_link">मेरे पास मेरा QR कोड नहीं है</string>
     <string name="emergency_title">हाथ में QR कोड नहीं है?</string>
-    <string name="emergency_subtitle">इस स्ट्रिंग को ठीक उसी तरह, अक्षर दर अक्षर फिर से टाइप करें — यह जानबूझकर लंबी रखी गई है।</string>
-    <string name="emergency_error">यह सटीक नहीं थी — नई स्ट्रिंग।</string>
+    <string name="emergency_subtitle">इसे बिल्कुल सही, अक्षर दर अक्षर टाइप करें। एक भी गलती होने पर एक नई, लंबी स्ट्रिंग के साथ फिर से शुरू होता है।</string>
+    <string name="emergency_error">गलत अक्षर। नई, लंबी स्ट्रिंग के साथ फिर से शुरू।</string>
     <string name="emergency_back_to_scan">स्कैन पर वापस जाएं</string>
 
     <!-- Camera -->

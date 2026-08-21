@@ -16,13 +16,15 @@
     <string name="action_allow">Permitir</string>
     <string name="action_check">Comprobar</string>
     <string name="action_continue">Continuar</string>
+    <string name="action_skip">Omitir</string>
     <string name="action_start">Empezar</string>
     <string name="action_finish">Finalizar</string>
-    <string name="action_validate">Confirmar</string>
     <string name="label_weekday">Entre semana</string>
     <string name="label_weekend">Fin de semana</string>
     <string name="label_separate_weekend">Horario distinto el fin de semana</string>
     <string name="unit_minutes_short">min</string>
+    <string name="duration_hours">%1$s h</string>
+    <string name="duration_hours_minutes">%1$s h %2$s min</string>
 
     <!-- Home -->
     <string name="home_checks_incomplete">Termina la configuración en Ajustes para activarla</string>
@@ -30,6 +32,9 @@
     <string name="home_exception_suffix">  ·  excepción</string>
     <string name="home_revert_override">Volver al horario habitual</string>
     <string name="home_early_wake_hint">Desde las %1$s si el sueño es ligero</string>
+    <string name="home_countdown_hours_minutes">Suena en %1$s h %2$s min</string>
+    <string name="home_countdown_minutes">Suena en %1$s min</string>
+    <string name="home_sleep_lock_message">Bloqueado por la noche. Sin cambios de opinión una vez que deberías estar dormido/a.</string>
     <string name="home_why_strict_link">Por qué esta alarma es tan estricta ›</string>
     <string name="day_today">Hoy</string>
     <string name="day_tomorrow">Mañana</string>
@@ -63,6 +68,22 @@
     <string name="settings_permissions_label">Permisos</string>
     <string name="settings_permissions_ok">OK ›</string>
     <string name="settings_permissions_pending">Por completar ›</string>
+    <string name="settings_accountability_label">Contactos de apoyo</string>
+    <string name="settings_accountability_suffix">SMS si falla ›</string>
+
+    <!-- Accountability contacts -->
+    <string name="accountability_intro">Si el plazo pasa sin confirmación (teléfono apagado, nada que ejecutar), Aube envía un SMS a estos números. Es la única consecuencia que sigue aplicándose una vez apagado el teléfono.</string>
+    <string name="accountability_permission_missing">Se requiere permiso de SMS</string>
+    <string name="accountability_add_hint">Número de teléfono</string>
+    <string name="accountability_pick_contact_button">Elegir de los contactos</string>
+    <string name="accountability_manual_entry_label">O escribe un número a mano</string>
+    <string name="accountability_add_button">Añadir contacto</string>
+    <string name="accountability_message_label">Mensaje</string>
+    <string name="accountability_message_placeholder">No me levanté a tiempo.</string>
+    <string name="accountability_signature_note">Siempre termina con: «%1$s»</string>
+    <string name="accountability_default_message">No me levanté a tiempo.</string>
+    <string name="accountability_sms_signature">— enviado automáticamente por la app %1$s</string>
+    <string name="cd_delete_contact">Eliminar este contacto</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmas exactas</string>
@@ -117,16 +138,28 @@
     <string name="onboarding_feature_qr_desc">Un código QR para escanear y detenerla, volumen bloqueado mientras suena.</string>
     <string name="onboarding_feature_routine_title">Una rutina después</string>
     <string name="onboarding_feature_routine_desc">Recordatorios de agua, luz y desayuno, a tu ritmo.</string>
+    <string name="onboarding_feature_accountability_title">Contactos de apoyo</string>
+    <string name="onboarding_feature_accountability_desc">Envía un SMS a alguien de confianza si no te levantas.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">¿A qué hora necesitas estar despierto?</string>
     <string name="onboarding_wake_subtitle">Podrás cambiarlo todo más tarde desde la pantalla principal.</string>
+
+    <!-- Onboarding: sleep duration -->
+    <string name="onboarding_sleep_headline">¿Cuántas horas de sueño quieres?</string>
+    <string name="onboarding_sleep_subtitle">Bloquea la alarma una vez dentro de esta ventana antes de la hora de despertar, para que un tú medio dormido no pueda apagarla o retrasarla en silencio.</string>
 
     <!-- Onboarding: QR code -->
     <string name="onboarding_qr_headline">Cómo vas a levantarte de verdad</string>
     <string name="onboarding_qr_subtitle">Sin botón de «lo he visto», sin posponer: la alarma solo se detiene escaneando un código QR físico — tienes que levantarte para alcanzarlo.</string>
     <string name="onboarding_qr_body">Este código QR ya está activo, sin configurar nada. Imprímelo ahora y pégalo lejos de la cama — o elige otro código QR más tarde en Ajustes.</string>
     <string name="onboarding_qr_print_now">Imprimir ahora</string>
+
+    <!-- Onboarding: accountability -->
+    <string name="onboarding_accountability_headline">Una consecuencia que un teléfono apagado no puede esquivar</string>
+    <string name="onboarding_accountability_subtitle">Si el plazo pasa por completo (teléfono apagado, nada que ejecutar), Aube puede enviar un SMS a alguien de confianza.</string>
+    <string name="onboarding_accountability_body">Opcional y desactivado por defecto. Configurable en cualquier momento desde Ajustes.</string>
+    <string name="onboarding_accountability_setup_button">Configurar contactos</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">Para que funcione de verdad esta noche</string>
@@ -147,8 +180,8 @@
     <string name="qr_dismiss_instruction">Escanea tu código QR para detener la alarma</string>
     <string name="qr_dismiss_no_code_link">No tengo mi código QR</string>
     <string name="emergency_title">¿No tienes el código QR a mano?</string>
-    <string name="emergency_subtitle">Vuelve a escribir esta cadena exactamente, carácter por carácter — es larga a propósito.</string>
-    <string name="emergency_error">No era exacta — nueva cadena.</string>
+    <string name="emergency_subtitle">Escríbela exactamente, carácter por carácter. Un solo error reinicia con una cadena nueva y más larga.</string>
+    <string name="emergency_error">Carácter incorrecto. Reiniciando con una cadena nueva y más larga.</string>
     <string name="emergency_back_to_scan">Volver a escanear</string>
 
     <!-- Camera -->
