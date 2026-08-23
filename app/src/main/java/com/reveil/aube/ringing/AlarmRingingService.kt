@@ -27,7 +27,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 /**
@@ -74,6 +74,10 @@ class AlarmRingingService : Service() {
     override fun onCreate() {
         super.onCreate()
         isActive = true
+        // A fresh instance is a fresh ring, even if the companion flag was left true by a
+        // previous cycle in this same process (e.g. a ring that ended via autoStopUnresolved
+        // without a real dismiss) — see `dismissRequested`'s doc.
+        dismissRequested = false
         startForegroundNotification()
         // Marks the alarm as "ringing, not yet dismissed" — see setAlarmRinging's doc for why
         // this is what lets a reboot get caught instead of quietly ending everything.
@@ -141,6 +145,10 @@ class AlarmRingingService : Service() {
     /** Gave up without ever being dismissed — clean up and arm the next occurrence, but skip
      * the post-wake routine reminders: nobody was actually there to wake up. */
     private fun autoStopUnresolved() {
+        // Same reasoning as handleDismissed() setting this before finish(): this is also a
+        // legitimate end to the ring, so onTaskRemoved must not relaunch it if the task
+        // happens to go away around the same time.
+        dismissed = true
         soundPlayer.stop()
         alarmVibrator.stop()
         overlay.hide()
@@ -152,7 +160,7 @@ class AlarmRingingService : Service() {
             // Rang for hours, on a phone that stayed on, with no one ever dismissing it —
             // exactly the failure AccountabilityNotifier exists for, same as the boot-time
             // missed-window case in BootReceiver.
-            AccountabilityNotifier.notifyMissedWakeup(applicationContext, settings)
+            AccountabilityNotifier.notifyMissedWakeup(applicationContext, settingsRepository, settings)
             settingsRepository.setAlarmRinging(false)
             settingsRepository.setLastHandledDate(LocalDate.now())
             AlarmScheduler(applicationContext).scheduleNext(settings)
@@ -241,16 +249,31 @@ class AlarmRingingService : Service() {
                 // onStartCommand isn't tied to that lifecycle, so this cancellation always
                 // completes.
                 AlarmScheduler(applicationContext).cancelAll()
-                // Same reasoning as the cancellation above, and blocked on rather than merely
-                // launched for the same reason: this used to be set only from AlarmActivity's
-                // lifecycleScope, which can die before it runs. Left stuck true, it doesn't
-                // just risk one bad reboot — BootReceiver treats it as "a ring is still in
-                // progress" forever, and nothing else was ever going to clear it, since a real
-                // dismiss is the only thing that does. A tiny local DataStore write, blocked
-                // on here, is a small one-time cost for never leaving that possible again.
-                runBlocking { SettingsRepository(applicationContext).setAlarmRinging(false) }
-                stopForeground(STOP_FOREGROUND_REMOVE)
-                stopSelf()
+                // Same reasoning as the cancellation above: this used to be set only from
+                // AlarmActivity's lifecycleScope, which can die before it runs, and left stuck
+                // true it doesn't just risk one bad reboot — BootReceiver treats it as "a ring
+                // is still in progress" forever, with nothing else ever going to clear it.
+                //
+                // This used to be `runBlocking` on this same (main) thread so the write was
+                // guaranteed to land before the service could die. That's what caused a real,
+                // on-device ANR: right after boot, with storage under heavy contention from
+                // every other app also starting, the DataStore commit stalled long enough to
+                // trip Android's "executing service" timeout — confirmed via `adb logcat`
+                // ("Timeout executing service" / "ANR in ... AlarmRingingService"), after which
+                // MIUI killed the process mid-dismiss. The kill happened before stopSelf() ever
+                // ran, so START_STICKY resurrected the service with a null Intent — landing
+                // straight in the dawnEndMillis<=0L recovery branch above, which relaunched the
+                // alarm from scratch: a "restart right after I dismissed it" loop, not a bug in
+                // that branch itself. The write still has to land before the service is allowed
+                // to stop — stopSelf() below only runs once it has — it just no longer blocks
+                // the thread the OS is timing.
+                scope.launch {
+                    SettingsRepository(applicationContext).setAlarmRinging(false)
+                    withContext(Dispatchers.Main) {
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                        stopSelf()
+                    }
+                }
             }
         }
         return START_STICKY
@@ -278,9 +301,28 @@ class AlarmRingingService : Service() {
      * from that alone — keep the sound going (it's untouched, still owned by this service)
      * and bring the screen straight back so there's no way to just make the activity
      * disappear without ever scanning.
+     *
+     * The guard below is what keeps this from firing on a *legitimate* dismiss. AlarmActivity
+     * is `singleInstance` and `excludeFromRecents`, so handleDismissed()'s finish() — being
+     * the sole activity in its own task — tears that task down, and this callback fires from
+     * that alone, indistinguishable at the OS level from the user swiping it away unscanned.
+     * Confirmed on a real device: every QR dismiss triggered this, relaunching a brand-new
+     * ring seconds after the one just dismissed, over and over, because ACTION_DISMISS
+     * (delivered separately, asynchronously, via startForegroundService) hadn't necessarily
+     * been processed yet. `dismissRequested` exists specifically so AlarmActivity can record
+     * that here, synchronously, before calling finish() — no dependency on intent delivery
+     * order. It's a *separate* flag from instance-level `dismissed` on purpose: `dismissed`
+     * only becomes true once ACTION_DISMISS has actually been handled below (sound stopped,
+     * scheduler rearmed, ...), and onStartCommand's own guard depends on that specific
+     * meaning — setting it early, before that handling runs, made onStartCommand ignore the
+     * real dismiss command as if it were a stale duplicate, silently leaving the sound running
+     * forever. Confirmed on a real device the morning after that fix shipped: the QR scan
+     * screen closed normally, but the alarm kept ringing and had to be silenced by powering
+     * the phone off.
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
+        if (dismissed || dismissRequested) return
         val relaunch = Intent(this, AlarmActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or
@@ -320,6 +362,17 @@ class AlarmRingingService : Service() {
         @Volatile
         var isActive: Boolean = false
             private set
+
+        /**
+         * True once a real QR scan has begun ending this ring — companion, not instance
+         * state, so [AlarmActivity] can set it directly and synchronously the moment a scan
+         * succeeds, before it does anything else (including finish()). Read only by
+         * onTaskRemoved — see its doc for why this has to be a flag separate from instance-
+         * level `dismissed` rather than reusing it. Reset to false in onCreate() so a new
+         * instance is never mistaken for one that already saw its dismiss.
+         */
+        @Volatile
+        var dismissRequested: Boolean = false
 
         private const val NOTIF_ID = 43
         private const val MISSED_NOTIF_ID = 44

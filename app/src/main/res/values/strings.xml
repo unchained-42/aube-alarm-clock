@@ -72,7 +72,7 @@
     <string name="settings_accountability_suffix">SMS if missed ›</string>
 
     <!-- Accountability contacts -->
-    <string name="accountability_intro">If you don\'t get up, whether the phone is off through the deadline or the alarm just rings for hours with no dismiss, Aube texts these numbers.</string>
+    <string name="accountability_intro">If you don\'t get up, whether the phone is off through the deadline or the alarm just rings for hours with no dismiss, Aube texts one of these numbers. With several contacts, it picks at random and skips whoever was texted last time.</string>
     <string name="accountability_permission_missing">SMS permission required</string>
     <string name="accountability_add_hint">Phone number</string>
     <string name="accountability_pick_contact_button">Choose from contacts</string>

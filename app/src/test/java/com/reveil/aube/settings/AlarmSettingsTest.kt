@@ -96,6 +96,7 @@ class AlarmSettingsTest {
         oneTimeOverrideWindow = oneTimeOverrideWindow,
         emergencyContacts = emptyList(),
         accountabilityMessage = null,
-        targetSleepMinutes = 480
+        targetSleepMinutes = 480,
+        lastNotifiedContact = null
     )
 }

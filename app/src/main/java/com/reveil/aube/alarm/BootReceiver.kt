@@ -38,7 +38,7 @@ class BootReceiver : BroadcastReceiver() {
                     // no-time-left path a safety net takes. This is at least as clear a "didn't
                     // get up" as the missed-window case below, arguably more so (the alarm had
                     // already started), so it gets the same text.
-                    AccountabilityNotifier.notifyMissedWakeup(appContext, settingsRepository.settings.first())
+                    AccountabilityNotifier.notifyMissedWakeup(appContext, settingsRepository, settingsRepository.settings.first())
                     // directLaunch=false: see launchAlarm's doc — a direct startActivity()
                     // this soon after boot lost a focus race against the lock screen's own
                     // window (confirmed via the ANR trace), so this leans on the notification's
@@ -58,7 +58,7 @@ class BootReceiver : BroadcastReceiver() {
                         // reschedule would silently arm tomorrow instead, with today's alarm
                         // never having rung at all. Nothing running on the device could stop
                         // this — so the only consequence left is texting someone who can.
-                        AccountabilityNotifier.notifyMissedWakeup(appContext, settings)
+                        AccountabilityNotifier.notifyMissedWakeup(appContext, settingsRepository, settings)
                         // directLaunch=false: see launchAlarm's doc — a direct startActivity()
                         // this soon after boot lost a focus race against the lock screen's own
                         // window (confirmed via the ANR trace), so this leans on the notification's

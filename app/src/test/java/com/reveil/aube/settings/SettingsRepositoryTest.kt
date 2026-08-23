@@ -106,6 +106,13 @@ class SettingsRepositoryTest {
     }
 
     @Test
+    fun `last notified contact defaults to null and reflects the last write`() = runTest {
+        assertNull(repository.settings.first().lastNotifiedContact)
+        repository.setLastNotifiedContact("+33612345678")
+        assertEquals("+33612345678", repository.settings.first().lastNotifiedContact)
+    }
+
+    @Test
     fun `alarm ringing flag defaults to false and reflects the last write`() = runTest {
         assertFalse(repository.isAlarmRingingUnresolved())
         repository.setAlarmRinging(true)

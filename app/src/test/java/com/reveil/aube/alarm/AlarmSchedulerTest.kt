@@ -50,7 +50,8 @@ class AlarmSchedulerTest {
         oneTimeOverrideWindow = oneTimeOverrideWindow,
         emergencyContacts = emptyList(),
         accountabilityMessage = null,
-        targetSleepMinutes = 480
+        targetSleepMinutes = 480,
+        lastNotifiedContact = null
     )
 
     // --- missedWindowSinceLastHandled ---

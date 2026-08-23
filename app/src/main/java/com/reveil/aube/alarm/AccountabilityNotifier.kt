@@ -11,11 +11,12 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.reveil.aube.R
 import com.reveil.aube.settings.AlarmSettings
+import com.reveil.aube.settings.SettingsRepository
 
 private const val TAG = "AubeAccountability"
 
 /**
- * Texts a "didn't wake up" message to configured contacts — the one consequence that still
+ * Texts a "didn't wake up" message to one configured contact — the one consequence that still
  * applies once the phone is powered off through the deadline. Nothing runs while the device
  * is off, and nothing can force it back on either (see the manufacturer-specific autostart
  * checks in [com.reveil.aube.permissions.PermissionsHelper] for the closest this app gets to
@@ -24,7 +25,18 @@ private const val TAG = "AubeAccountability"
  * every other sensitive permission in this app.
  */
 object AccountabilityNotifier {
-    fun notifyMissedWakeup(context: Context, settings: AlarmSettings) {
+    /**
+     * With one contact configured, that person is texted every time — there's no one else to
+     * rotate to. With several, the last person notified is excluded from the pick so the same
+     * contact isn't the only one who ever finds out, then the rest is random.
+     */
+    internal fun pickRecipient(contacts: List<String>, lastNotified: String?): String {
+        if (contacts.size == 1) return contacts[0]
+        val candidates = contacts.filter { it != lastNotified }.ifEmpty { contacts }
+        return candidates.random()
+    }
+
+    suspend fun notifyMissedWakeup(context: Context, settingsRepository: SettingsRepository, settings: AlarmSettings) {
         Log.i(TAG, "notifyMissedWakeup called, ${settings.emergencyContacts.size} contact(s) configured")
         if (settings.emergencyContacts.isEmpty()) {
             Log.i(TAG, "skipped: no contacts configured")
@@ -59,25 +71,25 @@ object AccountabilityNotifier {
             return
         }
 
-        settings.emergencyContacts.forEachIndexed { index, number ->
-            runCatching {
-                val parts = smsManager.divideMessage(message)
-                val sentIntents = ArrayList<PendingIntent>()
-                for (partIndex in parts.indices) {
-                    sentIntents.add(
-                        PendingIntent.getBroadcast(
-                            context,
-                            index * 100 + partIndex,
-                            Intent(ACTION_SMS_SENT).setPackage(context.packageName),
-                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                        )
+        val recipient = pickRecipient(settings.emergencyContacts, settings.lastNotifiedContact)
+        runCatching {
+            val parts = smsManager.divideMessage(message)
+            val sentIntents = ArrayList<PendingIntent>()
+            for (partIndex in parts.indices) {
+                sentIntents.add(
+                    PendingIntent.getBroadcast(
+                        context,
+                        partIndex,
+                        Intent(ACTION_SMS_SENT).setPackage(context.packageName),
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
-                }
-                Log.i(TAG, "sending ${parts.size} part(s) to contact #$index")
-                smsManager.sendMultipartTextMessage(number, null, parts, sentIntents, null)
-            }.onFailure { e ->
-                Log.e(TAG, "sendMultipartTextMessage threw for contact #$index", e)
+                )
             }
+            Log.i(TAG, "sending ${parts.size} part(s) to selected contact")
+            smsManager.sendMultipartTextMessage(recipient, null, parts, sentIntents, null)
+        }.onFailure { e ->
+            Log.e(TAG, "sendMultipartTextMessage threw", e)
         }
+        settingsRepository.setLastNotifiedContact(recipient)
     }
 }

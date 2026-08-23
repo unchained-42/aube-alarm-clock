@@ -7,7 +7,14 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.net.Uri
 import android.provider.Settings
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.reveil.aube.alarm.AlarmWatchdogWorker
 import com.reveil.aube.settings.LocaleHelper
+import java.util.concurrent.TimeUnit
 
 /** Channel ids referenced across the app. */
 object NotifChannels {
@@ -25,6 +32,46 @@ class AubeApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannels()
+        scheduleAlarmWatchdog()
+    }
+
+    private fun scheduleAlarmWatchdog() {
+        // WorkManager initializes itself via a manifest-merged ContentProvider on a real
+        // device, but that provider never runs under Robolectric's test Application — every
+        // unit test boots this same onCreate(), so a bare call here failed the entire suite
+        // with "WorkManager is not initialized" even though nothing about the app itself was
+        // broken. This is a best-effort background safety net, not core alarm logic (the
+        // exact AlarmManager alarms scheduleNext() itself sets are what actually ring), so
+        // losing it in the one environment that never has a real WorkManager anyway is fine.
+        runCatching {
+            val workManager = WorkManager.getInstance(this)
+
+            // A periodic request's first run only happens after its own interval elapses, not
+            // at enqueue time — on its own this wouldn't catch a broken cycle until up to 6h
+            // later. This one-time request runs the same check immediately instead, on every
+            // process start (not just an explicit app open) — which is what actually closes
+            // the gap: something as ordinary as a notification or a routine broadcast starts
+            // the process far more often than the user opens the app by hand. REPLACE, not
+            // KEEP: once one of these finishes, WorkManager still remembers it as SUCCEEDED
+            // under this name — KEEP would then block every future process start from ever
+            // enqueueing another one, silently turning "runs on every launch" into "ran
+            // exactly once, ever."
+            workManager.enqueueUniqueWork(
+                "alarm_watchdog_immediate",
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequestBuilder<AlarmWatchdogWorker>().build()
+            )
+
+            // KEEP, not REPLACE: this runs on every process start too, and the point is a
+            // stable, always-on cadence — restarting the countdown from zero every time would
+            // defeat that, even though the one-time request above already covers the "right
+            // now" case.
+            workManager.enqueueUniquePeriodicWork(
+                "alarm_watchdog_periodic",
+                ExistingPeriodicWorkPolicy.KEEP,
+                PeriodicWorkRequestBuilder<AlarmWatchdogWorker>(6, TimeUnit.HOURS).build()
+            )
+        }
     }
 
     private fun createNotificationChannels() {

@@ -92,7 +92,14 @@ data class AlarmSettings(
      * half-asleep decision to turn the alarm off or push it later isn't available in the one
      * stretch of time it would actually get used.
      */
-    val targetSleepMinutes: Int
+    val targetSleepMinutes: Int,
+    /**
+     * The phone number [com.reveil.aube.alarm.AccountabilityNotifier] last texted. With a
+     * single contact configured it's texted every time regardless of this value; with several,
+     * it's excluded from the random pick for the next miss so the same person isn't the only
+     * one who ever hears about it.
+     */
+    val lastNotifiedContact: String?
 ) {
     fun windowFor(dayOfWeekIsWeekend: Boolean): WakeWindow =
         if (dayOfWeekIsWeekend && useSeparateWeekend) weekendWindow else weekdayWindow
@@ -128,6 +135,7 @@ private val KEY_RINGING_UNRESOLVED = booleanPreferencesKey("ringing_unresolved")
 private val KEY_EMERGENCY_CONTACTS = stringPreferencesKey("emergency_contacts")
 private val KEY_ACCOUNTABILITY_MESSAGE = stringPreferencesKey("accountability_message")
 private val KEY_TARGET_SLEEP_MINUTES = intPreferencesKey("target_sleep_minutes")
+private val KEY_LAST_NOTIFIED_CONTACT = stringPreferencesKey("last_notified_contact")
 private const val DEFAULT_TARGET_SLEEP_MINUTES = 480 // 8h
 
 // Plain-text field/record separators rather than JSON, to avoid pulling in a serialization
@@ -227,7 +235,8 @@ class SettingsRepository(
             } else null,
             emergencyContacts = decodeContacts(prefs[KEY_EMERGENCY_CONTACTS]),
             accountabilityMessage = prefs[KEY_ACCOUNTABILITY_MESSAGE],
-            targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES
+            targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES,
+            lastNotifiedContact = prefs[KEY_LAST_NOTIFIED_CONTACT]
         )
     }
 
@@ -291,6 +300,10 @@ class SettingsRepository(
 
     suspend fun setTargetSleepMinutes(minutes: Int) {
         dataStore.edit { it[KEY_TARGET_SLEEP_MINUTES] = minutes }
+    }
+
+    suspend fun setLastNotifiedContact(contact: String) {
+        dataStore.edit { it[KEY_LAST_NOTIFIED_CONTACT] = contact }
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {

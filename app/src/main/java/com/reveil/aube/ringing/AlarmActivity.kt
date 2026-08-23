@@ -189,6 +189,17 @@ class AlarmActivity : ComponentActivity() {
     }
 
     private fun handleDismissed() {
+        // Set first, synchronously, before anything else here — including finish() below.
+        // finish() tears down this singleInstance/excludeFromRecents activity's own sole
+        // task, which triggers AlarmRingingService.onTaskRemoved(); that used to race the
+        // ACTION_DISMISS command sent just below (delivered asynchronously, via
+        // startForegroundService) and sometimes win, relaunching a brand-new ring right after
+        // this legitimate one — confirmed on a real device via logcat. A plain static write is
+        // visible to onTaskRemoved the instant it runs, with no intent round-trip to lose the
+        // race against. Deliberately a separate flag from the service's own instance-level
+        // `dismissed` — see onTaskRemoved's doc for why reusing that one silenced the real
+        // dismiss command instead of just the stale ones it was meant to guard against.
+        AlarmRingingService.dismissRequested = true
         // The one legitimate way the service ever stops ringing — see
         // AlarmRingingService.ACTION_DISMISS. This Activity finishing, by any other route,
         // must not be able to do this.

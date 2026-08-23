@@ -72,7 +72,7 @@
     <string name="settings_accountability_suffix">SMS si raté ›</string>
 
     <!-- Accountability contacts -->
-    <string name="accountability_intro">Si l\'échéance passe sans dismiss (téléphone éteint, plus rien à exécuter), Aube envoie un SMS à ces numéros. C\'est la seule conséquence qui reste possible une fois le téléphone éteint.</string>
+    <string name="accountability_intro">Si l\'échéance passe sans dismiss (téléphone éteint, plus rien à exécuter), Aube envoie un SMS à l\'un de ces numéros. S\'il y en a plusieurs, le choix est aléatoire et exclut la personne prévenue la dernière fois. C\'est la seule conséquence qui reste possible une fois le téléphone éteint.</string>
     <string name="accountability_permission_missing">Permission SMS requise</string>
     <string name="accountability_add_hint">Numéro de téléphone</string>
     <string name="accountability_pick_contact_button">Choisir dans les contacts</string>
