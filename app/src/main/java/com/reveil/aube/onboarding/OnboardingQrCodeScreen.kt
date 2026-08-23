@@ -80,6 +80,17 @@ fun OnboardingQrCodeScreen(onContinue: () -> Unit) {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.height(8.dp))
+        // The default code is identical on every install, so its strength as a forcing
+        // function comes entirely from where the printed card ends up, not from the text
+        // being secret — worth saying explicitly here rather than leaving it implied.
+        Text(
+            stringResource(R.string.onboarding_qr_personalize_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(Modifier.height(28.dp))
 
         OutlinedButton(

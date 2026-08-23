@@ -82,6 +82,8 @@
     <string name="accountability_pick_contact_button">Choose from contacts</string>
     <string name="accountability_manual_entry_label">Or type a number by hand</string>
     <string name="accountability_add_button">Add contact</string>
+    <string name="accountability_invalid_number">That doesn\'t look like a valid phone number</string>
+    <string name="accountability_last_send_failed">The last message couldn\'t be delivered. Check the number and the SMS permission.</string>
     <string name="accountability_message_label">Message</string>
     <string name="accountability_message_placeholder">I didn\'t wake up on time.</string>
     <string name="accountability_signature_note">Always ends with: \"%1$s\"</string>
@@ -105,6 +107,7 @@
     <string name="qr_setup_intro">To really get you up, the alarm only stops by scanning this QR code — impossible from bed.</string>
     <string name="qr_setup_print_button">Print the Aube QR code</string>
     <string name="qr_setup_active_default">This QR code is active — stick it far from your bed.</string>
+    <string name="qr_setup_default_hint">It\'s the same code on every install of Aube — scanning your own barcode instead makes it truly yours to defeat.</string>
     <string name="qr_setup_active_custom">A custom QR code is active instead of this one.</string>
     <string name="qr_setup_reset_default">Go back to the default Aube QR code</string>
     <string name="qr_setup_use_other">Use a different QR code</string>
@@ -157,6 +160,7 @@
     <string name="onboarding_qr_headline">How you\'ll really get up</string>
     <string name="onboarding_qr_subtitle">No \"I saw it\" button, no snooze: the alarm only stops by scanning a physical QR code — you need to get up to reach it.</string>
     <string name="onboarding_qr_body">This QR code is already active, with nothing to set up. Print it now and stick it far from your bed — or choose a different QR code later in Settings.</string>
+    <string name="onboarding_qr_personalize_hint">This default code is the same on every install of Aube. For a ritual nothing but you can defeat, swap it for your own barcode later in Settings.</string>
     <string name="onboarding_qr_print_now">Print now</string>
 
     <!-- Onboarding: accountability -->

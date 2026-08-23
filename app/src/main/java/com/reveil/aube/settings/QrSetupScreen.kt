@@ -134,6 +134,14 @@ fun QrSetupScreen(settingsRepository: SettingsRepository, onBack: () -> Unit) {
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (current.usingDefaultQrCode) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        stringResource(R.string.qr_setup_default_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
 
                 if (!current.usingDefaultQrCode) {
                     Spacer(Modifier.height(4.dp))

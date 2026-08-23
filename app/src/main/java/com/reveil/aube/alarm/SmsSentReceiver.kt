@@ -6,6 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.telephony.SmsManager
 import android.util.Log
+import com.reveil.aube.settings.SettingsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private const val TAG = "AubeAccountability"
 const val ACTION_SMS_SENT = "com.reveil.aube.action.SMS_SENT"
@@ -19,6 +23,7 @@ const val ACTION_SMS_SENT = "com.reveil.aube.action.SMS_SENT"
  */
 class SmsSentReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        val succeeded = resultCode == Activity.RESULT_OK
         val reason = when (resultCode) {
             Activity.RESULT_OK -> "sent"
             SmsManager.RESULT_ERROR_GENERIC_FAILURE -> "generic failure"
@@ -32,5 +37,20 @@ class SmsSentReceiver : BroadcastReceiver() {
             else -> "unknown error code $resultCode"
         }
         Log.i(TAG, "SMS part result: $reason")
+
+        // Persisted (not just logged) so a silently-failing number is visible in
+        // AccountabilityContactsScreen the next time it's opened, instead of only in a log
+        // nobody but a developer would ever read. goAsync()'d for the same reason BootReceiver
+        // uses it: this manifest-registered receiver's process can be torn down before the
+        // DataStore write actually lands otherwise.
+        val appContext = context.applicationContext
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SettingsRepository(appContext).setLastNotificationSucceeded(succeeded)
+            } finally {
+                pendingResult.finish()
+            }
+        }
     }
 }

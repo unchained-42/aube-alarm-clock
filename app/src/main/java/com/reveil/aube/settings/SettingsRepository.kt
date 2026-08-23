@@ -113,7 +113,17 @@ data class AlarmSettings(
      * it's excluded from the random pick for the next miss so the same person isn't the only
      * one who ever hears about it.
      */
-    val lastNotifiedContact: String?
+    val lastNotifiedContact: String?,
+    /**
+     * Null until the first send attempt ever completes. After that, whether the most recent
+     * one actually reached the carrier — see [com.reveil.aube.alarm.SmsSentReceiver], the only
+     * place that can observe this, since [android.telephony.SmsManager] reports it
+     * asynchronously rather than through a return value at the call site. Surfaced in
+     * [com.reveil.aube.settings.AccountabilityContactsScreen] so a silently-failing number
+     * (typo, carrier block, MIUI's hidden SMS app-ops toggle) doesn't stay invisible until the
+     * one morning it would have mattered.
+     */
+    val lastNotificationSucceeded: Boolean? = null
 ) {
     fun windowFor(dayOfWeekIsWeekend: Boolean): WakeWindow =
         if (dayOfWeekIsWeekend && useSeparateWeekend) weekendWindow else weekdayWindow
@@ -150,6 +160,7 @@ private val KEY_EMERGENCY_CONTACTS = stringPreferencesKey("emergency_contacts")
 private val KEY_ACCOUNTABILITY_MESSAGE = stringPreferencesKey("accountability_message")
 private val KEY_TARGET_SLEEP_MINUTES = intPreferencesKey("target_sleep_minutes")
 private val KEY_LAST_NOTIFIED_CONTACT = stringPreferencesKey("last_notified_contact")
+private val KEY_LAST_NOTIFICATION_SUCCEEDED = booleanPreferencesKey("last_notification_succeeded")
 private const val DEFAULT_TARGET_SLEEP_MINUTES = 480 // 8h
 
 // Plain-text field/record separators rather than JSON, to avoid pulling in a serialization
@@ -260,7 +271,8 @@ class SettingsRepository(
             emergencyContacts = decodeContacts(accPrefs[KEY_EMERGENCY_CONTACTS]),
             accountabilityMessage = accPrefs[KEY_ACCOUNTABILITY_MESSAGE],
             targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES,
-            lastNotifiedContact = accPrefs[KEY_LAST_NOTIFIED_CONTACT]
+            lastNotifiedContact = accPrefs[KEY_LAST_NOTIFIED_CONTACT],
+            lastNotificationSucceeded = accPrefs[KEY_LAST_NOTIFICATION_SUCCEEDED]
         )
     }
 
@@ -328,6 +340,17 @@ class SettingsRepository(
 
     suspend fun setLastNotifiedContact(contact: String) {
         accountabilityDataStore.edit { it[KEY_LAST_NOTIFIED_CONTACT] = contact }
+    }
+
+    /**
+     * Called from [com.reveil.aube.alarm.SmsSentReceiver] once the carrier actually responds —
+     * see [AlarmSettings.lastNotificationSucceeded]'s doc. A multipart message reports one
+     * result per part; the last part to respond wins, which is enough to answer the question
+     * this exists for ("is the current number/setup actually working") without tracking each
+     * part's outcome individually.
+     */
+    suspend fun setLastNotificationSucceeded(succeeded: Boolean) {
+        accountabilityDataStore.edit { it[KEY_LAST_NOTIFICATION_SUCCEEDED] = succeeded }
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {

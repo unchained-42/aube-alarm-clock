@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,15 @@ fun BarcodeCameraView(modifier: Modifier = Modifier, onBarcodeDetected: (String)
         if (!hasCameraPermission) permissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
+    // Owned by this composable's lifetime, not the AndroidView factory call, so it can be shut
+    // down exactly once when this screen leaves composition instead of leaking a thread on
+    // every recomposition that re-runs the factory (e.g. a "wrong code" retry that briefly
+    // hides and re-shows this view) — the factory itself has no matching teardown callback.
+    val analysisExecutor = remember { Executors.newSingleThreadExecutor() }
+    DisposableEffect(Unit) {
+        onDispose { analysisExecutor.shutdown() }
+    }
+
     if (hasCameraPermission) {
         Box(modifier = modifier) {
             AndroidView(
@@ -68,8 +78,7 @@ fun BarcodeCameraView(modifier: Modifier = Modifier, onBarcodeDetected: (String)
                         val analysis = ImageAnalysis.Builder()
                             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                             .build()
-                        val executor = Executors.newSingleThreadExecutor()
-                        analysis.setAnalyzer(executor, ZXingCodeAnalyzer(onBarcodeDetected))
+                        analysis.setAnalyzer(analysisExecutor, ZXingCodeAnalyzer(onBarcodeDetected))
                         try {
                             cameraProvider.unbindAll()
                             val camera = cameraProvider.bindToLifecycle(

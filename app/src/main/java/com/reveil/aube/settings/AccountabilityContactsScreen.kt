@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.ContactsContract
+import android.telephony.PhoneNumberUtils
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -95,6 +98,7 @@ fun AccountabilityContactsScreen(
     }
 
     var newNumber by remember { mutableStateOf("") }
+    var newNumberError by remember { mutableStateOf(false) }
     var messageText by remember(current.accountabilityMessage) {
         mutableStateOf(current.accountabilityMessage ?: "")
     }
@@ -123,6 +127,22 @@ fun AccountabilityContactsScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(Modifier.height(20.dp))
+
+            // Only the async SmsManager callback (routed through SmsSentReceiver, since a send
+            // failure never throws at the call site) can ever know this — surfaced here so a
+            // silently-failing number doesn't stay invisible until the one morning it mattered.
+            if (current.lastNotificationSucceeded == false) {
+                Text(
+                    stringResource(R.string.accountability_last_send_failed),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.errorContainer, RoundedCornerShape(8.dp))
+                        .padding(12.dp)
+                )
+                Spacer(Modifier.height(20.dp))
+            }
 
             if (!hasSmsPermission) {
                 Row(
@@ -189,24 +209,45 @@ fun AccountabilityContactsScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
                     value = newNumber,
-                    onValueChange = { newNumber = it },
+                    onValueChange = {
+                        newNumber = it
+                        newNumberError = false
+                    },
                     placeholder = { Text(stringResource(R.string.accountability_add_hint)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     singleLine = true,
+                    isError = newNumberError,
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(Modifier.width(8.dp))
                 OutlinedButton(onClick = {
                     val trimmed = newNumber.trim()
-                    if (trimmed.isNotEmpty() && trimmed !in current.emergencyContacts) {
-                        scope.launch { settingsRepository.setEmergencyContacts(current.emergencyContacts + trimmed) }
+                    when {
+                        trimmed.isEmpty() -> Unit
+                        trimmed in current.emergencyContacts -> newNumber = ""
+                        // Only catches structurally invalid input (letters, punctuation-only
+                        // strings, ...) — the point is to stop the SMS from silently going
+                        // nowhere on a clear typo, not to validate that the number is actually
+                        // reachable, which no on-device check can know anyway.
+                        !PhoneNumberUtils.isWellFormedSmsAddress(trimmed) -> newNumberError = true
+                        else -> {
+                            scope.launch { settingsRepository.setEmergencyContacts(current.emergencyContacts + trimmed) }
+                            newNumber = ""
+                        }
                     }
-                    newNumber = ""
                 }) {
                     Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.width(18.dp))
                     Spacer(Modifier.width(4.dp))
                     Text(stringResource(R.string.accountability_add_button))
                 }
+            }
+            if (newNumberError) {
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    stringResource(R.string.accountability_invalid_number),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
 
             Spacer(Modifier.height(28.dp))

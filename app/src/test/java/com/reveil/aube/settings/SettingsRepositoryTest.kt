@@ -146,6 +146,15 @@ class SettingsRepositoryTest {
     }
 
     @Test
+    fun `last notification result defaults to null and reflects the last write`() = runTest {
+        assertNull(repository.settings.first().lastNotificationSucceeded)
+        repository.setLastNotificationSucceeded(false)
+        assertEquals(false, repository.settings.first().lastNotificationSucceeded)
+        repository.setLastNotificationSucceeded(true)
+        assertEquals(true, repository.settings.first().lastNotificationSucceeded)
+    }
+
+    @Test
     fun `alarm ringing flag defaults to false and reflects the last write`() = runTest {
         assertFalse(repository.isAlarmRingingUnresolved())
         repository.setAlarmRinging(true)
