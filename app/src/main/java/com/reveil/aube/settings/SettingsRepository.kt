@@ -1,6 +1,7 @@
 package com.reveil.aube.settings
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -11,12 +12,25 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.reveil.aube.R
 import com.reveil.aube.qr.DEFAULT_QR_PAYLOAD
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.util.UUID
 
+private const val TAG = "AubeSettings"
+
 private val Context.dataStore by preferencesDataStore(name = "aube_settings")
+
+/**
+ * Deliberately a separate DataStore file from the main one above, not just separate keys
+ * within it — Android's backup rules (see res/xml/data_extraction_rules.xml and
+ * backup_rules.xml) can only exclude whole files from cloud backup/device transfer, not
+ * individual keys. Emergency contact phone numbers and the accountability message are the
+ * one piece of real PII this app stores; everything else here (wake windows, dawn duration,
+ * reminders...) is harmless to back up and worth keeping backed up for a smooth device
+ * migration.
+ */
+private val Context.accountabilityDataStore by preferencesDataStore(name = "aube_accountability")
 
 /**
  * Wake window expressed in minutes-from-midnight. [earliest] is the earliest the alarm may
@@ -159,12 +173,20 @@ private fun encodeReminders(reminders: List<CustomReminder>): String =
 
 private fun decodeReminders(raw: String?, context: Context): List<CustomReminder> {
     if (raw.isNullOrEmpty()) return defaultReminders(context)
-    return raw.split(RECORD_SEP).mapNotNull { record ->
+    val records = raw.split(RECORD_SEP)
+    val decoded = records.mapNotNull { record ->
         val parts = record.split(FIELD_SEP)
         if (parts.size != 4) return@mapNotNull null
         val delay = parts[2].toIntOrNull() ?: return@mapNotNull null
         CustomReminder(id = parts[0], enabled = parts[1].toBoolean(), delayMinutes = delay, message = parts[3])
     }
+    // A record that fails to parse is silently dropped by mapNotNull above — logging here is
+    // the only way a corrupted store (a stray delimiter character, a truncated write) would
+    // ever be visible in a bug report instead of just quietly losing a reminder.
+    if (decoded.size < records.size) {
+        Log.w(TAG, "decodeReminders: dropped ${records.size - decoded.size} malformed record(s)")
+    }
+    return decoded
 }
 
 private fun encodeContacts(contacts: List<String>): String = contacts.joinToString(RECORD_SEP.toString())
@@ -198,10 +220,12 @@ class SettingsRepository(
     // single JVM-wide delegate (the first Context to touch it wins, for every Context after
     // that, regardless of which one asked), so without this seam, state written by one test
     // leaks into whichever test happens to run next in the same JVM.
-    private val dataStore: DataStore<Preferences> = context.dataStore
+    private val dataStore: DataStore<Preferences> = context.dataStore,
+    // Same seam, same reason, for the separate accountability-data file — see its property doc.
+    private val accountabilityDataStore: DataStore<Preferences> = context.accountabilityDataStore
 ) {
 
-    val settings: Flow<AlarmSettings> = dataStore.data.map { prefs ->
+    val settings: Flow<AlarmSettings> = combine(dataStore.data, accountabilityDataStore.data) { prefs, accPrefs ->
         AlarmSettings(
             // Defaults to off: a fresh install shouldn't silently schedule an alarm before
             // the reliability checks (exact alarms, battery, MIUI autostart...) are done.
@@ -233,10 +257,10 @@ class SettingsRepository(
                 // was written before that pin existed.
                 sanitizeWindow(WakeWindow(prefs[KEY_OVERRIDE_EARLIEST]!!, prefs[KEY_OVERRIDE_LATEST]!!))
             } else null,
-            emergencyContacts = decodeContacts(prefs[KEY_EMERGENCY_CONTACTS]),
-            accountabilityMessage = prefs[KEY_ACCOUNTABILITY_MESSAGE],
+            emergencyContacts = decodeContacts(accPrefs[KEY_EMERGENCY_CONTACTS]),
+            accountabilityMessage = accPrefs[KEY_ACCOUNTABILITY_MESSAGE],
             targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES,
-            lastNotifiedContact = prefs[KEY_LAST_NOTIFIED_CONTACT]
+            lastNotifiedContact = accPrefs[KEY_LAST_NOTIFIED_CONTACT]
         )
     }
 
@@ -291,11 +315,11 @@ class SettingsRepository(
     }
 
     suspend fun setEmergencyContacts(contacts: List<String>) {
-        dataStore.edit { it[KEY_EMERGENCY_CONTACTS] = encodeContacts(contacts) }
+        accountabilityDataStore.edit { it[KEY_EMERGENCY_CONTACTS] = encodeContacts(contacts) }
     }
 
     suspend fun setAccountabilityMessage(message: String) {
-        dataStore.edit { it[KEY_ACCOUNTABILITY_MESSAGE] = message }
+        accountabilityDataStore.edit { it[KEY_ACCOUNTABILITY_MESSAGE] = message }
     }
 
     suspend fun setTargetSleepMinutes(minutes: Int) {
@@ -303,7 +327,7 @@ class SettingsRepository(
     }
 
     suspend fun setLastNotifiedContact(contact: String) {
-        dataStore.edit { it[KEY_LAST_NOTIFIED_CONTACT] = contact }
+        accountabilityDataStore.edit { it[KEY_LAST_NOTIFIED_CONTACT] = contact }
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {
@@ -339,7 +363,34 @@ class SettingsRepository(
     }
 
     suspend fun isAlarmRingingUnresolved(): Boolean =
-        dataStore.data.map { it[KEY_RINGING_UNRESOLVED] ?: false }.first()
+        dataStore.data.first()[KEY_RINGING_UNRESOLVED] ?: false
+
+    /**
+     * One-time move of emergency-contact data from the main (backed-up) store to the
+     * accountability-only (excluded-from-backup) one — see [accountabilityDataStore]'s doc for
+     * why they're split. Self-limiting rather than flag-gated: once the old keys are removed
+     * below, [hasOldData] is false on every future call, so this is a no-op after the first
+     * successful run. Safe to call on every app start.
+     */
+    suspend fun migrateAccountabilityDataIfNeeded() {
+        val old = dataStore.data.first()
+        val hasOldData = old[KEY_EMERGENCY_CONTACTS] != null ||
+            old[KEY_ACCOUNTABILITY_MESSAGE] != null ||
+            old[KEY_LAST_NOTIFIED_CONTACT] != null
+        if (!hasOldData) return
+
+        accountabilityDataStore.edit { new ->
+            old[KEY_EMERGENCY_CONTACTS]?.let { new[KEY_EMERGENCY_CONTACTS] = it }
+            old[KEY_ACCOUNTABILITY_MESSAGE]?.let { new[KEY_ACCOUNTABILITY_MESSAGE] = it }
+            old[KEY_LAST_NOTIFIED_CONTACT]?.let { new[KEY_LAST_NOTIFIED_CONTACT] = it }
+        }
+        dataStore.edit {
+            it.remove(KEY_EMERGENCY_CONTACTS)
+            it.remove(KEY_ACCOUNTABILITY_MESSAGE)
+            it.remove(KEY_LAST_NOTIFIED_CONTACT)
+        }
+        Log.i(TAG, "migrateAccountabilityDataIfNeeded: moved accountability data to its own store")
+    }
 
     companion object {
         fun newReminderId(): String = UUID.randomUUID().toString()

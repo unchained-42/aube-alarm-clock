@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.Typeface
 import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -29,6 +30,8 @@ import com.reveil.aube.R
  * Activity/Fragment providing one for a raw WindowManager-added view. Not worth the
  * complexity for a screen this simple.
  */
+private const val TAG = "AubeAlarmOverlay"
+
 class AlarmOverlayController(private val context: Context) {
     private val windowManager = context.getSystemService(WindowManager::class.java)
     private var overlayView: View? = null
@@ -78,8 +81,12 @@ class AlarmOverlayController(private val context: Context) {
         try {
             windowManager.addView(root, params)
             overlayView = root
-        } catch (_: Exception) {
-            // Permission revoked mid-flight, or an OEM restriction — never fatal.
+        } catch (e: Exception) {
+            // Permission revoked mid-flight, or an OEM restriction — never fatal, but worth a
+            // log: this is the fallback screen for "the user navigated away from the real
+            // alarm activity", so silently failing here means nothing at all blocks the way
+            // back to the launcher/recents on that device.
+            Log.w(TAG, "failed to add ringing overlay window", e)
         }
     }
 

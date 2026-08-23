@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">Aube-Wecker klingelt</string>
     <string name="notif_channel_routine_name">Morgenroutine</string>
     <string name="notif_channel_routine_desc">Erinnerungen an Wasser, Licht und Frühstück nach dem Aufwachen</string>
-    <string name="fgs_special_use_subtype">Bewegungserkennung im Schlaf für einen intelligenten Wecker</string>
 
     <!-- Common -->
     <string name="cd_back">Zurück</string>

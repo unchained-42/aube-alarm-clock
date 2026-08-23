@@ -2,6 +2,7 @@ package com.reveil.aube.ringing
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -30,6 +31,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.reveil.aube.R
 import java.util.concurrent.Executors
+
+private const val TAG = "AubeBarcodeCameraView"
 
 /** Live camera preview that reports every decoded barcode's raw payload as it finds one. */
 @Composable
@@ -80,8 +83,12 @@ fun BarcodeCameraView(modifier: Modifier = Modifier, onBarcodeDetected: (String)
                             if (camera.cameraInfo.hasFlashUnit()) {
                                 camera.cameraControl.enableTorch(true)
                             }
-                        } catch (_: Exception) {
+                        } catch (e: Exception) {
                             // Camera unavailable on this device/state — caller should offer a fallback.
+                            // Logged so a device where the scan screen consistently can't bind the
+                            // camera is diagnosable, since the user-visible symptom (a blank/frozen
+                            // preview) gives no clue why on its own.
+                            Log.w(TAG, "camera bind/torch failed", e)
                         }
                     }, ContextCompat.getMainExecutor(ctx))
                     previewView

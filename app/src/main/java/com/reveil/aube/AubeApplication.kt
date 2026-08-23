@@ -14,7 +14,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.reveil.aube.alarm.AlarmWatchdogWorker
 import com.reveil.aube.settings.LocaleHelper
+import com.reveil.aube.settings.SettingsRepository
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /** Channel ids referenced across the app. */
 object NotifChannels {
@@ -33,6 +37,19 @@ class AubeApplication : Application() {
         super.onCreate()
         createNotificationChannels()
         scheduleAlarmWatchdog()
+        migrateAccountabilityData()
+    }
+
+    /**
+     * Best-effort, fire-and-forget — same reasoning as [scheduleAlarmWatchdog]: this only ever
+     * moves data for an install that had accountability contacts configured before the storage
+     * split (see [SettingsRepository.accountabilityDataStore]'s doc), so losing one run on a
+     * process that dies early just means it retries on the next start with nothing lost.
+     */
+    private fun migrateAccountabilityData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching { SettingsRepository(applicationContext).migrateAccountabilityDataIfNeeded() }
+        }
     }
 
     private fun scheduleAlarmWatchdog() {

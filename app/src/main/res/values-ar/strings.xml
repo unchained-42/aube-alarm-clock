@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">منبه Aube يرن</string>
     <string name="notif_channel_routine_name">روتين الصباح</string>
     <string name="notif_channel_routine_desc">تذكيرات بالماء والضوء والإفطار بعد الاستيقاظ</string>
-    <string name="fgs_special_use_subtype">تتبع الحركة أثناء النوم من أجل منبه ذكي</string>
 
     <!-- Common -->
     <string name="cd_back">رجوع</string>

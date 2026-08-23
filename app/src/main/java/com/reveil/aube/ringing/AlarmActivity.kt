@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -47,6 +48,8 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+private const val TAG = "AubeAlarmActivity"
+
 class AlarmActivity : ComponentActivity() {
 
     private lateinit var settingsRepository: SettingsRepository
@@ -81,8 +84,11 @@ class AlarmActivity : ComponentActivity() {
         // "swipe it away" path. Released only in handleDismissed(), on a real scan.
         try {
             startLockTask()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             // Best-effort hardening — must never be the reason the alarm screen fails to show.
+            // Logged (not silent) so a device/OEM where this consistently fails is diagnosable
+            // from a bug report instead of just quietly losing the pinning protection.
+            Log.w(TAG, "startLockTask failed, continuing without screen pinning", e)
         }
 
         setContent {

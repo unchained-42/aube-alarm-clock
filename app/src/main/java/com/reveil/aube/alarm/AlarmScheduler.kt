@@ -5,6 +5,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.reveil.aube.NotifChannels
+import com.reveil.aube.R
+import com.reveil.aube.permissions.PermissionsHelper
 import com.reveil.aube.settings.AlarmSettings
 import java.time.DayOfWeek
 import java.time.ZonedDateTime
@@ -117,12 +122,41 @@ class AlarmScheduler(private val context: Context) {
 
     private fun setExact(triggerAtMillis: Long, pendingIntent: PendingIntent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
-            // Falls back to an inexact alarm rather than crashing; the UI should be
-            // steering the user to grant exact-alarm permission before this happens.
+            // Falls back to an inexact alarm rather than crashing. The UI gates turning the
+            // alarm on in the first place on this same permission (missingBlockingChecks), so
+            // reaching this branch means it was granted at enable time and got revoked later —
+            // Android allows toggling it anytime, with no callback to this app when it happens.
+            // Silently degrading an alarm app's timing guarantee isn't safe to leave unnoticed,
+            // so this surfaces it instead of only logging it.
             alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+            notifyExactAlarmDegraded()
             return
         }
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+    }
+
+    /**
+     * setOnlyAlertOnce means a second scheduleNext() while still revoked (the very next day,
+     * say) silently updates the same notification instead of re-alerting — seen once is enough
+     * until the user actually deals with it, same idiom as [com.reveil.aube.ringing.launchAlarm].
+     */
+    private fun notifyExactAlarmDegraded() {
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return
+        val pendingIntent = PendingIntent.getActivity(
+            context, REQUEST_CODE_EXACT_ALARM_SETTINGS,
+            PermissionsHelper.exactAlarmSettingsIntent(context),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val notification = NotificationCompat.Builder(context, NotifChannels.ROUTINE)
+            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setContentTitle(context.getString(R.string.notif_exact_alarm_degraded_title))
+            .setContentText(context.getString(R.string.notif_exact_alarm_degraded_text))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_exact_alarm_degraded_text)))
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+            .build()
+        NotificationManagerCompat.from(context).notify(NOTIF_ID_EXACT_ALARM_DEGRADED, notification)
     }
 
     private fun trackingPendingIntent(earliestMillis: Long, latestMillis: Long, dawnDurationMinutes: Int): PendingIntent {
@@ -153,5 +187,7 @@ class AlarmScheduler(private val context: Context) {
     companion object {
         private const val REQUEST_CODE_TRACKING = 1001
         private const val REQUEST_CODE_SAFETY_NET = 1002
+        private const val REQUEST_CODE_EXACT_ALARM_SETTINGS = 1003
+        private const val NOTIF_ID_EXACT_ALARM_DEGRADED = 45
     }
 }

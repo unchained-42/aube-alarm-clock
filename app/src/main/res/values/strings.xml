@@ -6,7 +6,11 @@
     <string name="notif_channel_alarm_desc">Aube alarm ringing</string>
     <string name="notif_channel_routine_name">Morning routine</string>
     <string name="notif_channel_routine_desc">Water, light and breakfast reminders after waking up</string>
-    <string name="fgs_special_use_subtype">Movement tracking during sleep for a smart alarm</string>
+    <!-- Read by Android at the platform level for the foreground-service special-use policy
+         declaration, never shown to users — must not vary by locale, or the manifest's
+         resource reference becomes ambiguous ("varies by configuration") and fails a release
+         build's lint. -->
+    <string name="fgs_special_use_subtype" translatable="false">Movement tracking during sleep for a smart alarm</string>
 
     <!-- Common -->
     <string name="cd_back">Back</string>
@@ -193,6 +197,8 @@
     <string name="notif_missed_text">The alarm stopped on its own without a scan — you might not have been there.</string>
     <string name="notif_tracking_title">Aube is monitoring your sleep</string>
     <string name="notif_tracking_text">A gentle wake-up planned between now and the latest time</string>
+    <string name="notif_exact_alarm_degraded_title">Alarm reliability reduced</string>
+    <string name="notif_exact_alarm_degraded_text">Exact-alarm permission was revoked, so tomorrow\'s alarm is no longer guaranteed to ring at the exact minute. Tap to fix it.</string>
 
     <!-- Overlay -->
     <string name="overlay_still_ringing_title">The alarm is still ringing</string>

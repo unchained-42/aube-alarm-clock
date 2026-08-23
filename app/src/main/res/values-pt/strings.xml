@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">O alarme do Aube está tocando</string>
     <string name="notif_channel_routine_name">Rotina matinal</string>
     <string name="notif_channel_routine_desc">Lembretes de água, luz e café da manhã após acordar</string>
-    <string name="fgs_special_use_subtype">Monitoramento de movimento durante o sono para um alarme inteligente</string>
 
     <!-- Common -->
     <string name="cd_back">Voltar</string>

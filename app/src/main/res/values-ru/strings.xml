@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">Звонит будильник Aube</string>
     <string name="notif_channel_routine_name">Утренний ритуал</string>
     <string name="notif_channel_routine_desc">Напоминания о воде, свете и завтраке после пробуждения</string>
-    <string name="fgs_special_use_subtype">Отслеживание движений во сне для умного будильника</string>
 
     <!-- Common -->
     <string name="cd_back">Назад</string>

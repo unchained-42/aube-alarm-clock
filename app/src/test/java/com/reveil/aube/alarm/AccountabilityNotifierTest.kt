@@ -39,7 +39,10 @@ class AccountabilityNotifierTest {
     private val testDataStore = PreferenceDataStoreFactory.create(
         produceFile = { File.createTempFile("test_settings_${UUID.randomUUID()}", ".preferences_pb") }
     )
-    private val repository = SettingsRepository(context, testDataStore)
+    private val testAccountabilityDataStore = PreferenceDataStoreFactory.create(
+        produceFile = { File.createTempFile("test_accountability_${UUID.randomUUID()}", ".preferences_pb") }
+    )
+    private val repository = SettingsRepository(context, testDataStore, testAccountabilityDataStore)
 
     private fun settings(contacts: List<String>, message: String? = null, lastNotifiedContact: String? = null) = AlarmSettings(
         alarmEnabled = true,

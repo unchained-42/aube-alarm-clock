@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">Aube अलार्म बज रहा है</string>
     <string name="notif_channel_routine_name">सुबह की दिनचर्या</string>
     <string name="notif_channel_routine_desc">जागने के बाद पानी, रोशनी और नाश्ते के रिमाइंडर</string>
-    <string name="fgs_special_use_subtype">स्मार्ट अलार्म के लिए नींद के दौरान हलचल ट्रैकिंग</string>
 
     <!-- Common -->
     <string name="cd_back">वापस</string>

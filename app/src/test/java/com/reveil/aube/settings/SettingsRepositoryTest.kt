@@ -1,6 +1,8 @@
 package com.reveil.aube.settings
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.test.core.app.ApplicationProvider
 import java.io.File
 import java.time.LocalDate
@@ -35,7 +37,10 @@ class SettingsRepositoryTest {
     private val testDataStore = PreferenceDataStoreFactory.create(
         produceFile = { File.createTempFile("test_settings_${UUID.randomUUID()}", ".preferences_pb") }
     )
-    private val repository = SettingsRepository(context, testDataStore)
+    private val testAccountabilityDataStore = PreferenceDataStoreFactory.create(
+        produceFile = { File.createTempFile("test_accountability_${UUID.randomUUID()}", ".preferences_pb") }
+    )
+    private val repository = SettingsRepository(context, testDataStore, testAccountabilityDataStore)
 
     @Test
     fun `defaults come back sane on a fresh install`() = runTest {
@@ -110,6 +115,34 @@ class SettingsRepositoryTest {
         assertNull(repository.settings.first().lastNotifiedContact)
         repository.setLastNotifiedContact("+33612345678")
         assertEquals("+33612345678", repository.settings.first().lastNotifiedContact)
+    }
+
+    @Test
+    fun `migrateAccountabilityDataIfNeeded moves old data into the separate store and clears it from the main one`() = runTest {
+        // Simulates a pre-migration install: accountability data written into the main
+        // (backed-up) store under its raw key name, as every version before this one did.
+        testDataStore.edit { it[stringPreferencesKey("emergency_contacts")] = "+33612345678" }
+        testDataStore.edit { it[stringPreferencesKey("accountability_message")] = "Reveille-toi" }
+        testDataStore.edit { it[stringPreferencesKey("last_notified_contact")] = "+33612345678" }
+
+        repository.migrateAccountabilityDataIfNeeded()
+
+        val settings = repository.settings.first()
+        assertEquals(listOf("+33612345678"), settings.emergencyContacts)
+        assertEquals("Reveille-toi", settings.accountabilityMessage)
+        assertEquals("+33612345678", settings.lastNotifiedContact)
+        // The old copy must actually be gone, not just shadowed, so a future read of the main
+        // store alone (or a real cloud restore of just that file) can't resurrect stale data.
+        assertNull(testDataStore.data.first()[stringPreferencesKey("emergency_contacts")])
+    }
+
+    @Test
+    fun `migrateAccountabilityDataIfNeeded is a no-op when there is nothing to migrate`() = runTest {
+        repository.setEmergencyContacts(listOf("+33612345678"))
+
+        repository.migrateAccountabilityDataIfNeeded()
+
+        assertEquals(listOf("+33612345678"), repository.settings.first().emergencyContacts)
     }
 
     @Test

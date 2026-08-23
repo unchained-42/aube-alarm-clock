@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">Aubeアラームが鳴っています</string>
     <string name="notif_channel_routine_name">朝のルーティン</string>
     <string name="notif_channel_routine_desc">起床後の水分補給・光・朝食のリマインダー</string>
-    <string name="fgs_special_use_subtype">スマートアラームのための睡眠中の動きの検知</string>
 
     <!-- Common -->
     <string name="cd_back">戻る</string>

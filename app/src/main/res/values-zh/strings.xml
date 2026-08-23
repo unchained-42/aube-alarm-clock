@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">Aube 闹钟正在响</string>
     <string name="notif_channel_routine_name">晨间流程</string>
     <string name="notif_channel_routine_desc">起床后的喝水、光照和早餐提醒</string>
-    <string name="fgs_special_use_subtype">睡眠期间的运动监测，用于智能闹钟</string>
 
     <!-- Common -->
     <string name="cd_back">返回</string>

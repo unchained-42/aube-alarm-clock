@@ -6,7 +6,6 @@
     <string name="notif_channel_alarm_desc">Sonnerie du réveil Aube</string>
     <string name="notif_channel_routine_name">Routine du matin</string>
     <string name="notif_channel_routine_desc">Rappels eau, lumière et petit-déjeuner après le réveil</string>
-    <string name="fgs_special_use_subtype">Suivi du mouvement pendant le sommeil pour un réveil intelligent</string>
 
     <!-- Common -->
     <string name="cd_back">Retour</string>

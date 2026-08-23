@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Pre-API-31 equivalent of data_extraction_rules.xml (android:fullBackupContent) — same
+    exclusion, for the old Auto Backup / adb backup mechanism on API 23-30.
+-->
+<full-backup-content>
+    <exclude domain="file" path="datastore/aube_accountability.preferences_pb" />
+</full-backup-content>
