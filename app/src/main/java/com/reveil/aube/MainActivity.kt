@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.reveil.aube.onboarding.OnboardingChargeReminderScreen
 import com.reveil.aube.onboarding.OnboardingQrCodeScreen
 import com.reveil.aube.onboarding.OnboardingReliabilityScreen
 import com.reveil.aube.onboarding.OnboardingSleepDurationScreen
@@ -94,6 +95,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("onboarding_sleep_duration") {
                             OnboardingSleepDurationScreen(
+                                settingsRepository = settingsRepository,
+                                onContinue = { navController.navigate("onboarding_charge_reminder") }
+                            )
+                        }
+                        composable("onboarding_charge_reminder") {
+                            OnboardingChargeReminderScreen(
                                 settingsRepository = settingsRepository,
                                 onContinue = { navController.navigate("onboarding_qr_code") }
                             )

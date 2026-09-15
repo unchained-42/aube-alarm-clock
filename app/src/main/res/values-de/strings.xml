@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">Akku bei %1$s %%. Der Wecker stirbt mit dem Akku — es piept weiter, bis das Telefon lädt.</string>
     <string name="charge_notif_text_night">Das Weckertelefon muss über Nacht laden. Es piept weiter, bis es angeschlossen ist.</string>
     <string name="charge_chirp_text">Telefon anschließen, um das zu beenden.</string>
+    <string name="onboarding_charge_headline">Wann sollen wir dich ans Anschließen erinnern?</string>
+    <string name="onboarding_charge_subtitle">Der Wecker stirbt mit dem Akku. Ab dieser Uhrzeit piept das Telefon alle paar Minuten, bis es lädt.</string>
+    <string name="onboarding_charge_tap_to_change">Uhrzeit antippen zum Ändern</string>
+    <string name="onboarding_charge_body">Wähle einen Moment, in dem du noch wach bist. In deinem Schlaffenster piept nie etwas — egal wie voll der Akku ist.</string>
+    <string name="onboarding_charge_skip">Keine Erinnerung</string>
+    <string name="settings_charge_reminder_label">Anschluss-Erinnerung</string>
+    <string name="settings_charge_reminder_at">Ab %1$s bis zum Anschließen ›</string>
+    <string name="settings_charge_reminder_off">Aus — nur ein niedriger Akku piept</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Exakte Alarme</string>

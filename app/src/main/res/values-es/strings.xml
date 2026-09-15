@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">Batería al %1$s %%. La alarma muere con la batería — seguirá sonando hasta que el teléfono cargue.</string>
     <string name="charge_notif_text_night">El teléfono de la alarma debe estar cargando durante la noche. Seguirá sonando hasta que esté enchufado.</string>
     <string name="charge_chirp_text">Enchufa el teléfono para detener esto.</string>
+    <string name="onboarding_charge_headline">¿A qué hora te recordamos enchufarlo?</string>
+    <string name="onboarding_charge_subtitle">La alarma muere con la batería. A partir de esta hora, si el teléfono no está cargando, sonará cada pocos minutos hasta que lo esté.</string>
+    <string name="onboarding_charge_tap_to_change">Toca la hora para cambiarla</string>
+    <string name="onboarding_charge_body">Elige un momento en que aún estés despierto. Dentro de tu ventana de sueño nunca suena nada — sea cual sea la batería.</string>
+    <string name="onboarding_charge_skip">Sin recordatorio</string>
+    <string name="settings_charge_reminder_label">Recordatorio de carga</string>
+    <string name="settings_charge_reminder_at">Desde las %1$s hasta enchufarlo ›</string>
+    <string name="settings_charge_reminder_off">Desactivado — solo suena con batería baja</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmas exactas</string>

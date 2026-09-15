@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">Bateria em %1$s %%. O alarme morre com a bateria — vai continuar a apitar até o telefone carregar.</string>
     <string name="charge_notif_text_night">O telefone do alarme precisa carregar durante a noite. Vai continuar a apitar até estar ligado.</string>
     <string name="charge_chirp_text">Ligue o telefone ao carregador para parar isto.</string>
+    <string name="onboarding_charge_headline">A que hora devemos lembrar de ligar o carregador?</string>
+    <string name="onboarding_charge_subtitle">O alarme morre com a bateria. A partir desta hora, se o telefone não estiver carregando, ele apita a cada poucos minutos até estar.</string>
+    <string name="onboarding_charge_tap_to_change">Toque na hora para alterar</string>
+    <string name="onboarding_charge_body">Escolha um momento em que ainda esteja acordado. Dentro da sua janela de sono nada apita — seja qual for a bateria.</string>
+    <string name="onboarding_charge_skip">Sem lembrete</string>
+    <string name="settings_charge_reminder_label">Lembrete de carga</string>
+    <string name="settings_charge_reminder_at">Das %1$s até ligar o carregador ›</string>
+    <string name="settings_charge_reminder_off">Desligado — só a bateria fraca apita</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmes exatos</string>

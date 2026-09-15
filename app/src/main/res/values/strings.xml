@@ -102,6 +102,14 @@
     <string name="charge_notif_text_low">Battery at %1$s%%. The alarm dies with the battery — it will keep chirping until the phone is charging.</string>
     <string name="charge_notif_text_night">The alarm phone must be charging for the night. It will keep chirping until it is plugged in.</string>
     <string name="charge_chirp_text">Plug the phone in to stop this.</string>
+    <string name="onboarding_charge_headline">When should we remind you to plug it in?</string>
+    <string name="onboarding_charge_subtitle">The alarm dies with the battery. From this time on, if the phone isn\'t charging, it chirps every few minutes until it is.</string>
+    <string name="onboarding_charge_tap_to_change">Tap the time to change it</string>
+    <string name="onboarding_charge_body">Pick a moment when you\'re still up. Once you\'re in your sleep window, nothing ever chirps — whatever the battery.</string>
+    <string name="onboarding_charge_skip">No reminder</string>
+    <string name="settings_charge_reminder_label">Plug-in reminder</string>
+    <string name="settings_charge_reminder_at">From %1$s until plugged in ›</string>
+    <string name="settings_charge_reminder_off">Off — only a low battery chirps</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Exact alarms</string>

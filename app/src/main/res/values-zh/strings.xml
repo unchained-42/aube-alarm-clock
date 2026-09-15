@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">电量 %1$s%%。电池耗尽闹钟就会失效 — 在手机充电之前会一直响。</string>
     <string name="charge_notif_text_night">闹钟手机夜间必须充电。在插上电源之前会一直响。</string>
     <string name="charge_chirp_text">给手机充电即可停止。</string>
+    <string name="onboarding_charge_headline">什么时候提醒你充电？</string>
+    <string name="onboarding_charge_subtitle">电池耗尽闹钟就会失效。从这个时间起，如果手机没在充电，会每隔几分钟响一次，直到插上电源。</string>
+    <string name="onboarding_charge_tap_to_change">点击时间进行修改</string>
+    <string name="onboarding_charge_body">选一个你还没睡的时间。进入睡眠时段后，无论电量多少都不会再响。</string>
+    <string name="onboarding_charge_skip">不提醒</string>
+    <string name="settings_charge_reminder_label">充电提醒</string>
+    <string name="settings_charge_reminder_at">从 %1$s 起直到充电 ›</string>
+    <string name="settings_charge_reminder_off">已关闭 — 仅低电量时提醒</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">精确闹钟</string>

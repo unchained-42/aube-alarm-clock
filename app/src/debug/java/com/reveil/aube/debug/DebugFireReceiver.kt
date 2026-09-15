@@ -28,7 +28,8 @@ class DebugFireReceiver : BroadcastReceiver() {
             ACTION_FIRE -> launchAlarm(app, dawnStartMillis = now, dawnEndMillis = now)
             ACTION_GUARD -> runBlocking { ChargeGuard.evaluate(app) }
             // adb shell am broadcast -a com.reveil.aube.debug.CONFIG --ei latest 600 --ei earliest 570 \
-            //   --ei sleep 480 --ez weekend false -n com.reveil.aube/.debug.DebugFireReceiver
+            //   --ei sleep 480 --ez weekend false [--ei reminder 1320|-1] [--es lastHandled 2026-09-15] \
+            //   -n com.reveil.aube/.debug.DebugFireReceiver
             ACTION_CONFIG -> runBlocking {
                 val repo = SettingsRepository(app)
                 val latest = intent.getIntExtra("latest", 10 * 60)
@@ -38,6 +39,10 @@ class DebugFireReceiver : BroadcastReceiver() {
                 repo.setWeekendWindow(window)
                 repo.setUseSeparateWeekend(intent.getBooleanExtra("weekend", false))
                 repo.setTargetSleepMinutes(intent.getIntExtra("sleep", 480))
+                if (intent.hasExtra("reminder")) {
+                    intent.getIntExtra("reminder", -1).let { repo.setChargeReminderMinute(if (it < 0) null else it) }
+                }
+                intent.getStringExtra("lastHandled")?.let { repo.setLastHandledDate(LocalDate.parse(it)) }
                 repo.setOnboardingCompleted(true)
                 repo.setAlarmEnabled(true)
                 val settings = repo.settings.first()

@@ -26,7 +26,7 @@
 - 📱 QR/barcode dismiss: scan a code placed somewhere you have to get out of bed to reach
 - 🔐 Hard to bypass: screen pinning, full-screen overlay, volume-key lock, foreground service independent of the UI, boot-resume
 - 🧱 Hardcore mode (device owner, spare phone): power menu disabled while ringing, no Home/Recents/status bar, force-stop/clear-data/uninstall/safe-mode/factory-reset refused by the OS, ring resumes ~40 s after a forced hardware reboot with no mute
-- 🔋 Charge guard: if the phone is unplugged below 40% (or unplugged at bedtime), it chirps until someone plugs it in, more sparsely as the battery gets lower
+- 🔋 Charge guard: if the phone is unplugged below 40%, or still unplugged at the evening reminder time you pick during onboarding, it chirps until someone plugs it in, more sparsely as the battery gets lower; never a sound during the sleep window itself
 - 🆘 Emergency fallback: long randomized-string challenge if you don't have the code, restarts from scratch on the first wrong character
 - ⏰ Bounded auto-stop: 1h ring, then pulses for a few hours, then gives up instead of running forever
 - ☀️ Optional post-wake reminders (water, light, breakfast)
@@ -59,7 +59,7 @@ Kotlin + Jetpack Compose, no backend, everything on-device.
 - **Ringing**: separate foreground `Service` owns sound/vibration, independent of the UI activity
 - **Hardening**: screen pinning, `SYSTEM_ALERT_WINDOW` overlay, volume-key interception, volume watchdog, boot-resume receiver (`LOCKED_BOOT_COMPLETED`, sound restarts from the service before any screen)
 - **Hardcore mode**: `DevicePolicyManager` as device owner: lock task with `LOCK_TASK_FEATURE_NONE`, user restrictions (`DISALLOW_APPS_CONTROL`, `DISALLOW_SAFE_BOOT`, `DISALLOW_FACTORY_RESET`, `DISALLOW_CONFIG_DATE_TIME`, …), uninstall blocked, keyguard disabled, stay-awake while plugged
-- **Charge guard**: self-rearming `AlarmManager` poll (5 min idle, `setAlarmClock` cadence once nagging), short foreground service for each chirp on the alarm stream
+- **Charge guard**: self-rearming `AlarmManager` poll (5 min idle, `setAlarmClock` cadence once nagging, nothing at all between bedtime and the wake window), short foreground service for each chirp on the alarm stream
 - **Crash-proof state**: the "ring in progress" flag lives in fsync'd, device-protected `SharedPreferences`; DataStore files corrupted by a power cut are replaced instead of crashing the app
 - **QR/barcode**: [ZXing](https://github.com/zxing/zxing) + CameraX, auto-torch for dark rooms
 - **Storage**: Jetpack DataStore, local only

@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">البطارية %1$s%%. يتوقف المنبّه مع فراغ البطارية — سيستمر التنبيه حتى يبدأ الهاتف بالشحن.</string>
     <string name="charge_notif_text_night">يجب أن يكون هاتف المنبّه على الشاحن طوال الليل. سيستمر التنبيه حتى يتم وصله.</string>
     <string name="charge_chirp_text">وصّل الهاتف بالشاحن لإيقاف هذا.</string>
+    <string name="onboarding_charge_headline">متى نذكّرك بوصل الشاحن؟</string>
+    <string name="onboarding_charge_subtitle">يتوقف المنبّه مع فراغ البطارية. من هذا الوقت، إذا لم يكن الهاتف يشحن، سيصدر تنبيهًا كل بضع دقائق حتى يتم وصله.</string>
+    <string name="onboarding_charge_tap_to_change">اضغط على الوقت لتغييره</string>
+    <string name="onboarding_charge_body">اختر وقتًا تكون فيه مستيقظًا. داخل فترة نومك لا يصدر أي صوت أبدًا — مهما كانت البطارية.</string>
+    <string name="onboarding_charge_skip">بدون تذكير</string>
+    <string name="settings_charge_reminder_label">تذكير الشحن</string>
+    <string name="settings_charge_reminder_at">من %1$s حتى وصل الشاحن ›</string>
+    <string name="settings_charge_reminder_off">متوقف — البطارية الضعيفة فقط تنبّه</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">المنبهات الدقيقة</string>

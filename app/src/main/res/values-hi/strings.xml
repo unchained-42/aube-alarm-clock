@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">बैटरी %1$s%% है। बैटरी के साथ अलार्म भी बंद हो जाएगा — फ़ोन चार्ज होने तक यह बजता रहेगा।</string>
     <string name="charge_notif_text_night">अलार्म फ़ोन रात भर चार्ज पर होना चाहिए। प्लग लगने तक यह बजता रहेगा।</string>
     <string name="charge_chirp_text">इसे रोकने के लिए फ़ोन चार्ज पर लगाएँ।</string>
+    <string name="onboarding_charge_headline">चार्ज पर लगाने की याद कब दिलाएँ?</string>
+    <string name="onboarding_charge_subtitle">बैटरी के साथ अलार्म भी बंद हो जाता है। इस समय से, अगर फ़ोन चार्ज नहीं हो रहा, तो यह हर कुछ मिनट में बजेगा जब तक चार्ज पर न लगे।</string>
+    <string name="onboarding_charge_tap_to_change">बदलने के लिए समय पर टैप करें</string>
+    <string name="onboarding_charge_body">ऐसा समय चुनें जब आप अभी जागे हों। नींद की अवधि में कुछ भी नहीं बजेगा — बैटरी कितनी भी हो।</string>
+    <string name="onboarding_charge_skip">कोई अनुस्मारक नहीं</string>
+    <string name="settings_charge_reminder_label">चार्जिंग अनुस्मारक</string>
+    <string name="settings_charge_reminder_at">%1$s से चार्ज पर लगाने तक ›</string>
+    <string name="settings_charge_reminder_off">बंद — केवल कम बैटरी पर बजेगा</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">सटीक अलार्म</string>

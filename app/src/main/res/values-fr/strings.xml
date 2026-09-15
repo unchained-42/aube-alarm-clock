@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">Batterie à %1$s %%. Le réveil s\'éteint avec la batterie — ça sonnera jusqu\'à ce que le téléphone charge.</string>
     <string name="charge_notif_text_night">Le téléphone du réveil doit être en charge pour la nuit. Ça sonnera jusqu\'à ce qu\'il soit branché.</string>
     <string name="charge_chirp_text">Branche le téléphone pour arrêter ça.</string>
+    <string name="onboarding_charge_headline">À quelle heure te rappeler de le brancher ?</string>
+    <string name="onboarding_charge_subtitle">Le réveil s\'éteint avec la batterie. À partir de cette heure, si le téléphone ne charge pas, il bipe toutes les quelques minutes jusqu\'à ce qu\'il soit branché.</string>
+    <string name="onboarding_charge_tap_to_change">Touche l\'heure pour la changer</string>
+    <string name="onboarding_charge_body">Choisis un moment où tu es encore debout. Une fois dans ta fenêtre de sommeil, plus aucun bip — quelle que soit la batterie.</string>
+    <string name="onboarding_charge_skip">Pas de rappel</string>
+    <string name="settings_charge_reminder_label">Rappel de branchement</string>
+    <string name="settings_charge_reminder_at">À partir de %1$s jusqu\'au branchement ›</string>
+    <string name="settings_charge_reminder_off">Désactivé — seule une batterie faible bipe</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmes exactes</string>

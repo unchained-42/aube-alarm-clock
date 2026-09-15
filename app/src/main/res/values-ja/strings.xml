@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">バッテリー %1$s%%。バッテリーが切れるとアラームも止まります — 充電されるまで鳴り続けます。</string>
     <string name="charge_notif_text_night">アラーム用スマホは夜間充電しておく必要があります。接続されるまで鳴り続けます。</string>
     <string name="charge_chirp_text">止めるにはスマホを充電してください。</string>
+    <string name="onboarding_charge_headline">充電のリマインドは何時にしますか？</string>
+    <string name="onboarding_charge_subtitle">バッテリーが切れるとアラームも止まります。この時刻以降、充電されていなければ数分ごとに鳴り、接続されるまで続きます。</string>
+    <string name="onboarding_charge_tap_to_change">時刻をタップして変更</string>
+    <string name="onboarding_charge_body">まだ起きている時間を選んでください。睡眠時間帯に入ると、バッテリー残量に関わらず一切鳴りません。</string>
+    <string name="onboarding_charge_skip">リマインドしない</string>
+    <string name="settings_charge_reminder_label">充電リマインダー</string>
+    <string name="settings_charge_reminder_at">%1$s から接続されるまで ›</string>
+    <string name="settings_charge_reminder_off">オフ — バッテリー低下時のみ鳴ります</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">正確なアラーム</string>

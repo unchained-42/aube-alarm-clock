@@ -95,7 +95,16 @@ data class AlarmSettings(
      * half-asleep decision to turn the alarm off or push it later isn't available in the one
      * stretch of time it would actually get used.
      */
-    val targetSleepMinutes: Int
+    val targetSleepMinutes: Int,
+    /**
+     * Minute of the day at which the charge guard starts reminding you to plug the phone in
+     * for the night, if it isn't already — chosen during onboarding, editable in Settings.
+     * Null means no reminder. See [com.reveil.aube.charge.ChargeGuard]: a fixed "30 minutes
+     * before bedtime" was the first design, and was wrong for the same reason a snooze is —
+     * a chirp in the stretch where you're actually drifting off is exactly the disturbance
+     * this app exists to avoid. So the person picks the moment, once, while awake.
+     */
+    val chargeReminderMinute: Int?
 ) {
     fun windowFor(dayOfWeekIsWeekend: Boolean): WakeWindow =
         if (dayOfWeekIsWeekend && useSeparateWeekend) weekendWindow else weekdayWindow
@@ -132,6 +141,7 @@ private const val RINGING_FLAG_FILE = "aube_ringing_state"
 private const val RINGING_FLAG_KEY = "ringing_unresolved"
 private val KEY_TARGET_SLEEP_MINUTES = intPreferencesKey("target_sleep_minutes")
 private const val DEFAULT_TARGET_SLEEP_MINUTES = 480 // 8h
+private val KEY_CHARGE_REMINDER_MINUTE = intPreferencesKey("charge_reminder_minute")
 
 // Plain-text field/record separators rather than JSON, to avoid pulling in a serialization
 // dependency for what's really just a short local list. These control characters can't be
@@ -229,7 +239,8 @@ class SettingsRepository(
                 // was written before that pin existed.
                 sanitizeWindow(WakeWindow(prefs[KEY_OVERRIDE_EARLIEST]!!, prefs[KEY_OVERRIDE_LATEST]!!))
             } else null,
-            targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES
+            targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES,
+            chargeReminderMinute = prefs[KEY_CHARGE_REMINDER_MINUTE]
         )
     }
 
@@ -285,6 +296,10 @@ class SettingsRepository(
 
     suspend fun setTargetSleepMinutes(minutes: Int) {
         dataStore.edit { it[KEY_TARGET_SLEEP_MINUTES] = minutes }
+    }
+
+    suspend fun setChargeReminderMinute(minute: Int?) {
+        dataStore.edit { if (minute == null) it.remove(KEY_CHARGE_REMINDER_MINUTE) else it[KEY_CHARGE_REMINDER_MINUTE] = minute }
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {

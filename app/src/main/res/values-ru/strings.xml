@@ -97,6 +97,14 @@
     <string name="charge_notif_text_low">Батарея %1$s %%. Будильник умирает вместе с батареей — сигнал будет повторяться, пока телефон не начнёт заряжаться.</string>
     <string name="charge_notif_text_night">Телефон-будильник должен заряжаться ночью. Сигнал будет повторяться, пока он не подключён.</string>
     <string name="charge_chirp_text">Подключите телефон к зарядке, чтобы остановить это.</string>
+    <string name="onboarding_charge_headline">Когда напомнить подключить зарядку?</string>
+    <string name="onboarding_charge_subtitle">Будильник умирает вместе с батареей. С этого времени, если телефон не заряжается, он будет подавать сигнал каждые несколько минут, пока его не подключат.</string>
+    <string name="onboarding_charge_tap_to_change">Нажмите на время, чтобы изменить</string>
+    <string name="onboarding_charge_body">Выберите момент, когда вы ещё не спите. В окне сна ничего не звучит — при любом заряде.</string>
+    <string name="onboarding_charge_skip">Без напоминания</string>
+    <string name="settings_charge_reminder_label">Напоминание о зарядке</string>
+    <string name="settings_charge_reminder_at">С %1$s до подключения ›</string>
+    <string name="settings_charge_reminder_off">Выключено — сигнал только при низком заряде</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Точные будильники</string>

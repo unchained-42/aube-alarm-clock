@@ -59,33 +59,67 @@ object ChargeGuard {
         return PowerState(batteryPercent = level * 100 / scale, plugged = plugged)
     }
 
-    /** True from [ChargeGuardPolicy.BEDTIME_LEAD_MINUTES] before the target bedtime until the wake window opens. */
-    internal fun inNightWindow(
+    /**
+     * Bedtime is derived, not configured: the wake deadline minus the target sleep duration
+     * (the same arithmetic as HomeScreen's sleep-duration lock). The reminder window starts
+     * at the user's chosen [reminderMinute] and runs until bedtime — or for
+     * [ChargeGuardPolicy.REMINDER_MIN_WINDOW_MINUTES] if that time is at/after bedtime, and
+     * never longer than [ChargeGuardPolicy.REMINDER_MAX_WINDOW_MINUTES]. The reminder window
+     * wins over SLEEP: a time the user explicitly picked is honoured even if it lands after
+     * the derived bedtime. SLEEP is the rest of bedtime → wake window; no reminder configured
+     * means no PRE_SLEEP at all.
+     */
+    internal fun phaseAt(
         now: ZonedDateTime,
         nextEarliest: ZonedDateTime,
         nextLatest: ZonedDateTime,
-        targetSleepMinutes: Int
-    ): Boolean {
-        val bedtime = nextLatest.minusMinutes(targetSleepMinutes.toLong() + ChargeGuardPolicy.BEDTIME_LEAD_MINUTES)
-        return !now.isBefore(bedtime) && now.isBefore(nextEarliest)
+        targetSleepMinutes: Int,
+        reminderMinute: Int?
+    ): ChargeGuardPolicy.Phase {
+        val bedtime = nextLatest.minusMinutes(targetSleepMinutes.toLong())
+        if (reminderMinute != null) {
+            val onBedtimeDay = bedtime.toLocalDate().atTime(reminderMinute / 60, reminderMinute % 60).atZone(bedtime.zone)
+            // The reminder is meant for the evening leading up to this bedtime, which may be
+            // "yesterday" relative to it (bedtime 00:30, reminder 22:00).
+            for (start in listOf(onBedtimeDay, onBedtimeDay.minusDays(1))) {
+                val untilBedtime = java.time.Duration.between(start, bedtime).toMinutes()
+                val end = when {
+                    untilBedtime in ChargeGuardPolicy.REMINDER_MIN_WINDOW_MINUTES..ChargeGuardPolicy.REMINDER_MAX_WINDOW_MINUTES -> bedtime
+                    untilBedtime > ChargeGuardPolicy.REMINDER_MAX_WINDOW_MINUTES -> start.plusMinutes(ChargeGuardPolicy.REMINDER_MAX_WINDOW_MINUTES)
+                    else -> start.plusMinutes(ChargeGuardPolicy.REMINDER_MIN_WINDOW_MINUTES)
+                }
+                if (!now.isBefore(start) && now.isBefore(end)) return ChargeGuardPolicy.Phase.PRE_SLEEP
+            }
+        }
+        return if (!now.isBefore(bedtime) && now.isBefore(nextEarliest)) ChargeGuardPolicy.Phase.SLEEP else ChargeGuardPolicy.Phase.DAY
     }
 
     suspend fun evaluate(context: Context, settingsRepository: SettingsRepository = SettingsRepository(context)) {
         val appContext = context.applicationContext
         val power = readPowerState(appContext) ?: return
         val settings = settingsRepository.settings.first()
-        val night = settings.alarmEnabled && run {
+        var sleepEndsAt: ZonedDateTime? = null
+        val phase = if (!settings.alarmEnabled) ChargeGuardPolicy.Phase.DAY else {
             val (earliest, latest) = AlarmScheduler(appContext).previewNextWindow(settings)
-            inNightWindow(ZonedDateTime.now(), earliest, latest, settings.targetSleepMinutes)
+            sleepEndsAt = earliest
+            phaseAt(ZonedDateTime.now(), earliest, latest, settings.targetSleepMinutes, settings.chargeReminderMinute)
         }
-        val interval = ChargeGuardPolicy.nagIntervalMillis(power.batteryPercent, power.plugged, night)
-        Log.i(TAG, "battery=${power.batteryPercent}% plugged=${power.plugged} night=$night -> interval=$interval")
+        val interval = ChargeGuardPolicy.nagIntervalMillis(power.batteryPercent, power.plugged, phase)
+        Log.i(TAG, "battery=${power.batteryPercent}% plugged=${power.plugged} phase=$phase -> interval=$interval")
 
         val prefs = prefs(appContext)
         if (interval == null) {
             NotificationManagerCompat.from(appContext).cancel(NOTIF_ID)
             if (power.plugged) prefs.edit().remove(KEY_LAST_CHIRP).apply()
-            scheduleIdleCheck(appContext, System.currentTimeMillis() + IDLE_INTERVAL_MS)
+            // Asleep: nothing this guard could learn before the wake window would change
+            // anything (it stays silent regardless), so it doesn't poll through the night
+            // — the alarm's own tracking/ring wakes the app then anyway.
+            val next = if (phase == ChargeGuardPolicy.Phase.SLEEP && sleepEndsAt != null) {
+                sleepEndsAt.toInstant().toEpochMilli()
+            } else {
+                System.currentTimeMillis() + IDLE_INTERVAL_MS
+            }
+            scheduleIdleCheck(appContext, next)
             return
         }
 
@@ -93,7 +127,7 @@ object ChargeGuard {
         val lastChirp = prefs.getLong(KEY_LAST_CHIRP, 0L)
         if (now - lastChirp >= interval - DUE_SLACK_MS) {
             prefs.edit().putLong(KEY_LAST_CHIRP, now).apply()
-            postNotification(appContext, power.batteryPercent, night)
+            postNotification(appContext, power.batteryPercent)
             // A ring already blaring says everything a chirp would — and both share the
             // alarm stream's volume, which the two players would otherwise fight over.
             if (!AlarmRingingService.isActive) {
@@ -128,7 +162,7 @@ object ChargeGuard {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-    private fun postNotification(context: Context, batteryPercent: Int, night: Boolean) {
+    private fun postNotification(context: Context, batteryPercent: Int) {
         if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return
         val text = if (batteryPercent < ChargeGuardPolicy.LOW_BATTERY_PERCENT) {
             context.getString(R.string.charge_notif_text_low, batteryPercent.toString())

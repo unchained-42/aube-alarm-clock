@@ -49,6 +49,7 @@ class AlarmSchedulerTest {
         oneTimeOverrideDate = oneTimeOverrideDate,
         oneTimeOverrideWindow = oneTimeOverrideWindow,
         targetSleepMinutes = 480,
+        chargeReminderMinute = null,
     )
 
     // --- missedWindowSinceLastHandled ---

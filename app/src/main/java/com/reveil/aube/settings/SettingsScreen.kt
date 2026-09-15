@@ -42,8 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.reveil.aube.R
+import com.reveil.aube.charge.ChargeGuardPolicy
 import com.reveil.aube.kiosk.KioskPolicy
 import com.reveil.aube.permissions.missingBlockingChecks
+import com.reveil.aube.ui.formatMinutes
+import com.reveil.aube.ui.showTimePicker
 import kotlinx.coroutines.launch
 
 @Composable
@@ -213,6 +216,44 @@ fun SettingsScreen(
             Text("$currentLanguageLabel ›", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
         }
 
+
+        Spacer(Modifier.height(4.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(stringResource(R.string.settings_charge_reminder_label), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
+                val reminder = current.chargeReminderMinute
+                if (reminder != null) {
+                    Text(
+                        stringResource(R.string.settings_charge_reminder_at, formatMinutes(reminder)),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable {
+                            showTimePicker(context, reminder) { picked -> scope.launch { settingsRepository.setChargeReminderMinute(picked) } }
+                        }
+                    )
+                } else {
+                    Text(stringResource(R.string.settings_charge_reminder_off), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            androidx.compose.material3.Switch(
+                checked = current.chargeReminderMinute != null,
+                onCheckedChange = { on ->
+                    scope.launch {
+                        if (on) {
+                            // Same suggestion as onboarding: an hour before the derived bedtime.
+                            val bedtime = current.weekdayWindow.latestMinute - current.targetSleepMinutes
+                            settingsRepository.setChargeReminderMinute(((bedtime - ChargeGuardPolicy.DEFAULT_REMINDER_LEAD_MINUTES) % 1440 + 1440) % 1440)
+                        } else {
+                            settingsRepository.setChargeReminderMinute(null)
+                        }
+                    }
+                }
+            )
+        }
 
         Spacer(Modifier.height(4.dp))
         Row(
