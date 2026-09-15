@@ -94,9 +94,6 @@ class AlarmSettingsTest {
         onboardingCompleted = true,
         oneTimeOverrideDate = oneTimeOverrideDate,
         oneTimeOverrideWindow = oneTimeOverrideWindow,
-        emergencyContacts = emptyList(),
-        accountabilityMessage = null,
         targetSleepMinutes = 480,
-        lastNotifiedContact = null
     )
 }

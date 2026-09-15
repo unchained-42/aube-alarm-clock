@@ -67,22 +67,36 @@
     <string name="settings_permissions_label">Berechtigungen</string>
     <string name="settings_permissions_ok">OK ›</string>
     <string name="settings_permissions_pending">Zu erledigen ›</string>
-    <string name="settings_accountability_label">Vertrauenskontakte</string>
-    <string name="settings_accountability_suffix">SMS bei Verpassen ›</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="settings_hardcore_label">Hardcore-Modus</string>
+    <string name="settings_hardcore_active">Aktiv ›</string>
+    <string name="settings_hardcore_inactive">Aus ›</string>
+    <string name="hardcore_title">Hardcore-Modus</string>
+    <string name="hardcore_status_active">Aktiv — das Telefon kann während des Weckers nicht ausgeschaltet werden.</string>
+    <string name="hardcore_status_inactive">Aus — das Ausschaltmenü kann den Wecker noch beenden.</string>
+    <string name="hardcore_what_it_does">Während der Wecker klingelt, lässt der Hardcore-Modus Android selbst:</string>
+    <string name="hardcore_blocks_power_menu">Das Ausschaltmenü ausblenden (langes Drücken der Ein/Aus-Taste tut nichts).</string>
+    <string name="hardcore_blocks_leave_screen">Den Weckbildschirm sperren: kein Home, keine Übersicht, keine Statusleiste, kein Sperrbildschirm.</string>
+    <string name="hardcore_blocks_force_stop">Stopp erzwingen, Daten löschen und Deinstallation in den Einstellungen verweigern.</string>
+    <string name="hardcore_blocks_safe_mode">Abgesicherten Modus und Zurücksetzen in den Einstellungen verweigern.</string>
+    <string name="hardcore_blocks_clock">Die Uhr auf Netzwerkzeit halten, damit sie nicht über den Wecker hinaus verstellt werden kann.</string>
+    <string name="hardcore_limits">Was er nicht verhindern kann: ~10 s Halten der Ein/Aus-Taste erzwingt einen Hardware-Neustart — der Wecker klingelt dann direkt nach dem Start wieder. Den Akku leerlaufen zu lassen funktioniert auch, also Telefon angesteckt lassen.</string>
+    <string name="hardcore_how_to_enable">Zum Einschalten braucht es einmalig einen Computer mit adb. Android erlaubt es nur auf einem Telefon ohne Konten:</string>
+    <string name="hardcore_step_accounts">Alle Konten (Google, Xiaomi…) und jeden zweiten Bereich/Nutzer vom Telefon entfernen.</string>
+    <string name="hardcore_step_usb_debug">USB-Debugging in den Entwickleroptionen aktivieren und das Telefon anschließen.</string>
+    <string name="hardcore_step_command">Diesen Befehl ausführen und dann zu diesem Bildschirm zurückkehren:</string>
+    <string name="hardcore_release_button">Hardcore-Modus ausschalten</string>
+    <string name="hardcore_release_refused_ringing">Nicht, während der Wecker klingelt.</string>
+    <string name="hardcore_release_confirm_title">Hardcore-Modus ausschalten?</string>
+    <string name="hardcore_release_confirm_text">Das Ausschaltmenü funktioniert während des Weckers wieder. Zum erneuten Einschalten sind wieder adb und ein Telefon ohne Konten nötig.</string>
+    <string name="hardcore_release_confirm_button">Ausschalten</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">Verstreicht die Frist ohne Bestätigung (Telefon aus, nichts läuft mehr), schickt Aube diesen Nummern eine SMS. Das ist die einzige Konsequenz, die bleibt, sobald das Telefon aus ist.</string>
-    <string name="accountability_permission_missing">SMS-Berechtigung erforderlich</string>
-    <string name="accountability_add_hint">Telefonnummer</string>
-    <string name="accountability_pick_contact_button">Aus Kontakten wählen</string>
-    <string name="accountability_manual_entry_label">Oder eine Nummer manuell eingeben</string>
-    <string name="accountability_add_button">Kontakt hinzufügen</string>
-    <string name="accountability_message_label">Nachricht</string>
-    <string name="accountability_message_placeholder">Ich bin nicht rechtzeitig aufgestanden.</string>
-    <string name="accountability_signature_note">Endet immer mit: „%1$s“</string>
-    <string name="accountability_default_message">Ich bin nicht rechtzeitig aufgestanden.</string>
-    <string name="accountability_sms_signature">— automatisch gesendet von der App %1$s</string>
-    <string name="cd_delete_contact">Diesen Kontakt entfernen</string>
+    <string name="notif_channel_charge_name">Ladewächter</string>
+    <string name="notif_channel_charge_desc">Erinnerungen, das Weckertelefon anzuschließen, bevor der Akku leer ist</string>
+    <string name="charge_notif_title">Telefon anschließen</string>
+    <string name="charge_notif_text_low">Akku bei %1$s %%. Der Wecker stirbt mit dem Akku — es piept weiter, bis das Telefon lädt.</string>
+    <string name="charge_notif_text_night">Das Weckertelefon muss über Nacht laden. Es piept weiter, bis es angeschlossen ist.</string>
+    <string name="charge_chirp_text">Telefon anschließen, um das zu beenden.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Exakte Alarme</string>
@@ -137,8 +151,6 @@
     <string name="onboarding_feature_qr_desc">Ein QR-Code zum Scannen zum Stoppen, Lautstärke gesperrt während des Klingelns.</string>
     <string name="onboarding_feature_routine_title">Danach eine Routine</string>
     <string name="onboarding_feature_routine_desc">Erinnerungen an Wasser, Licht, Frühstück, in deinem Tempo.</string>
-    <string name="onboarding_feature_accountability_title">Vertrauenskontakte</string>
-    <string name="onboarding_feature_accountability_desc">Schickt einer Vertrauensperson eine SMS, wenn du nicht aufstehst.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">Um wie viel Uhr musst du wach sein?</string>
@@ -153,12 +165,6 @@
     <string name="onboarding_qr_subtitle">Kein „Ich hab\'s gesehen“-Knopf, kein Schlummern: Der Wecker stoppt nur durch Scannen eines physischen QR-Codes — du musst aufstehen, um ihn zu erreichen.</string>
     <string name="onboarding_qr_body">Dieser QR-Code ist bereits aktiv, ohne etwas einzurichten. Drucke ihn jetzt aus und klebe ihn weit weg vom Bett — oder wähle später in den Einstellungen einen anderen QR-Code.</string>
     <string name="onboarding_qr_print_now">Jetzt drucken</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">Eine Konsequenz, der ein ausgeschaltetes Telefon nicht entkommt</string>
-    <string name="onboarding_accountability_subtitle">Verstreicht die Frist komplett (Telefon aus, nichts läuft mehr), kann Aube einer Vertrauensperson eine SMS schicken.</string>
-    <string name="onboarding_accountability_body">Optional und standardmäßig deaktiviert. Jederzeit später in den Einstellungen einrichtbar.</string>
-    <string name="onboarding_accountability_setup_button">Kontakte einrichten</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">Damit es heute Nacht wirklich funktioniert</string>

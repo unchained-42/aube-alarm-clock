@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner
  * Regression coverage for the two trickiest pieces of scheduling math: rolling to the next
  * valid day without re-offering an already-handled one, and detecting a deadline that passed
  * entirely unhandled (device off through the window) so [BootReceiver] can fall back to the
- * accountability text instead of silently re-arming for tomorrow.
+ * ring instead of silently re-arming for tomorrow.
  */
 @RunWith(RobolectricTestRunner::class)
 class AlarmSchedulerTest {
@@ -48,10 +48,7 @@ class AlarmSchedulerTest {
         onboardingCompleted = true,
         oneTimeOverrideDate = oneTimeOverrideDate,
         oneTimeOverrideWindow = oneTimeOverrideWindow,
-        emergencyContacts = emptyList(),
-        accountabilityMessage = null,
         targetSleepMinutes = 480,
-        lastNotifiedContact = null
     )
 
     // --- missedWindowSinceLastHandled ---

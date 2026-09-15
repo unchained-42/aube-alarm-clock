@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Debug builds only: lets a developer fire the real ringing flow on demand over adb
+             (`adb shell am broadcast -a com.reveil.aube.debug.FIRE -n com.reveil.aube/.debug.DebugFireReceiver`).
+             Never merged into release — nothing exported there can start a ring. -->
+        <receiver
+            android:name=".debug.DebugFireReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.reveil.aube.debug.FIRE" />
+                <action android:name="com.reveil.aube.debug.STOP" />
+                <action android:name="com.reveil.aube.debug.GUARD" />
+                <action android:name="com.reveil.aube.debug.CONFIG" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

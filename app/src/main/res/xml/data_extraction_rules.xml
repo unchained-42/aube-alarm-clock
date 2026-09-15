@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Excludes the accountability DataStore file (emergency contact phone numbers, the
-    accountability message) from Android's cloud backup and device-to-device transfer.
-    Everything else — wake windows, dawn duration, reminders, the QR dismiss payload — stays
-    backed up, since none of it is personal data and losing it would be a real UX regression
-    on a device switch. See SettingsRepository.accountabilityDataStore's doc.
+    Nothing excluded from cloud backup or device-to-device transfer: every setting the app
+    stores (wake windows, dawn duration, reminders, the QR dismiss payload) is harmless to
+    back up, and losing it would be a real UX regression on a device switch.
 -->
 <data-extraction-rules>
-    <cloud-backup>
-        <exclude domain="file" path="datastore/aube_accountability.preferences_pb" />
-    </cloud-backup>
-    <device-transfer>
-        <exclude domain="file" path="datastore/aube_accountability.preferences_pb" />
-    </device-transfer>
+    <cloud-backup />
+    <device-transfer />
 </data-extraction-rules>

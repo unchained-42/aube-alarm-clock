@@ -13,6 +13,8 @@
 
 > ⚠️ Wellness tool, not a medical device. Not intended to diagnose, treat, or prevent any sleep disorder.
 
+> 📱 **Meant for a spare phone you no longer use.** Aube's strict mode ("hardcore mode") turns the phone into a single-purpose alarm: it takes over the device as *device owner*, removes the lock screen, blocks the power menu while ringing, and refuses to be force-stopped or uninstalled. That is exactly what you want from an alarm you can't talk yourself out of, and exactly what you don't want on your daily phone. Use an old Android phone, plug it in on the nightstand, and let it do one job. See [Hardcore mode](#hardcore-mode-device-owner).
+
 ## Features
 
 - 🌅 Dawn simulation: screen ramps from black to full brightness before the alarm sounds
@@ -23,8 +25,9 @@
 - 🛌 Accelerometer-based light-sleep detection: can wake you up to 45 min early if you're already stirring
 - 📱 QR/barcode dismiss: scan a code placed somewhere you have to get out of bed to reach
 - 🔐 Hard to bypass: screen pinning, full-screen overlay, volume-key lock, foreground service independent of the UI, boot-resume
+- 🧱 Hardcore mode (device owner, spare phone): power menu disabled while ringing, no Home/Recents/status bar, force-stop/clear-data/uninstall/safe-mode/factory-reset refused by the OS, ring resumes ~40 s after a forced hardware reboot with no mute
+- 🔋 Charge guard: if the phone is unplugged below 40% (or unplugged at bedtime), it chirps until someone plugs it in, more sparsely as the battery gets lower
 - 🆘 Emergency fallback: long randomized-string challenge if you don't have the code, restarts from scratch on the first wrong character
-- 📵 Accountability contacts: texts someone you trust if the phone is powered off through the deadline, the one loophole no on-device fix can close
 - ⏰ Bounded auto-stop: 1h ring, then pulses for a few hours, then gives up instead of running forever
 - ☀️ Optional post-wake reminders (water, light, breakfast)
 - 🌍 10 languages, follows system locale
@@ -43,9 +46,9 @@
 
 Snooze research is genuinely mixed: some studies find it near-neutral. Aube's position is to remove the trade-off, not relitigate it every morning.
 
-### Why accountability contacts exist
+### What software can and can't block
 
-Powering the phone off defeats every on-device protection at once: no code runs while a device is off, and no third-party app can force it back on or block the power menu (Android reserves both to the OS, and OEM alarm apps that briefly exploited accessibility-service workarounds for this had the technique closed as of Android 12). So the one loophole software can't close, Aube hands to a person instead: if the deadline passes with the phone off, or the alarm rings for hours with no dismiss, it texts your configured contacts. Off by default, requires the standard Android SMS permission, numbers stay on-device.
+Powering the phone off defeats every on-device protection at once: no code runs while a device is off. A regular app can't block the power menu (Android reserves it to the OS); [hardcore mode](#hardcore-mode-device-owner) can. What no software on any phone can block is the hardware forced reboot (power held ~10 s, handled by the power-management chip before the OS is involved) and a battery running flat. Aube's answer is to make both pointless rather than pretend to prevent them: a ring interrupted by a reboot resumes about 40 s after the cut, at full volume, with the one-time mute already spent, and the charge guard chirps until the phone is back on its charger.
 
 ## How It Works
 
@@ -54,8 +57,10 @@ Kotlin + Jetpack Compose, no backend, everything on-device.
 - **Scheduling**: `AlarmManager` exact alarms (tracking start + hard safety-net ring)
 - **Sleep tracking**: foreground `Service`, accelerometer, movement scoring
 - **Ringing**: separate foreground `Service` owns sound/vibration, independent of the UI activity
-- **Hardening**: screen pinning, `SYSTEM_ALERT_WINDOW` overlay, volume-key interception, volume watchdog, boot-resume receiver
-- **Accountability**: `SmsManager`, triggered from the boot receiver (missed deadline) and the ringing service (auto-stop after hours of no dismiss)
+- **Hardening**: screen pinning, `SYSTEM_ALERT_WINDOW` overlay, volume-key interception, volume watchdog, boot-resume receiver (`LOCKED_BOOT_COMPLETED`, sound restarts from the service before any screen)
+- **Hardcore mode**: `DevicePolicyManager` as device owner: lock task with `LOCK_TASK_FEATURE_NONE`, user restrictions (`DISALLOW_APPS_CONTROL`, `DISALLOW_SAFE_BOOT`, `DISALLOW_FACTORY_RESET`, `DISALLOW_CONFIG_DATE_TIME`, …), uninstall blocked, keyguard disabled, stay-awake while plugged
+- **Charge guard**: self-rearming `AlarmManager` poll (5 min idle, `setAlarmClock` cadence once nagging), short foreground service for each chirp on the alarm stream
+- **Crash-proof state**: the "ring in progress" flag lives in fsync'd, device-protected `SharedPreferences`; DataStore files corrupted by a power cut are replaced instead of crashing the app
 - **QR/barcode**: [ZXing](https://github.com/zxing/zxing) + CameraX, auto-torch for dark rooms
 - **Storage**: Jetpack DataStore, local only
 
@@ -70,6 +75,38 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 Requires Android 8.0 (API 26)+.
 
+## Hardcore mode (device owner)
+
+Without it, Aube is already hard to dismiss without the QR code, but the power menu still works: long-press power, tap *Power off*, alarm over. Android only lets one kind of app disable that menu, a **device owner** in lock task mode, and only lets an app become device owner on a phone with no accounts and no other users, over adb. That is a one-time setup, and the reason this mode is for a spare phone.
+
+What it does while the alarm rings: hides the power menu (long-press does nothing), pins the alarm screen (no Home, Recents, status bar or lock screen, and the unpin gesture is disabled), and keeps the clock on network time. Permanently: force stop, clear data, uninstall, disable, safe mode and factory reset from Settings are all refused by the OS (also via adb), the lock screen is removed so the alarm can resume within seconds of a reboot, and the screen stays on while plugged in.
+
+What it can't do: block the hardware forced reboot (power held ~10 s) or a dead battery. Both are handled by making them pointless: the ring resumes about 40 s after the cut, at full volume, with the one-time mute already spent, and the charge guard nags until the phone is charging. A spare phone usually has no SIM either, which is why Aube has no "text someone" fallback: everything it does happens on the device.
+
+### Steps
+
+1. **Pick a phone you don't use**, install Aube on it and finish the onboarding.
+2. **Remove every account** on the phone: Settings › Accounts (Google, Xiaomi/Samsung/Huawei account, …). Sign out completely; Android refuses `set-device-owner` while any account exists.
+3. **Remove secondary users/spaces** (Xiaomi "Second space", Samsung "Secure Folder", work profiles, guest users): Settings › Users, or over adb:
+   ```bash
+   adb shell pm list users
+   adb shell pm remove-user <id>   # every id except 0
+   ```
+4. **Remove the lock-screen PIN/pattern** (Settings › Security › Screen lock › None). Not strictly required for enrollment, but without it Android runs nothing after a reboot until you unlock, so the alarm couldn't resume on its own.
+5. **Enable USB debugging** (Settings › About phone › tap *Build number* 7× › Developer options › USB debugging) and plug the phone into a computer with [adb](https://developer.android.com/tools/releases/platform-tools).
+6. **Enroll:**
+   ```bash
+   adb shell dpm set-device-owner com.reveil.aube/.kiosk.AubeDeviceAdminReceiver
+   ```
+   Expected: `Success: Device owner set to package com.reveil.aube`. If it complains about accounts or users, go back to steps 2–3.
+7. Open Aube › Settings › **Hardcore mode**: it should read *Active*. The policies are applied immediately and re-applied on every app start.
+8. **Enable the OEM's autostart / background permissions** for Aube (Settings › Permissions in the app points to the right screen). Device owner doesn't bypass MIUI/EMUI/ColorOS autostart lists, and the boot-resume depends on it.
+9. Leave the phone **plugged in** on the nightstand and print the QR code somewhere you have to get out of bed to reach.
+
+To turn it off later: Aube › Settings › Hardcore mode › *Turn hardcore mode off* (refused while an alarm is ringing, which is the point). Once off, the phone behaves like any other; the only other way out is a factory reset from recovery.
+
+Notes for developers: while the alarm is pinned in lock task, `adb install` may fail on OEMs that show an install-confirmation dialog (it can't appear over the pinned screen), and `am force-stop` / `pm clear` are refused for the device-owner package. Debug builds expose `adb shell am broadcast -a com.reveil.aube.debug.FIRE|STOP|GUARD -n com.reveil.aube/.debug.DebugFireReceiver` to start a ring, end one cleanly, or force a charge-guard check.
+
 ## Permissions
 
 | Permission | Why |
@@ -81,7 +118,7 @@ Requires Android 8.0 (API 26)+.
 | Display over other apps | Powers the "still ringing" overlay |
 | Camera | Scans the dismiss code |
 | Accelerometer | Light-sleep detection, on-device only, never transmitted |
-| SMS | Optional: texts your accountability contacts if the deadline is missed entirely |
+| Device admin (hardcore mode) | Optional, enrolled over adb: lock task, user restrictions, uninstall block, keyguard off. See [Hardcore mode](#hardcore-mode-device-owner) |
 
 ## Languages
 

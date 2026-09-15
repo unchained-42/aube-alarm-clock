@@ -8,29 +8,33 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.reveil.aube.R
 import com.reveil.aube.qr.DEFAULT_QR_PAYLOAD
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import java.util.UUID
 
 private const val TAG = "AubeSettings"
 
-private val Context.dataStore by preferencesDataStore(name = "aube_settings")
-
 /**
- * Deliberately a separate DataStore file from the main one above, not just separate keys
- * within it — Android's backup rules (see res/xml/data_extraction_rules.xml and
- * backup_rules.xml) can only exclude whole files from cloud backup/device transfer, not
- * individual keys. Emergency contact phone numbers and the accountability message are the
- * one piece of real PII this app stores; everything else here (wake windows, dawn duration,
- * reminders...) is harmless to back up and worth keeping backed up for a smooth device
- * migration.
+ * Both stores replace a corrupted file with empty preferences instead of throwing on every
+ * read forever. This isn't hypothetical: a forced hardware reboot (power held ~10 s) during
+ * a ring left aube_settings.preferences_pb as 61 bytes of zeros on a real device — the
+ * file's size had reached disk, its contents hadn't — and from then on every single read
+ * (BootReceiver, the alarm screen, the home screen) crashed with a CorruptionException. The
+ * settings in that file were already gone at that point; the only thing the crash added was
+ * an app that could never ring again. Losing settings is recoverable; that isn't.
  */
-private val Context.accountabilityDataStore by preferencesDataStore(name = "aube_accountability")
+private val Context.dataStore by preferencesDataStore(
+    name = "aube_settings",
+    corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() }
+)
+
 
 /**
  * Wake window expressed in minutes-from-midnight. [earliest] is the earliest the alarm may
@@ -85,45 +89,13 @@ data class AlarmSettings(
     val oneTimeOverrideDate: LocalDate?,
     val oneTimeOverrideWindow: WakeWindow?,
     /**
-     * Phone numbers texted a "didn't wake up" message when the deadline is missed — see
-     * [com.reveil.aube.alarm.AccountabilityNotifier]. The device being off has no software
-     * remedy (nothing runs while it's powered down), so this trades a technical fix for a
-     * social one: a real person finding out is a consequence turning the phone back on late,
-     * at your own pace, otherwise has none of.
-     */
-    val emergencyContacts: List<String>,
-    /**
-     * Null/blank means the built-in default text. Whatever the user types here is always
-     * followed by [com.reveil.aube.alarm.AccountabilityNotifier]'s signature line when actually
-     * sent — enforced in code at send time, not stored as part of this editable text, so it
-     * can't be edited away.
-     */
-    val accountabilityMessage: String?,
-    /**
      * Set during onboarding: how long before the hard deadline the alarm locks itself.
      * [com.reveil.aube.ui.HomeScreen] disables the enable/disable switch, the one-time time
      * edit, and both weekday/weekend sliders once now falls inside this window, so a
      * half-asleep decision to turn the alarm off or push it later isn't available in the one
      * stretch of time it would actually get used.
      */
-    val targetSleepMinutes: Int,
-    /**
-     * The phone number [com.reveil.aube.alarm.AccountabilityNotifier] last texted. With a
-     * single contact configured it's texted every time regardless of this value; with several,
-     * it's excluded from the random pick for the next miss so the same person isn't the only
-     * one who ever hears about it.
-     */
-    val lastNotifiedContact: String?,
-    /**
-     * Null until the first send attempt ever completes. After that, whether the most recent
-     * one actually reached the carrier — see [com.reveil.aube.alarm.SmsSentReceiver], the only
-     * place that can observe this, since [android.telephony.SmsManager] reports it
-     * asynchronously rather than through a return value at the call site. Surfaced in
-     * [com.reveil.aube.settings.AccountabilityContactsScreen] so a silently-failing number
-     * (typo, carrier block, MIUI's hidden SMS app-ops toggle) doesn't stay invisible until the
-     * one morning it would have mattered.
-     */
-    val lastNotificationSucceeded: Boolean? = null
+    val targetSleepMinutes: Int
 ) {
     fun windowFor(dayOfWeekIsWeekend: Boolean): WakeWindow =
         if (dayOfWeekIsWeekend && useSeparateWeekend) weekendWindow else weekdayWindow
@@ -156,11 +128,9 @@ private val KEY_OVERRIDE_DATE = stringPreferencesKey("override_date")
 private val KEY_OVERRIDE_EARLIEST = intPreferencesKey("override_earliest")
 private val KEY_OVERRIDE_LATEST = intPreferencesKey("override_latest")
 private val KEY_RINGING_UNRESOLVED = booleanPreferencesKey("ringing_unresolved")
-private val KEY_EMERGENCY_CONTACTS = stringPreferencesKey("emergency_contacts")
-private val KEY_ACCOUNTABILITY_MESSAGE = stringPreferencesKey("accountability_message")
+private const val RINGING_FLAG_FILE = "aube_ringing_state"
+private const val RINGING_FLAG_KEY = "ringing_unresolved"
 private val KEY_TARGET_SLEEP_MINUTES = intPreferencesKey("target_sleep_minutes")
-private val KEY_LAST_NOTIFIED_CONTACT = stringPreferencesKey("last_notified_contact")
-private val KEY_LAST_NOTIFICATION_SUCCEEDED = booleanPreferencesKey("last_notification_succeeded")
 private const val DEFAULT_TARGET_SLEEP_MINUTES = 480 // 8h
 
 // Plain-text field/record separators rather than JSON, to avoid pulling in a serialization
@@ -200,13 +170,6 @@ private fun decodeReminders(raw: String?, context: Context): List<CustomReminder
     return decoded
 }
 
-private fun encodeContacts(contacts: List<String>): String = contacts.joinToString(RECORD_SEP.toString())
-
-private fun decodeContacts(raw: String?): List<String> {
-    if (raw.isNullOrEmpty()) return emptyList()
-    return raw.split(RECORD_SEP).filter { it.isNotBlank() }
-}
-
 /**
  * The UI never lets you create more than a 45-minute early-wake gap (see the slider range in
  * [com.reveil.aube.ui.WakeWindowEditor]), but earlier app versions had bugs that could persist
@@ -231,12 +194,10 @@ class SettingsRepository(
     // single JVM-wide delegate (the first Context to touch it wins, for every Context after
     // that, regardless of which one asked), so without this seam, state written by one test
     // leaks into whichever test happens to run next in the same JVM.
-    private val dataStore: DataStore<Preferences> = context.dataStore,
-    // Same seam, same reason, for the separate accountability-data file — see its property doc.
-    private val accountabilityDataStore: DataStore<Preferences> = context.accountabilityDataStore
+    private val dataStore: DataStore<Preferences> = context.dataStore
 ) {
 
-    val settings: Flow<AlarmSettings> = combine(dataStore.data, accountabilityDataStore.data) { prefs, accPrefs ->
+    val settings: Flow<AlarmSettings> = dataStore.data.map { prefs ->
         AlarmSettings(
             // Defaults to off: a fresh install shouldn't silently schedule an alarm before
             // the reliability checks (exact alarms, battery, MIUI autostart...) are done.
@@ -268,11 +229,7 @@ class SettingsRepository(
                 // was written before that pin existed.
                 sanitizeWindow(WakeWindow(prefs[KEY_OVERRIDE_EARLIEST]!!, prefs[KEY_OVERRIDE_LATEST]!!))
             } else null,
-            emergencyContacts = decodeContacts(accPrefs[KEY_EMERGENCY_CONTACTS]),
-            accountabilityMessage = accPrefs[KEY_ACCOUNTABILITY_MESSAGE],
-            targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES,
-            lastNotifiedContact = accPrefs[KEY_LAST_NOTIFIED_CONTACT],
-            lastNotificationSucceeded = accPrefs[KEY_LAST_NOTIFICATION_SUCCEEDED]
+            targetSleepMinutes = prefs[KEY_TARGET_SLEEP_MINUTES] ?: DEFAULT_TARGET_SLEEP_MINUTES
         )
     }
 
@@ -326,31 +283,8 @@ class SettingsRepository(
         dataStore.edit { it[KEY_REMINDERS] = encodeReminders(reminders) }
     }
 
-    suspend fun setEmergencyContacts(contacts: List<String>) {
-        accountabilityDataStore.edit { it[KEY_EMERGENCY_CONTACTS] = encodeContacts(contacts) }
-    }
-
-    suspend fun setAccountabilityMessage(message: String) {
-        accountabilityDataStore.edit { it[KEY_ACCOUNTABILITY_MESSAGE] = message }
-    }
-
     suspend fun setTargetSleepMinutes(minutes: Int) {
         dataStore.edit { it[KEY_TARGET_SLEEP_MINUTES] = minutes }
-    }
-
-    suspend fun setLastNotifiedContact(contact: String) {
-        accountabilityDataStore.edit { it[KEY_LAST_NOTIFIED_CONTACT] = contact }
-    }
-
-    /**
-     * Called from [com.reveil.aube.alarm.SmsSentReceiver] once the carrier actually responds —
-     * see [AlarmSettings.lastNotificationSucceeded]'s doc. A multipart message reports one
-     * result per part; the last part to respond wins, which is enough to answer the question
-     * this exists for ("is the current number/setup actually working") without tracking each
-     * part's outcome individually.
-     */
-    suspend fun setLastNotificationSucceeded(succeeded: Boolean) {
-        accountabilityDataStore.edit { it[KEY_LAST_NOTIFICATION_SUCCEEDED] = succeeded }
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) {
@@ -382,38 +316,24 @@ class SettingsRepository(
      * this flag and resumes ringing immediately instead, if it's still true after boot.
      */
     suspend fun setAlarmRinging(active: Boolean) {
+        // The one value here that must survive exactly the event most likely to destroy this
+        // file (see the corruption handler's doc): the flag lives in its own SharedPreferences
+        // file, written synchronously with commit() — which fsyncs before its atomic rename,
+        // unlike DataStore 1.1's okio-based writer — in device-protected storage, so it's
+        // also readable in the window between boot and first unlock. Still mirrored into
+        // DataStore for anything (tests included) that reads it from there.
+        ringingFlagPrefs().edit().putBoolean(RINGING_FLAG_KEY, active).commit()
         dataStore.edit { it[KEY_RINGING_UNRESOLVED] = active }
     }
 
     suspend fun isAlarmRingingUnresolved(): Boolean =
-        dataStore.data.first()[KEY_RINGING_UNRESOLVED] ?: false
+        ringingFlagPrefs().getBoolean(RINGING_FLAG_KEY, false) ||
+            (dataStore.data.first()[KEY_RINGING_UNRESOLVED] ?: false)
 
-    /**
-     * One-time move of emergency-contact data from the main (backed-up) store to the
-     * accountability-only (excluded-from-backup) one — see [accountabilityDataStore]'s doc for
-     * why they're split. Self-limiting rather than flag-gated: once the old keys are removed
-     * below, [hasOldData] is false on every future call, so this is a no-op after the first
-     * successful run. Safe to call on every app start.
-     */
-    suspend fun migrateAccountabilityDataIfNeeded() {
-        val old = dataStore.data.first()
-        val hasOldData = old[KEY_EMERGENCY_CONTACTS] != null ||
-            old[KEY_ACCOUNTABILITY_MESSAGE] != null ||
-            old[KEY_LAST_NOTIFIED_CONTACT] != null
-        if (!hasOldData) return
+    private fun ringingFlagPrefs() =
+        context.createDeviceProtectedStorageContext()
+            .getSharedPreferences(RINGING_FLAG_FILE, Context.MODE_PRIVATE)
 
-        accountabilityDataStore.edit { new ->
-            old[KEY_EMERGENCY_CONTACTS]?.let { new[KEY_EMERGENCY_CONTACTS] = it }
-            old[KEY_ACCOUNTABILITY_MESSAGE]?.let { new[KEY_ACCOUNTABILITY_MESSAGE] = it }
-            old[KEY_LAST_NOTIFIED_CONTACT]?.let { new[KEY_LAST_NOTIFIED_CONTACT] = it }
-        }
-        dataStore.edit {
-            it.remove(KEY_EMERGENCY_CONTACTS)
-            it.remove(KEY_ACCOUNTABILITY_MESSAGE)
-            it.remove(KEY_LAST_NOTIFIED_CONTACT)
-        }
-        Log.i(TAG, "migrateAccountabilityDataIfNeeded: moved accountability data to its own store")
-    }
 
     companion object {
         fun newReminderId(): String = UUID.randomUUID().toString()

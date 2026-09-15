@@ -67,22 +67,36 @@
     <string name="settings_permissions_label">Permissões</string>
     <string name="settings_permissions_ok">OK ›</string>
     <string name="settings_permissions_pending">A concluir ›</string>
-    <string name="settings_accountability_label">Contatos de apoio</string>
-    <string name="settings_accountability_suffix">SMS se falhar ›</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="settings_hardcore_label">Modo hardcore</string>
+    <string name="settings_hardcore_active">Ativo ›</string>
+    <string name="settings_hardcore_inactive">Desligado ›</string>
+    <string name="hardcore_title">Modo hardcore</string>
+    <string name="hardcore_status_active">Ativo — o telefone não pode ser desligado enquanto o alarme toca.</string>
+    <string name="hardcore_status_inactive">Desligado — o menu de desligar ainda pode terminar o alarme.</string>
+    <string name="hardcore_what_it_does">Enquanto o alarme toca, o modo hardcore faz o próprio Android:</string>
+    <string name="hardcore_blocks_power_menu">Ocultar o menu de desligar (manter o botão de energia pressionado não faz nada).</string>
+    <string name="hardcore_blocks_leave_screen">Bloquear a tela do alarme: sem Início, sem Recentes, sem barra de status, sem tela de bloqueio.</string>
+    <string name="hardcore_blocks_force_stop">Recusar forçar parada, limpar dados e desinstalar pelas Configurações.</string>
+    <string name="hardcore_blocks_safe_mode">Recusar o modo seguro e a redefinição pelas Configurações.</string>
+    <string name="hardcore_blocks_clock">Manter o relógio na hora da rede para que não possa ser adiantado além do alarme.</string>
+    <string name="hardcore_limits">O que ele não pode impedir: segurar o botão de energia ~10 s força uma reinicialização por hardware — o alarme volta a tocar logo após a inicialização. Deixar a bateria acabar também funciona, então mantenha o telefone carregando.</string>
+    <string name="hardcore_how_to_enable">Ativar exige um computador com adb, uma única vez. O Android só permite em um telefone sem contas:</string>
+    <string name="hardcore_step_accounts">Remova todas as contas (Google, Xiaomi…) e qualquer segundo espaço/usuário do telefone.</string>
+    <string name="hardcore_step_usb_debug">Ative a depuração USB nas Opções do desenvolvedor e conecte o telefone.</string>
+    <string name="hardcore_step_command">Execute este comando e volte a esta tela:</string>
+    <string name="hardcore_release_button">Desligar o modo hardcore</string>
+    <string name="hardcore_release_refused_ringing">Não enquanto o alarme toca.</string>
+    <string name="hardcore_release_confirm_title">Desligar o modo hardcore?</string>
+    <string name="hardcore_release_confirm_text">O menu de desligar voltará a funcionar durante os alarmes. Reativar exigirá novamente adb e um telefone sem contas.</string>
+    <string name="hardcore_release_confirm_button">Desligar</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">Se o prazo passar sem confirmação (telefone desligado, nada a executar), o Aube envia um SMS para estes números. É a única consequência que continua a valer depois de o telefone desligar.</string>
-    <string name="accountability_permission_missing">Permissão de SMS necessária</string>
-    <string name="accountability_add_hint">Número de telefone</string>
-    <string name="accountability_pick_contact_button">Escolher dos contatos</string>
-    <string name="accountability_manual_entry_label">Ou digite um número manualmente</string>
-    <string name="accountability_add_button">Adicionar contato</string>
-    <string name="accountability_message_label">Mensagem</string>
-    <string name="accountability_message_placeholder">Não acordei a tempo.</string>
-    <string name="accountability_signature_note">Termina sempre com: "%1$s"</string>
-    <string name="accountability_default_message">Não acordei a tempo.</string>
-    <string name="accountability_sms_signature">— enviado automaticamente pelo app %1$s</string>
-    <string name="cd_delete_contact">Remover este contato</string>
+    <string name="notif_channel_charge_name">Guarda de carga</string>
+    <string name="notif_channel_charge_desc">Lembretes para ligar o telefone do alarme à corrente antes que a bateria acabe</string>
+    <string name="charge_notif_title">Ligue o telefone ao carregador</string>
+    <string name="charge_notif_text_low">Bateria em %1$s %%. O alarme morre com a bateria — vai continuar a apitar até o telefone carregar.</string>
+    <string name="charge_notif_text_night">O telefone do alarme precisa carregar durante a noite. Vai continuar a apitar até estar ligado.</string>
+    <string name="charge_chirp_text">Ligue o telefone ao carregador para parar isto.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmes exatos</string>
@@ -137,8 +151,6 @@
     <string name="onboarding_feature_qr_desc">Um código QR para escanear e parar, volume bloqueado enquanto toca.</string>
     <string name="onboarding_feature_routine_title">Uma rotina depois</string>
     <string name="onboarding_feature_routine_desc">Lembretes de água, luz e café da manhã, no seu ritmo.</string>
-    <string name="onboarding_feature_accountability_title">Contatos de apoio</string>
-    <string name="onboarding_feature_accountability_desc">Envia um SMS a alguém de confiança se você não acordar.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">A que horas você precisa estar acordado?</string>
@@ -153,12 +165,6 @@
     <string name="onboarding_qr_subtitle">Sem botão \"eu vi\", sem soneca: o alarme só para escaneando um código QR físico — você precisa se levantar para alcançá-lo.</string>
     <string name="onboarding_qr_body">Este código QR já está ativo, sem precisar configurar nada. Imprima-o agora e cole-o longe da cama — ou escolha outro código QR depois em Configurações.</string>
     <string name="onboarding_qr_print_now">Imprimir agora</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">Uma consequência que um telefone desligado não evita</string>
-    <string name="onboarding_accountability_subtitle">Se o prazo passar completamente (telefone desligado, nada a executar), o Aube pode enviar um SMS a alguém de confiança.</string>
-    <string name="onboarding_accountability_body">Opcional e desativado por padrão. Pode ser configurado a qualquer momento nas Definições.</string>
-    <string name="onboarding_accountability_setup_button">Configurar contatos</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">Para que funcione de verdade esta noite</string>

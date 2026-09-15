@@ -32,25 +32,20 @@ class BootReceiverTest {
     private val testDataStore = PreferenceDataStoreFactory.create(
         produceFile = { File.createTempFile("test_settings_${UUID.randomUUID()}", ".preferences_pb") }
     )
-    private val testAccountabilityDataStore = PreferenceDataStoreFactory.create(
-        produceFile = { File.createTempFile("test_accountability_${UUID.randomUUID()}", ".preferences_pb") }
-    )
-    private val repository = SettingsRepository(context, testDataStore, testAccountabilityDataStore)
+    private val repository = SettingsRepository(context, testDataStore)
 
     private fun scheduledAlarmCount(): Int =
         shadowOf(context.getSystemService(AlarmManager::class.java)).scheduledAlarms.size
 
     @Test
-    fun `a ring interrupted by the reboot is resumed and the contact is notified`() = runTest {
+    fun `a ring interrupted by the reboot is resumed, not rescheduled`() = runTest {
         repository.setAlarmRinging(true)
-        repository.setEmergencyContacts(listOf("+33612345678"))
         ShadowLog.clear()
 
         BootReceiver.handleBoot(context, repository)
 
         val logs = ShadowLog.getLogs().map { it.msg }
         assertTrue(logs.any { it.contains("branch: was ringing when device went down, resuming") })
-        assertTrue(logs.any { it.contains("notifyMissedWakeup called, 1 contact(s) configured") })
         assertFalse(
             "resuming an interrupted ring must not also (re)schedule the next occurrence",
             scheduledAlarmCount() > 0
@@ -58,21 +53,19 @@ class BootReceiverTest {
     }
 
     @Test
-    fun `a deadline missed entirely with the device off notifies the contact instead of silently rescheduling`() = runTest {
+    fun `a deadline missed entirely with the device off rings now instead of silently rescheduling`() = runTest {
         // Full-day windows mean yesterday's deadline (23:59) is always already in the past by
         // the time this runs "today", no matter what time of day the test executes at — same
         // trick AlarmSchedulerTest uses to keep this deterministic without a fake clock.
         repository.setAlarmEnabled(true)
         repository.setWeekdayWindow(WakeWindow(0, 1439))
         repository.setWeekendWindow(WakeWindow(0, 1439))
-        repository.setEmergencyContacts(listOf("+33612345678"))
         ShadowLog.clear()
 
         BootReceiver.handleBoot(context, repository)
 
         val logs = ShadowLog.getLogs().map { it.msg }
         assertTrue(logs.any { it.contains("branch: not ringing when device went down, missedWindow=true") })
-        assertTrue(logs.any { it.contains("notifyMissedWakeup called, 1 contact(s) configured") })
         assertFalse(
             "a missed deadline must not be silently rearmed as if nothing happened",
             scheduledAlarmCount() > 0
@@ -80,24 +73,19 @@ class BootReceiverTest {
     }
 
     @Test
-    fun `a normal reboot with nothing missed just reschedules, with no accountability notification`() = runTest {
+    fun `a normal reboot with nothing missed just reschedules`() = runTest {
         repository.setAlarmEnabled(true)
         repository.setWeekdayWindow(WakeWindow(0, 1439))
         repository.setWeekendWindow(WakeWindow(0, 1439))
         // Marking today as already handled means the scan in missedWindowSinceLastHandled
         // never considers any day "missed", regardless of what time the test runs at.
         repository.setLastHandledDate(LocalDate.now())
-        repository.setEmergencyContacts(listOf("+33612345678"))
         ShadowLog.clear()
 
         BootReceiver.handleBoot(context, repository)
 
         val logs = ShadowLog.getLogs().map { it.msg }
         assertTrue(logs.any { it.contains("branch: not ringing when device went down, missedWindow=false") })
-        assertFalse(
-            "a normal reboot must not text the accountability contact",
-            logs.any { it.contains("notifyMissedWakeup called") }
-        )
         assertTrue("a normal reboot must reschedule the next occurrence", scheduledAlarmCount() > 0)
     }
 }

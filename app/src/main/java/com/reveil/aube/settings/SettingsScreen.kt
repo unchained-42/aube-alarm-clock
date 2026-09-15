@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.reveil.aube.R
+import com.reveil.aube.kiosk.KioskPolicy
 import com.reveil.aube.permissions.missingBlockingChecks
 import kotlinx.coroutines.launch
 
@@ -53,7 +54,7 @@ fun SettingsScreen(
     onOpenQrSetup: () -> Unit,
     onOpenLanguageSettings: () -> Unit,
     onOpenPermissions: () -> Unit,
-    onOpenAccountabilityContacts: () -> Unit
+    onOpenHardcoreMode: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -72,6 +73,8 @@ fun SettingsScreen(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
     val missingChecks = remember(checksTick) { missingBlockingChecks(context) }
+    // Same re-check-on-resume: enrollment happens over adb, outside the app entirely.
+    val hardcoreActive = remember(checksTick) { KioskPolicy.isDeviceOwner(context) }
 
     val pickAudio = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
@@ -210,14 +213,19 @@ fun SettingsScreen(
             Text("$currentLanguageLabel ›", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
         }
 
+
         Spacer(Modifier.height(4.dp))
         Row(
-            modifier = Modifier.fillMaxWidth().clickable(onClick = onOpenAccountabilityContacts).padding(vertical = 12.dp),
+            modifier = Modifier.fillMaxWidth().clickable(onClick = onOpenHardcoreMode).padding(vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(stringResource(R.string.settings_accountability_label), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
-            Text(stringResource(R.string.settings_accountability_suffix), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(R.string.settings_hardcore_label), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                if (hardcoreActive) stringResource(R.string.settings_hardcore_active) else stringResource(R.string.settings_hardcore_inactive),
+                style = MaterialTheme.typography.bodyLarge,
+                color = if (hardcoreActive) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

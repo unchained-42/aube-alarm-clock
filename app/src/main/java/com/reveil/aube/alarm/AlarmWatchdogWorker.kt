@@ -3,6 +3,7 @@ package com.reveil.aube.alarm
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.reveil.aube.charge.ChargeGuard
 import com.reveil.aube.ringing.AlarmRingingService
 import com.reveil.aube.settings.SettingsRepository
 import kotlinx.coroutines.flow.first
@@ -26,6 +27,8 @@ import kotlinx.coroutines.runBlocking
 class AlarmWatchdogWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
     override fun doWork(): Result = runBlocking {
+        // Independent of the alarm state below: the guard has its own "not while ringing" rule.
+        runCatching { ChargeGuard.evaluate(applicationContext) }
         // Never touch AlarmManager while a ring is genuinely in progress or still waiting to
         // be resumed — scheduleNext()'s cancelAll() would tear down state that a real ring
         // (or BootReceiver's own resume logic) still needs.

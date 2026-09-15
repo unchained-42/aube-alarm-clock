@@ -67,22 +67,36 @@
     <string name="settings_permissions_label">Разрешения</string>
     <string name="settings_permissions_ok">Всё готово ›</string>
     <string name="settings_permissions_pending">Нужно завершить ›</string>
-    <string name="settings_accountability_label">Контакты подстраховки</string>
-    <string name="settings_accountability_suffix">SMS при пропуске ›</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="settings_hardcore_label">Режим хардкор</string>
+    <string name="settings_hardcore_active">Включён ›</string>
+    <string name="settings_hardcore_inactive">Выключен ›</string>
+    <string name="hardcore_title">Режим хардкор</string>
+    <string name="hardcore_status_active">Включён — телефон нельзя выключить, пока звонит будильник.</string>
+    <string name="hardcore_status_inactive">Выключен — меню выключения всё ещё может остановить будильник.</string>
+    <string name="hardcore_what_it_does">Пока звонит будильник, режим хардкор заставляет сам Android:</string>
+    <string name="hardcore_blocks_power_menu">Скрыть меню выключения (долгое нажатие кнопки питания ничего не делает).</string>
+    <string name="hardcore_blocks_leave_screen">Заблокировать экран будильника: без «Домой», «Недавних», строки состояния и экрана блокировки.</string>
+    <string name="hardcore_blocks_force_stop">Запретить остановку, очистку данных и удаление через Настройки.</string>
+    <string name="hardcore_blocks_safe_mode">Запретить безопасный режим и сброс через Настройки.</string>
+    <string name="hardcore_blocks_clock">Держать время по сети, чтобы часы нельзя было перевести за будильник.</string>
+    <string name="hardcore_limits">Чего он не может предотвратить: удержание кнопки питания ~10 с вызывает аппаратную перезагрузку — будильник снова звонит сразу после загрузки. Разряженная батарея тоже сработает, так что держите телефон на зарядке.</string>
+    <string name="hardcore_how_to_enable">Для включения нужен компьютер с adb, один раз. Android разрешает это только на телефоне без аккаунтов:</string>
+    <string name="hardcore_step_accounts">Удалите все аккаунты (Google, Xiaomi…) и любое второе пространство/пользователя с телефона.</string>
+    <string name="hardcore_step_usb_debug">Включите отладку по USB в параметрах разработчика и подключите телефон.</string>
+    <string name="hardcore_step_command">Выполните эту команду и вернитесь на этот экран:</string>
+    <string name="hardcore_release_button">Выключить режим хардкор</string>
+    <string name="hardcore_release_refused_ringing">Не во время звонка будильника.</string>
+    <string name="hardcore_release_confirm_title">Выключить режим хардкор?</string>
+    <string name="hardcore_release_confirm_text">Меню выключения снова будет работать во время будильника. Для повторного включения снова понадобятся adb и телефон без аккаунтов.</string>
+    <string name="hardcore_release_confirm_button">Выключить</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">Если срок истёк без подтверждения (телефон выключен, выполнять уже нечего), Aube отправит SMS этим номерам. Это единственное, что ещё сработает после выключения телефона.</string>
-    <string name="accountability_permission_missing">Требуется разрешение на SMS</string>
-    <string name="accountability_add_hint">Номер телефона</string>
-    <string name="accountability_pick_contact_button">Выбрать из контактов</string>
-    <string name="accountability_manual_entry_label">Или введите номер вручную</string>
-    <string name="accountability_add_button">Добавить контакт</string>
-    <string name="accountability_message_label">Сообщение</string>
-    <string name="accountability_message_placeholder">Я не проснулся вовремя.</string>
-    <string name="accountability_signature_note">Всегда заканчивается на: «%1$s»</string>
-    <string name="accountability_default_message">Я не проснулся вовремя.</string>
-    <string name="accountability_sms_signature">— отправлено автоматически приложением %1$s</string>
-    <string name="cd_delete_contact">Удалить этот контакт</string>
+    <string name="notif_channel_charge_name">Контроль зарядки</string>
+    <string name="notif_channel_charge_desc">Напоминания подключить телефон-будильник к зарядке, пока батарея не села</string>
+    <string name="charge_notif_title">Подключите телефон к зарядке</string>
+    <string name="charge_notif_text_low">Батарея %1$s %%. Будильник умирает вместе с батареей — сигнал будет повторяться, пока телефон не начнёт заряжаться.</string>
+    <string name="charge_notif_text_night">Телефон-будильник должен заряжаться ночью. Сигнал будет повторяться, пока он не подключён.</string>
+    <string name="charge_chirp_text">Подключите телефон к зарядке, чтобы остановить это.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Точные будильники</string>
@@ -137,8 +151,6 @@
     <string name="onboarding_feature_qr_desc">QR-код для сканирования, чтобы остановить, громкость заблокирована во время звонка.</string>
     <string name="onboarding_feature_routine_title">Ритуал после пробуждения</string>
     <string name="onboarding_feature_routine_desc">Напоминания о воде, свете, завтраке — в вашем темпе.</string>
-    <string name="onboarding_feature_accountability_title">Контакты подстраховки</string>
-    <string name="onboarding_feature_accountability_desc">Отправляет SMS доверенному человеку, если ты не встаёшь.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">Во сколько вам нужно проснуться?</string>
@@ -153,12 +165,6 @@
     <string name="onboarding_qr_subtitle">Без кнопки «я увидел», без откладывания: будильник останавливается только сканированием физического QR-кода — до него нужно дойти.</string>
     <string name="onboarding_qr_body">Этот QR-код уже активен — ничего настраивать не нужно. Распечатайте его сейчас и приклейте подальше от кровати — или выберите другой QR-код позже в Настройках.</string>
     <string name="onboarding_qr_print_now">Распечатать сейчас</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">Последствие, которого не избежать даже выключив телефон</string>
-    <string name="onboarding_accountability_subtitle">Если срок истёк полностью (телефон выключен, выполнять нечего), Aube может отправить SMS доверенному человеку.</string>
-    <string name="onboarding_accountability_body">Необязательно и отключено по умолчанию. Настроить можно в любой момент в Настройках.</string>
-    <string name="onboarding_accountability_setup_button">Настроить контакты</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">Чтобы это действительно сработало сегодня ночью</string>

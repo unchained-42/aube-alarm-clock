@@ -13,6 +13,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.reveil.aube.alarm.AlarmWatchdogWorker
+import com.reveil.aube.charge.ChargeGuard
+import com.reveil.aube.kiosk.KioskPolicy
 import com.reveil.aube.settings.LocaleHelper
 import com.reveil.aube.settings.SettingsRepository
 import java.util.concurrent.TimeUnit
@@ -25,6 +27,7 @@ object NotifChannels {
     const val TRACKING = "tracking"
     const val ALARM = "alarm"
     const val ROUTINE = "routine"
+    const val CHARGE = "charge"
 }
 
 class AubeApplication : Application() {
@@ -37,18 +40,17 @@ class AubeApplication : Application() {
         super.onCreate()
         createNotificationChannels()
         scheduleAlarmWatchdog()
-        migrateAccountabilityData()
+        // No-op unless this app is the device owner. Re-asserted on every process start (not
+        // just at enrollment) so an update that adds a policy, or a policy an earlier run
+        // missed, is in force before the next ring rather than after the next enrollment.
+        KioskPolicy.applyHardening(this)
+        evaluateChargeGuard()
     }
 
-    /**
-     * Best-effort, fire-and-forget — same reasoning as [scheduleAlarmWatchdog]: this only ever
-     * moves data for an install that had accountability contacts configured before the storage
-     * split (see [SettingsRepository.accountabilityDataStore]'s doc), so losing one run on a
-     * process that dies early just means it retries on the next start with nothing lost.
-     */
-    private fun migrateAccountabilityData() {
+    /** Best-effort, same reasoning as [scheduleAlarmWatchdog]: every other trigger re-runs it. */
+    private fun evaluateChargeGuard() {
         CoroutineScope(Dispatchers.IO).launch {
-            runCatching { SettingsRepository(applicationContext).migrateAccountabilityDataIfNeeded() }
+            runCatching { ChargeGuard.evaluate(applicationContext) }
         }
     }
 
@@ -130,6 +132,19 @@ class AubeApplication : Application() {
             description = getString(R.string.notif_channel_routine_desc)
         }
 
-        manager.createNotificationChannels(listOf(tracking, alarm, routine))
+        // Its own channel, not the alarm's: the chirp service plays its own sound on the alarm
+        // stream, so this channel must stay silent itself or every nag would double up.
+        val charge = NotificationChannel(
+            NotifChannels.CHARGE,
+            getString(R.string.notif_channel_charge_name),
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = getString(R.string.notif_channel_charge_desc)
+            setSound(null, null)
+            enableVibration(false)
+            setBypassDnd(true)
+        }
+
+        manager.createNotificationChannels(listOf(tracking, alarm, routine, charge))
     }
 }

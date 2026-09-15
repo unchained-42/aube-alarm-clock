@@ -67,22 +67,36 @@
     <string name="settings_permissions_label">الأذونات</string>
     <string name="settings_permissions_ok">كل شيء جاهز ›</string>
     <string name="settings_permissions_pending">يحتاج إكمال ›</string>
-    <string name="settings_accountability_label">جهات اتصال للمساءلة</string>
-    <string name="settings_accountability_suffix">رسالة عند الفوات ›</string>
+    <string name="action_cancel">إلغاء</string>
+    <string name="settings_hardcore_label">الوضع الصارم</string>
+    <string name="settings_hardcore_active">مفعّل ›</string>
+    <string name="settings_hardcore_inactive">متوقف ›</string>
+    <string name="hardcore_title">الوضع الصارم</string>
+    <string name="hardcore_status_active">مفعّل — لا يمكن إطفاء الهاتف أثناء رنين المنبّه.</string>
+    <string name="hardcore_status_inactive">متوقف — ما زال بإمكان قائمة الطاقة إنهاء المنبّه.</string>
+    <string name="hardcore_what_it_does">أثناء رنين المنبّه، يجعل الوضع الصارم نظام Android نفسه:</string>
+    <string name="hardcore_blocks_power_menu">يخفي قائمة الطاقة (الضغط المطوّل على زر الطاقة لا يفعل شيئًا).</string>
+    <string name="hardcore_blocks_leave_screen">يقفل شاشة المنبّه: لا زر رئيسي، لا تطبيقات حديثة، لا شريط حالة، لا شاشة قفل.</string>
+    <string name="hardcore_blocks_force_stop">يرفض الإيقاف القسري ومسح البيانات وإلغاء التثبيت من الإعدادات.</string>
+    <string name="hardcore_blocks_safe_mode">يرفض الوضع الآمن وإعادة ضبط المصنع من الإعدادات.</string>
+    <string name="hardcore_blocks_clock">يُبقي الساعة على وقت الشبكة حتى لا يمكن تقديمها بعد وقت المنبّه.</string>
+    <string name="hardcore_limits">ما لا يمكنه منعه: الضغط على زر الطاقة ~10 ثوانٍ يفرض إعادة تشغيل عتادية — وعندها يرن المنبّه مجددًا فور الإقلاع. نفاد البطارية يعمل أيضًا، لذا أبقِ الهاتف موصولًا بالشاحن.</string>
+    <string name="hardcore_how_to_enable">يتطلب التفعيل حاسوبًا مع adb مرة واحدة. لا يسمح Android بذلك إلا على هاتف بلا حسابات:</string>
+    <string name="hardcore_step_accounts">أزل كل الحسابات (Google، Xiaomi…) وأي مساحة/مستخدم ثانٍ من الهاتف.</string>
+    <string name="hardcore_step_usb_debug">فعّل تصحيح أخطاء USB في خيارات المطوّر ووصّل الهاتف.</string>
+    <string name="hardcore_step_command">نفّذ هذا الأمر ثم عد إلى هذه الشاشة:</string>
+    <string name="hardcore_release_button">إيقاف الوضع الصارم</string>
+    <string name="hardcore_release_refused_ringing">ليس أثناء رنين المنبّه.</string>
+    <string name="hardcore_release_confirm_title">إيقاف الوضع الصارم؟</string>
+    <string name="hardcore_release_confirm_text">ستعمل قائمة الطاقة مجددًا أثناء المنبّهات. تتطلب إعادة التفعيل adb وهاتفًا بلا حسابات مرة أخرى.</string>
+    <string name="hardcore_release_confirm_button">إيقاف</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">إذا مر الموعد النهائي دون إيقاف (الهاتف مطفأ، لا شيء يعمل)، يرسل Aube رسالة نصية لهذه الأرقام. إنها العاقبة الوحيدة التي تبقى فعّالة بعد إطفاء الهاتف.</string>
-    <string name="accountability_permission_missing">إذن الرسائل النصية مطلوب</string>
-    <string name="accountability_add_hint">رقم الهاتف</string>
-    <string name="accountability_pick_contact_button">اختيار من جهات الاتصال</string>
-    <string name="accountability_manual_entry_label">أو أدخل رقمًا يدويًا</string>
-    <string name="accountability_add_button">إضافة جهة اتصال</string>
-    <string name="accountability_message_label">الرسالة</string>
-    <string name="accountability_message_placeholder">لم أستيقظ في الوقت المحدد.</string>
-    <string name="accountability_signature_note">تنتهي دائمًا بـ: «%1$s»</string>
-    <string name="accountability_default_message">لم أستيقظ في الوقت المحدد.</string>
-    <string name="accountability_sms_signature">— أُرسلت تلقائيًا بواسطة تطبيق %1$s</string>
-    <string name="cd_delete_contact">إزالة جهة الاتصال هذه</string>
+    <string name="notif_channel_charge_name">حارس الشحن</string>
+    <string name="notif_channel_charge_desc">تذكيرات بوصل هاتف المنبّه بالشاحن قبل أن تفرغ البطارية</string>
+    <string name="charge_notif_title">وصّل الهاتف بالشاحن</string>
+    <string name="charge_notif_text_low">البطارية %1$s%%. يتوقف المنبّه مع فراغ البطارية — سيستمر التنبيه حتى يبدأ الهاتف بالشحن.</string>
+    <string name="charge_notif_text_night">يجب أن يكون هاتف المنبّه على الشاحن طوال الليل. سيستمر التنبيه حتى يتم وصله.</string>
+    <string name="charge_chirp_text">وصّل الهاتف بالشاحن لإيقاف هذا.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">المنبهات الدقيقة</string>
@@ -137,8 +151,6 @@
     <string name="onboarding_feature_qr_desc">رمز QR يُمسح لإيقافه، ومستوى الصوت مقفل أثناء الرنين.</string>
     <string name="onboarding_feature_routine_title">روتين بعد ذلك</string>
     <string name="onboarding_feature_routine_desc">تذكيرات بالماء والضوء والإفطار، بالوتيرة التي تناسبك.</string>
-    <string name="onboarding_feature_accountability_title">جهات اتصال للمساءلة</string>
-    <string name="onboarding_feature_accountability_desc">يرسل رسالة نصية لشخص تثق به إذا لم تستيقظ.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">في أي ساعة يجب أن تكون مستيقظًا؟</string>
@@ -153,12 +165,6 @@
     <string name="onboarding_qr_subtitle">لا زر «رأيته»، ولا غفوة: لا يتوقف المنبه إلا بمسح رمز QR فعلي — يجب أن تنهض للوصول إليه.</string>
     <string name="onboarding_qr_body">رمز QR هذا مفعّل بالفعل دون أي إعداد. اطبعه الآن والصقه بعيدًا عن السرير — أو اختر رمز QR آخر لاحقًا من الإعدادات.</string>
     <string name="onboarding_qr_print_now">طباعة الآن</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">عاقبة لا يفلت منها الهاتف حتى وهو مطفأ</string>
-    <string name="onboarding_accountability_subtitle">إذا فات الموعد النهائي تمامًا (الهاتف مطفأ، لا شيء يعمل)، يمكن لـ Aube إرسال رسالة نصية لشخص تثق به.</string>
-    <string name="onboarding_accountability_body">اختياري ومعطّل افتراضيًا. يمكن إعداده في أي وقت لاحقًا من الإعدادات.</string>
-    <string name="onboarding_accountability_setup_button">إعداد جهات الاتصال</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">لكي ينجح الأمر فعلاً الليلة</string>

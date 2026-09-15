@@ -67,24 +67,36 @@
     <string name="settings_permissions_label">Permissions</string>
     <string name="settings_permissions_ok">OK ›</string>
     <string name="settings_permissions_pending">À compléter ›</string>
-    <string name="settings_accountability_label">Contacts de secours</string>
-    <string name="settings_accountability_suffix">SMS si raté ›</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="settings_hardcore_label">Mode hardcore</string>
+    <string name="settings_hardcore_active">Actif ›</string>
+    <string name="settings_hardcore_inactive">Désactivé ›</string>
+    <string name="hardcore_title">Mode hardcore</string>
+    <string name="hardcore_status_active">Actif — impossible d\'éteindre le téléphone pendant que le réveil sonne.</string>
+    <string name="hardcore_status_inactive">Désactivé — le menu d\'extinction peut encore couper le réveil.</string>
+    <string name="hardcore_what_it_does">Pendant la sonnerie, le mode hardcore demande à Android lui-même de :</string>
+    <string name="hardcore_blocks_power_menu">Cacher le menu d\'extinction (l\'appui long sur Power ne fait rien).</string>
+    <string name="hardcore_blocks_leave_screen">Verrouiller l\'écran du réveil : ni Accueil, ni Récents, ni barre d\'état, ni écran de verrouillage.</string>
+    <string name="hardcore_blocks_force_stop">Refuser l\'arrêt forcé, l\'effacement des données et la désinstallation depuis les Réglages.</string>
+    <string name="hardcore_blocks_safe_mode">Refuser le mode sans échec et la réinitialisation depuis les Réglages.</string>
+    <string name="hardcore_blocks_clock">Garder l\'heure du réseau pour qu\'on ne puisse pas avancer l\'horloge au-delà du réveil.</string>
+    <string name="hardcore_limits">Ce qu\'il ne peut pas empêcher : maintenir Power ~10 s force un redémarrage matériel — le réveil resonne alors juste après le démarrage. Laisser la batterie se vider marche aussi : garde le téléphone branché.</string>
+    <string name="hardcore_how_to_enable">L\'activation demande un ordinateur avec adb, une seule fois. Android ne l\'autorise que sur un téléphone sans aucun compte :</string>
+    <string name="hardcore_step_accounts">Retire tous les comptes (Google, Xiaomi…) et tout second espace/utilisateur du téléphone.</string>
+    <string name="hardcore_step_usb_debug">Active le débogage USB dans les Options pour développeurs et branche le téléphone.</string>
+    <string name="hardcore_step_command">Lance cette commande, puis reviens sur cet écran :</string>
+    <string name="hardcore_release_button">Désactiver le mode hardcore</string>
+    <string name="hardcore_release_refused_ringing">Pas pendant que le réveil sonne.</string>
+    <string name="hardcore_release_confirm_title">Désactiver le mode hardcore ?</string>
+    <string name="hardcore_release_confirm_text">Le menu d\'extinction fonctionnera de nouveau pendant les réveils. Le réactiver demandera de nouveau adb et un téléphone sans compte.</string>
+    <string name="hardcore_release_confirm_button">Désactiver</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">Si l\'échéance passe sans dismiss (téléphone éteint, plus rien à exécuter), Aube envoie un SMS à l\'un de ces numéros. S\'il y en a plusieurs, le choix est aléatoire et exclut la personne prévenue la dernière fois. C\'est la seule conséquence qui reste possible une fois le téléphone éteint.</string>
-    <string name="accountability_permission_missing">Permission SMS requise</string>
-    <string name="accountability_add_hint">Numéro de téléphone</string>
-    <string name="accountability_pick_contact_button">Choisir dans les contacts</string>
-    <string name="accountability_manual_entry_label">Ou saisir un numéro à la main</string>
-    <string name="accountability_add_button">Ajouter un contact</string>
-    <string name="accountability_invalid_number">Ce numéro ne semble pas valide</string>
-    <string name="accountability_last_send_failed">Le dernier message n\'a pas pu être envoyé. Vérifie le numéro et l\'autorisation SMS.</string>
-    <string name="accountability_message_label">Message</string>
-    <string name="accountability_message_placeholder">Je ne me suis pas levé(e) à l\'heure.</string>
-    <string name="accountability_signature_note">Se termine toujours par : « %1$s »</string>
-    <string name="accountability_default_message">Je ne me suis pas levé(e) à l\'heure.</string>
-    <string name="accountability_sms_signature">— envoyé automatiquement par l\'app %1$s</string>
-    <string name="cd_delete_contact">Supprimer ce contact</string>
+    <string name="notif_channel_charge_name">Garde-batterie</string>
+    <string name="notif_channel_charge_desc">Rappels pour brancher le téléphone du réveil avant que la batterie soit vide</string>
+    <string name="charge_notif_title">Branche le téléphone</string>
+    <string name="charge_notif_text_low">Batterie à %1$s %%. Le réveil s\'éteint avec la batterie — ça sonnera jusqu\'à ce que le téléphone charge.</string>
+    <string name="charge_notif_text_night">Le téléphone du réveil doit être en charge pour la nuit. Ça sonnera jusqu\'à ce qu\'il soit branché.</string>
+    <string name="charge_chirp_text">Branche le téléphone pour arrêter ça.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmes exactes</string>
@@ -140,8 +152,6 @@
     <string name="onboarding_feature_qr_desc">Un QR-code à scanner pour l\'arrêter, volume verrouillé pendant la sonnerie.</string>
     <string name="onboarding_feature_routine_title">Une routine après</string>
     <string name="onboarding_feature_routine_desc">Rappels eau, lumière, petit-déjeuner, à ton rythme.</string>
-    <string name="onboarding_feature_accountability_title">Contacts de secours</string>
-    <string name="onboarding_feature_accountability_desc">Envoie un SMS à un proche si tu ne te lèves pas.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">À quelle heure dois-tu être debout ?</string>
@@ -157,12 +167,6 @@
     <string name="onboarding_qr_body">Ce QR-code est déjà actif, sans rien configurer. Imprime-le maintenant et colle-le loin du lit — ou choisis un autre QR-code plus tard dans Réglages.</string>
     <string name="onboarding_qr_personalize_hint">Ce code par défaut est le même sur chaque installation d\'Aube. Pour un rituel que toi seul(e) peux déjouer, remplace-le plus tard par ton propre code-barres dans Réglages.</string>
     <string name="onboarding_qr_print_now">Imprimer maintenant</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">Une conséquence qu\'un téléphone éteint ne peut pas éviter</string>
-    <string name="onboarding_accountability_subtitle">Si l\'échéance passe complètement (téléphone éteint, plus rien à exécuter), Aube peut envoyer un SMS à quelqu\'un de confiance.</string>
-    <string name="onboarding_accountability_body">Facultatif, désactivé par défaut. Configurable à tout moment depuis les Réglages.</string>
-    <string name="onboarding_accountability_setup_button">Configurer les contacts</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">Pour que ça marche vraiment cette nuit</string>

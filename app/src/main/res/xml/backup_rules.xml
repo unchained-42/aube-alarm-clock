@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Pre-API-31 equivalent of data_extraction_rules.xml (android:fullBackupContent) — same
-    exclusion, for the old Auto Backup / adb backup mechanism on API 23-30.
+    Pre-API-31 equivalent of data_extraction_rules.xml (android:fullBackupContent). Nothing
+    is excluded: every setting the app stores (wake windows, dawn duration, reminders, the QR
+    dismiss payload) is harmless to back up and worth keeping for a smooth device switch.
 -->
-<full-backup-content>
-    <exclude domain="file" path="datastore/aube_accountability.preferences_pb" />
-</full-backup-content>
+<full-backup-content />

@@ -21,15 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.reveil.aube.onboarding.OnboardingAccountabilityScreen
 import com.reveil.aube.onboarding.OnboardingQrCodeScreen
 import com.reveil.aube.onboarding.OnboardingReliabilityScreen
 import com.reveil.aube.onboarding.OnboardingSleepDurationScreen
 import com.reveil.aube.onboarding.OnboardingWakeTimeScreen
 import com.reveil.aube.onboarding.OnboardingWelcomeScreen
-import com.reveil.aube.settings.AccountabilityContactsScreen
 import com.reveil.aube.settings.LanguageSettingsScreen
 import com.reveil.aube.settings.LocaleHelper
+import com.reveil.aube.settings.HardcoreModeScreen
 import com.reveil.aube.settings.PermissionsScreen
 import com.reveil.aube.settings.QrSetupScreen
 import com.reveil.aube.settings.RoutineSettingsScreen
@@ -101,19 +100,6 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("onboarding_qr_code") {
                             OnboardingQrCodeScreen(
-                                onContinue = { navController.navigate("onboarding_accountability") }
-                            )
-                        }
-                        composable("onboarding_accountability") {
-                            OnboardingAccountabilityScreen(
-                                onSetUpContacts = { navController.navigate("onboarding_accountability_contacts") },
-                                onContinue = { navController.navigate("onboarding_reliability") }
-                            )
-                        }
-                        composable("onboarding_accountability_contacts") {
-                            AccountabilityContactsScreen(
-                                settingsRepository = settingsRepository,
-                                onBack = { navController.popBackStack() },
                                 onContinue = { navController.navigate("onboarding_reliability") }
                             )
                         }
@@ -145,7 +131,7 @@ class MainActivity : ComponentActivity() {
                                 onOpenQrSetup = { navController.navigate("qr_setup") },
                                 onOpenLanguageSettings = { navController.navigate("language_settings") },
                                 onOpenPermissions = { navController.navigate("permissions") },
-                                onOpenAccountabilityContacts = { navController.navigate("accountability_contacts") }
+                                onOpenHardcoreMode = { navController.navigate("hardcore_mode") }
                             )
                         }
                         composable("routine_settings") {
@@ -160,8 +146,8 @@ class MainActivity : ComponentActivity() {
                         composable("permissions") {
                             PermissionsScreen(onBack = { navController.popBackStack() })
                         }
-                        composable("accountability_contacts") {
-                            AccountabilityContactsScreen(settingsRepository = settingsRepository, onBack = { navController.popBackStack() })
+                        composable("hardcore_mode") {
+                            HardcoreModeScreen(onBack = { navController.popBackStack() })
                         }
                     }
                 }

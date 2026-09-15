@@ -9,19 +9,22 @@ import android.content.IntentFilter
 import android.content.pm.ServiceInfo
 import android.media.AudioManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.PowerManager
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.reveil.aube.NotifChannels
 import com.reveil.aube.R
-import com.reveil.aube.alarm.AccountabilityNotifier
 import com.reveil.aube.alarm.AlarmScheduler
 import com.reveil.aube.settings.LocaleHelper
 import com.reveil.aube.settings.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -39,6 +42,8 @@ import java.time.LocalDate
  * foreground service isn't tied to that lifecycle, and [onTaskRemoved] pulls the ringing
  * screen straight back instead of letting the alarm just vanish.
  */
+private const val TAG = "AubeRingingService"
+
 class AlarmRingingService : Service() {
 
     private val soundPlayer by lazy { AlarmSoundPlayer(this) }
@@ -52,6 +57,12 @@ class AlarmRingingService : Service() {
     private var vibrationWasRequested = false
     private var pulseSoundOn = true
     private var dismissed = false
+    // Kept so a stray-command instance (see onStartCommand) can order its "not ringing"
+    // write strictly after onCreate's "ringing" one — two independent launches could land
+    // in either order.
+    private var ringingFlagJob: Job? = null
+    private var activityVisible = false
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     // The ramp loop only corrects the volume once a second; this reacts the instant anything
     // else moves the alarm stream — the system's own touch-based volume panel, some other
@@ -81,7 +92,7 @@ class AlarmRingingService : Service() {
         startForegroundNotification()
         // Marks the alarm as "ringing, not yet dismissed" — see setAlarmRinging's doc for why
         // this is what lets a reboot get caught instead of quietly ending everything.
-        scope.launch { SettingsRepository(applicationContext).setAlarmRinging(true) }
+        ringingFlagJob = scope.launch { SettingsRepository(applicationContext).setAlarmRinging(true) }
 
         ContextCompat.registerReceiver(
             this, volumeWatchdog, IntentFilter("android.media.VOLUME_CHANGED_ACTION"),
@@ -149,6 +160,7 @@ class AlarmRingingService : Service() {
         // legitimate end to the ring, so onTaskRemoved must not relaunch it if the task
         // happens to go away around the same time.
         dismissed = true
+        notifyRingEnded()
         soundPlayer.stop()
         alarmVibrator.stop()
         overlay.hide()
@@ -157,16 +169,22 @@ class AlarmRingingService : Service() {
         scope.launch {
             val settingsRepository = SettingsRepository(applicationContext)
             val settings = settingsRepository.settings.first()
-            // Rang for hours, on a phone that stayed on, with no one ever dismissing it —
-            // exactly the failure AccountabilityNotifier exists for, same as the boot-time
-            // missed-window case in BootReceiver.
-            AccountabilityNotifier.notifyMissedWakeup(applicationContext, settingsRepository, settings)
             settingsRepository.setAlarmRinging(false)
             settingsRepository.setLastHandledDate(LocalDate.now())
             AlarmScheduler(applicationContext).scheduleNext(settings)
         }
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
+    }
+
+    /**
+     * Tells a still-alive AlarmActivity the ring is over so it finishes itself. A scan
+     * already finishes it directly; this covers the ends that don't start on that screen —
+     * the auto-stop ceiling, and the debug STOP hook — which used to leave the alarm screen
+     * pinned in lock task with nothing ringing behind it and no way off it but a scan.
+     */
+    private fun notifyRingEnded() {
+        sendBroadcast(Intent(ACTION_RING_ENDED).setPackage(packageName))
     }
 
     private fun postMissedNotification() {
@@ -205,18 +223,51 @@ class AlarmRingingService : Service() {
         // it's a safe, unambiguous signal that this is that restart, not a normal command —
         // recovering means exactly what BootReceiver already does for a reboot mid-ring:
         // relaunch the alarm from scratch instead of leaving it stuck.
-        if (dawnEndMillis <= 0L) {
+        if (dawnEndMillis <= 0L && intent == null) {
             val now = System.currentTimeMillis()
             dawnStartMillis = now
             dawnEndMillis = now
             launchAlarm(applicationContext, now, now)
             return START_STICKY
         }
+        // An explicit command reaching an instance that never learned a window. AlarmActivity
+        // always sends the window first, synchronously in onCreate, so this can only be a
+        // straggler: the activity's once-a-second volume tick (or a second DISMISS) landing
+        // after ACTION_DISMISS already stopped the previous instance — which startService
+        // then dutifully turned into a brand-new one. This used to fall into the recovery
+        // branch above and relaunch the alarm from scratch right after a legitimate scan: a
+        // dismiss → ring → dismiss → ring loop, confirmed on a real device once device-owner
+        // lock task made finish() slow enough for one more tick to get through every time.
+        // It's not a ring, so it must not leave the "ringing" flag onCreate just set behind
+        // either — BootReceiver would read that as a ring to resume on the next boot.
+        if (dawnEndMillis <= 0L) {
+            Log.i(TAG, "stray ${intent?.action} on a fresh instance, ending it")
+            dismissed = true
+            dismissAlarmNotification(applicationContext)
+            scope.launch {
+                ringingFlagJob?.join()
+                SettingsRepository(applicationContext).setAlarmRinging(false)
+                withContext(Dispatchers.Main) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopSelf()
+                }
+            }
+            return START_NOT_STICKY
+        }
 
         when (intent?.action) {
             ACTION_START_SOUND -> {
                 lastMusicUri = intent.getStringExtra(EXTRA_URI)
                 soundPlayer.start(lastMusicUri, intent.getFloatExtra(EXTRA_VOLUME, 1f))
+            }
+            ACTION_RESUME_AFTER_BOOT -> {
+                lastMusicUri = intent.getStringExtra(EXTRA_URI)
+                soundPlayer.start(lastMusicUri, 1f)
+                if (intent.getBooleanExtra(EXTRA_VIBRATE, true)) {
+                    vibrationWasRequested = true
+                    alarmVibrator.start()
+                }
+                mainHandler.postDelayed({ bringScreenBackAfterBoot() }, RESUME_SCREEN_DELAY_MS)
             }
             ACTION_SET_VOLUME -> soundPlayer.setVolume(intent.getFloatExtra(EXTRA_VOLUME, 1f))
             ACTION_START_VIBRATION -> {
@@ -229,8 +280,14 @@ class AlarmRingingService : Service() {
             }
             // Mirrors AlarmActivity.onStart()/onStop(): the overlay only needs to be visible
             // when the real screen isn't — showing both at once would just double up.
-            ACTION_ACTIVITY_VISIBLE -> overlay.hide()
-            ACTION_ACTIVITY_HIDDEN -> overlay.show(dawnStartMillis, dawnEndMillis)
+            ACTION_ACTIVITY_VISIBLE -> {
+                activityVisible = true
+                overlay.hide()
+            }
+            ACTION_ACTIVITY_HIDDEN -> {
+                activityVisible = false
+                overlay.show(dawnStartMillis, dawnEndMillis)
+            }
             // The one legitimate way this ever ends: a successful scan, routed here from
             // AlarmActivity.handleDismissed().
             ACTION_DISMISS -> {
@@ -238,6 +295,11 @@ class AlarmRingingService : Service() {
                 soundPlayer.stop()
                 alarmVibrator.stop()
                 overlay.hide()
+                notifyRingEnded()
+                // AlarmActivity normally clears this itself, but not every dismiss comes from
+                // it (debug STOP hook) — and a leftover "Time to get up" whose full-screen
+                // intent starts a brand-new ring when tapped is not a harmless leftover.
+                dismissAlarmNotification(applicationContext)
                 // Cancelled here, synchronously, rather than left to AlarmActivity's
                 // lifecycleScope coroutine: that scope dies the moment the activity reaches
                 // DESTROYED, which finish() (called right after this) can trigger before the
@@ -277,6 +339,32 @@ class AlarmRingingService : Service() {
             }
         }
         return START_STICKY
+    }
+
+    /**
+     * The delayed second half of [ACTION_RESUME_AFTER_BOOT]. Sound has been going since the
+     * command arrived; this puts the pinned screen back in front of it. Starting an activity
+     * from a service is normally restricted, but this app holds SYSTEM_ALERT_WINDOW and, in
+     * hardcore mode, is the device owner — both exemptions. The overlay goes up too, in case
+     * the launch is refused anyway: its "return to the alarm" button is the same launch,
+     * from a user tap.
+     */
+    private fun bringScreenBackAfterBoot() {
+        if (dismissed || activityVisible) return
+        val intent = Intent(this, AlarmActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_NO_USER_ACTION
+            putExtra(EXTRA_DAWN_START_MILLIS, dawnStartMillis)
+            putExtra(EXTRA_DAWN_END_MILLIS, dawnEndMillis)
+            putExtra(EXTRA_RESUMED_AFTER_REBOOT, true)
+        }
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.w(TAG, "post-boot activity launch refused", e)
+        }
+        overlay.show(dawnStartMillis, dawnEndMillis)
     }
 
     private fun startForegroundNotification() {
@@ -335,6 +423,7 @@ class AlarmRingingService : Service() {
 
     override fun onDestroy() {
         isActive = false
+        mainHandler.removeCallbacksAndMessages(null)
         soundPlayer.stop()
         alarmVibrator.stop()
         overlay.hide()
@@ -394,6 +483,19 @@ class AlarmRingingService : Service() {
         // Comfortably past TOTAL_AUTO_STOP_MS so the wake lock never expires mid-cycle.
         private const val MAX_RINGING_DURATION_MS = 7 * 60 * 60 * 1000L
 
+        /** Sent (app-internal) once a ring has ended by any legitimate route. */
+        const val ACTION_RING_ENDED = "com.reveil.aube.action.RING_ENDED"
+        /**
+         * Boot-time resume of a ring the device went down in the middle of: starts sound
+         * (and vibration) immediately, then brings AlarmActivity back after a short delay
+         * — see [resumeAlarmAfterBoot]. Carries the window extras plus [EXTRA_URI]/[EXTRA_VIBRATE].
+         */
+        const val ACTION_RESUME_AFTER_BOOT = "com.reveil.aube.action.RESUME_AFTER_BOOT"
+        const val EXTRA_VIBRATE = "extra_vibrate"
+        // Long enough for the system to have finished bringing up its own windows after
+        // BOOT_COMPLETED (a direct startActivity() any sooner lost a focus race and ANR'd),
+        // short enough that the screen is back before anyone can get their bearings.
+        private const val RESUME_SCREEN_DELAY_MS = 3_000L
         const val ACTION_START_SOUND = "com.reveil.aube.action.START_SOUND"
         const val ACTION_SET_VOLUME = "com.reveil.aube.action.SET_VOLUME"
         const val ACTION_START_VIBRATION = "com.reveil.aube.action.START_VIBRATION"

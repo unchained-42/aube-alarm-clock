@@ -67,22 +67,36 @@
     <string name="settings_permissions_label">权限</string>
     <string name="settings_permissions_ok">正常 ›</string>
     <string name="settings_permissions_pending">待完成 ›</string>
-    <string name="settings_accountability_label">紧急联系人</string>
-    <string name="settings_accountability_suffix">未起床时发短信 ›</string>
+    <string name="action_cancel">取消</string>
+    <string name="settings_hardcore_label">硬核模式</string>
+    <string name="settings_hardcore_active">已启用 ›</string>
+    <string name="settings_hardcore_inactive">已关闭 ›</string>
+    <string name="hardcore_title">硬核模式</string>
+    <string name="hardcore_status_active">已启用 — 闹钟响铃时无法关闭手机。</string>
+    <string name="hardcore_status_inactive">已关闭 — 电源菜单仍然可以终止闹钟。</string>
+    <string name="hardcore_what_it_does">闹钟响铃期间，硬核模式让 Android 系统本身：</string>
+    <string name="hardcore_blocks_power_menu">隐藏电源菜单（长按电源键无任何反应）。</string>
+    <string name="hardcore_blocks_leave_screen">锁定闹钟界面：没有主屏、没有最近任务、没有状态栏、没有锁屏。</string>
+    <string name="hardcore_blocks_force_stop">拒绝在设置中强行停止、清除数据和卸载。</string>
+    <string name="hardcore_blocks_safe_mode">拒绝安全模式和在设置中恢复出厂设置。</string>
+    <string name="hardcore_blocks_clock">保持网络时间，使时钟无法被调到闹钟之后。</string>
+    <string name="hardcore_limits">它无法阻止的：长按电源键约 10 秒会强制硬件重启 — 开机后闹钟会立即再次响起。让电池耗尽也可以，所以请保持手机充电。</string>
+    <string name="hardcore_how_to_enable">启用需要一台装有 adb 的电脑，只需一次。Android 仅允许在没有任何账号的手机上启用：</string>
+    <string name="hardcore_step_accounts">移除手机上的所有账号（Google、小米…）以及任何第二空间/用户。</string>
+    <string name="hardcore_step_usb_debug">在开发者选项中启用 USB 调试并连接手机。</string>
+    <string name="hardcore_step_command">运行此命令，然后回到此界面：</string>
+    <string name="hardcore_release_button">关闭硬核模式</string>
+    <string name="hardcore_release_refused_ringing">闹钟响铃时不可操作。</string>
+    <string name="hardcore_release_confirm_title">关闭硬核模式？</string>
+    <string name="hardcore_release_confirm_text">闹钟期间电源菜单将恢复可用。再次启用需要重新使用 adb 和一台没有账号的手机。</string>
+    <string name="hardcore_release_confirm_button">关闭</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">如果截止时间已过且未解除闹钟（手机关机，无法运行任何程序），Aube 会给这些号码发短信。这是手机关机后唯一还能生效的后果。</string>
-    <string name="accountability_permission_missing">需要短信权限</string>
-    <string name="accountability_add_hint">电话号码</string>
-    <string name="accountability_pick_contact_button">从联系人中选择</string>
-    <string name="accountability_manual_entry_label">或手动输入号码</string>
-    <string name="accountability_add_button">添加联系人</string>
-    <string name="accountability_message_label">短信内容</string>
-    <string name="accountability_message_placeholder">我没有按时起床。</string>
-    <string name="accountability_signature_note">结尾始终会附加：“%1$s”</string>
-    <string name="accountability_default_message">我没有按时起床。</string>
-    <string name="accountability_sms_signature">— 由 %1$s 应用自动发送</string>
-    <string name="cd_delete_contact">删除此联系人</string>
+    <string name="notif_channel_charge_name">充电守护</string>
+    <string name="notif_channel_charge_desc">在电池耗尽前提醒为闹钟手机充电</string>
+    <string name="charge_notif_title">请给手机充电</string>
+    <string name="charge_notif_text_low">电量 %1$s%%。电池耗尽闹钟就会失效 — 在手机充电之前会一直响。</string>
+    <string name="charge_notif_text_night">闹钟手机夜间必须充电。在插上电源之前会一直响。</string>
+    <string name="charge_chirp_text">给手机充电即可停止。</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">精确闹钟</string>
@@ -137,8 +151,6 @@
     <string name="onboarding_feature_qr_desc">需扫描二维码才能停止，响铃期间音量被锁定。</string>
     <string name="onboarding_feature_routine_title">之后的晨间流程</string>
     <string name="onboarding_feature_routine_desc">按你的节奏提醒喝水、光照、早餐。</string>
-    <string name="onboarding_feature_accountability_title">紧急联系人</string>
-    <string name="onboarding_feature_accountability_desc">如果你没起床，会给信任的人发短信。</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">你需要几点起床？</string>
@@ -153,12 +165,6 @@
     <string name="onboarding_qr_subtitle">没有「我看到了」按钮，没有贪睡：闹钟只能通过扫描实体二维码停止 — 你必须起身才能够到它。</string>
     <string name="onboarding_qr_body">此二维码无需任何设置即已生效。现在打印出来，贴在远离床铺的地方 — 或者稍后在设置中选择其他二维码。</string>
     <string name="onboarding_qr_print_now">立即打印</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">关机也无法躲开的后果</string>
-    <string name="onboarding_accountability_subtitle">如果截止时间完全错过（手机关机，无法运行任何程序），Aube 可以给你信任的人发短信。</string>
-    <string name="onboarding_accountability_body">此功能可选，默认关闭。你可以随时在设置中配置。</string>
-    <string name="onboarding_accountability_setup_button">设置联系人</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">为了今晚真正生效</string>

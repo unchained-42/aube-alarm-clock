@@ -67,22 +67,36 @@
     <string name="settings_permissions_label">अनुमतियां</string>
     <string name="settings_permissions_ok">सब ठीक है ›</string>
     <string name="settings_permissions_pending">पूरा करना बाकी ›</string>
-    <string name="settings_accountability_label">जवाबदेही संपर्क</string>
-    <string name="settings_accountability_suffix">न उठने पर SMS ›</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="settings_hardcore_label">हार्डकोर मोड</string>
+    <string name="settings_hardcore_active">सक्रिय ›</string>
+    <string name="settings_hardcore_inactive">बंद ›</string>
+    <string name="hardcore_title">हार्डकोर मोड</string>
+    <string name="hardcore_status_active">सक्रिय — अलार्म बजते समय फ़ोन बंद नहीं किया जा सकता।</string>
+    <string name="hardcore_status_inactive">बंद — पावर मेनू अभी भी अलार्म रोक सकता है।</string>
+    <string name="hardcore_what_it_does">अलार्म बजते समय, हार्डकोर मोड Android से ही यह करवाता है:</string>
+    <string name="hardcore_blocks_power_menu">पावर मेनू छुपाना (पावर बटन देर तक दबाने से कुछ नहीं होता)।</string>
+    <string name="hardcore_blocks_leave_screen">अलार्म स्क्रीन लॉक करना: न होम, न रीसेंट, न स्टेटस बार, न लॉक स्क्रीन।</string>
+    <string name="hardcore_blocks_force_stop">सेटिंग्स से फ़ोर्स स्टॉप, डेटा साफ़ करना और अनइंस्टॉल अस्वीकार करना।</string>
+    <string name="hardcore_blocks_safe_mode">सेफ़ मोड और सेटिंग्स से फ़ैक्टरी रीसेट अस्वीकार करना।</string>
+    <string name="hardcore_blocks_clock">घड़ी को नेटवर्क समय पर रखना ताकि इसे अलार्म से आगे न बढ़ाया जा सके।</string>
+    <string name="hardcore_limits">जो यह नहीं रोक सकता: पावर बटन ~10 सेकंड दबाए रखने से हार्डवेयर रीबूट होता है — फिर बूट के तुरंत बाद अलार्म फिर बजता है। बैटरी खत्म होने देना भी काम करता है, इसलिए फ़ोन चार्जिंग पर रखें।</string>
+    <string name="hardcore_how_to_enable">इसे चालू करने के लिए एक बार adb वाला कंप्यूटर चाहिए। Android इसे केवल बिना किसी खाते वाले फ़ोन पर अनुमति देता है:</string>
+    <string name="hardcore_step_accounts">फ़ोन से सभी खाते (Google, Xiaomi…) और कोई भी दूसरा स्पेस/उपयोगकर्ता हटाएँ।</string>
+    <string name="hardcore_step_usb_debug">डेवलपर विकल्पों में USB डिबगिंग चालू करें और फ़ोन कनेक्ट करें।</string>
+    <string name="hardcore_step_command">यह कमांड चलाएँ, फिर इस स्क्रीन पर वापस आएँ:</string>
+    <string name="hardcore_release_button">हार्डकोर मोड बंद करें</string>
+    <string name="hardcore_release_refused_ringing">अलार्म बजते समय नहीं।</string>
+    <string name="hardcore_release_confirm_title">हार्डकोर मोड बंद करें?</string>
+    <string name="hardcore_release_confirm_text">अलार्म के दौरान पावर मेनू फिर से काम करेगा। इसे फिर चालू करने के लिए दोबारा adb और बिना खाते वाला फ़ोन चाहिए होगा।</string>
+    <string name="hardcore_release_confirm_button">बंद करें</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">अगर समय-सीमा बिना बंद किए निकल जाए (फ़ोन बंद, कुछ भी चलाना संभव नहीं), तो Aube इन नंबरों पर SMS भेजता है। फ़ोन बंद होने के बाद भी लागू होने वाला यही एकमात्र असर है।</string>
-    <string name="accountability_permission_missing">SMS अनुमति आवश्यक है</string>
-    <string name="accountability_add_hint">फ़ोन नंबर</string>
-    <string name="accountability_pick_contact_button">संपर्कों से चुनें</string>
-    <string name="accountability_manual_entry_label">या नंबर खुद टाइप करें</string>
-    <string name="accountability_add_button">संपर्क जोड़ें</string>
-    <string name="accountability_message_label">संदेश</string>
-    <string name="accountability_message_placeholder">मैं समय पर नहीं उठा/उठी।</string>
-    <string name="accountability_signature_note">हमेशा इसके साथ खत्म होता है: "%1$s"</string>
-    <string name="accountability_default_message">मैं समय पर नहीं उठा/उठी।</string>
-    <string name="accountability_sms_signature">— %1$s ऐप द्वारा स्वचालित रूप से भेजा गया</string>
-    <string name="cd_delete_contact">यह संपर्क हटाएं</string>
+    <string name="notif_channel_charge_name">चार्ज गार्ड</string>
+    <string name="notif_channel_charge_desc">बैटरी खत्म होने से पहले अलार्म फ़ोन को चार्ज पर लगाने के अनुस्मारक</string>
+    <string name="charge_notif_title">फ़ोन चार्ज पर लगाएँ</string>
+    <string name="charge_notif_text_low">बैटरी %1$s%% है। बैटरी के साथ अलार्म भी बंद हो जाएगा — फ़ोन चार्ज होने तक यह बजता रहेगा।</string>
+    <string name="charge_notif_text_night">अलार्म फ़ोन रात भर चार्ज पर होना चाहिए। प्लग लगने तक यह बजता रहेगा।</string>
+    <string name="charge_chirp_text">इसे रोकने के लिए फ़ोन चार्ज पर लगाएँ।</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">सटीक अलार्म</string>
@@ -137,8 +151,6 @@
     <string name="onboarding_feature_qr_desc">इसे रोकने के लिए स्कैन करने का QR कोड, बजते समय वॉल्यूम लॉक रहता है।</string>
     <string name="onboarding_feature_routine_title">इसके बाद एक दिनचर्या</string>
     <string name="onboarding_feature_routine_desc">अपनी गति से पानी, रोशनी, नाश्ते के रिमाइंडर।</string>
-    <string name="onboarding_feature_accountability_title">जवाबदेही संपर्क</string>
-    <string name="onboarding_feature_accountability_desc">अगर आप नहीं उठे तो किसी भरोसेमंद व्यक्ति को SMS भेजता है।</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">आपको किस समय जागना है?</string>
@@ -153,12 +165,6 @@
     <string name="onboarding_qr_subtitle">कोई \"मैंने देख लिया\" बटन नहीं, कोई स्नूज़ नहीं: अलार्म केवल एक भौतिक QR कोड को स्कैन करने पर रुकता है — इसे पाने के लिए आपको उठना होगा।</string>
     <string name="onboarding_qr_body">यह QR कोड बिना कुछ सेट किए ही पहले से सक्रिय है। इसे अभी प्रिंट करें और बिस्तर से दूर चिपकाएं — या बाद में सेटिंग्स में कोई अन्य QR कोड चुनें।</string>
     <string name="onboarding_qr_print_now">अभी प्रिंट करें</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">एक ऐसा असर जिससे बंद फ़ोन भी नहीं बच सकता</string>
-    <string name="onboarding_accountability_subtitle">अगर समय-सीमा पूरी तरह निकल जाए (फ़ोन बंद, कुछ भी चलाना संभव नहीं), तो Aube किसी भरोसेमंद व्यक्ति को SMS भेज सकता है।</string>
-    <string name="onboarding_accountability_body">यह वैकल्पिक है और डिफ़ॉल्ट रूप से बंद रहता है। इसे बाद में कभी भी सेटिंग्स से जोड़ा जा सकता है।</string>
-    <string name="onboarding_accountability_setup_button">संपर्क सेट करें</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">ताकि आज रात यह सच में काम करे</string>

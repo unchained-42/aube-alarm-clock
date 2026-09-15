@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- No legacy device-admin policies are needed: everything the hardcore mode does goes
+     through DevicePolicyManager's device-owner APIs, which are gated on being device owner,
+     not on anything declared here. The file itself is still mandatory for the receiver's
+     android.app.device_admin meta-data to resolve. -->
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-policies />
+</device-admin>

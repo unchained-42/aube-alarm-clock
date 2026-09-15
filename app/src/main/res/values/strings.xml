@@ -72,24 +72,36 @@
     <string name="settings_permissions_label">Permissions</string>
     <string name="settings_permissions_ok">OK ›</string>
     <string name="settings_permissions_pending">To complete ›</string>
-    <string name="settings_accountability_label">Accountability contacts</string>
-    <string name="settings_accountability_suffix">SMS if missed ›</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="settings_hardcore_label">Hardcore mode</string>
+    <string name="settings_hardcore_active">Active ›</string>
+    <string name="settings_hardcore_inactive">Off ›</string>
+    <string name="hardcore_title">Hardcore mode</string>
+    <string name="hardcore_status_active">Active — the phone cannot be turned off while the alarm rings.</string>
+    <string name="hardcore_status_inactive">Off — the power menu can still end the alarm.</string>
+    <string name="hardcore_what_it_does">While the alarm rings, hardcore mode makes Android itself:</string>
+    <string name="hardcore_blocks_power_menu">Hide the power menu (long-press on the power button does nothing).</string>
+    <string name="hardcore_blocks_leave_screen">Lock the alarm screen: no Home, no Recents, no status bar, no lock screen.</string>
+    <string name="hardcore_blocks_force_stop">Refuse force stop, clear data and uninstall from Settings.</string>
+    <string name="hardcore_blocks_safe_mode">Refuse safe mode and factory reset from Settings.</string>
+    <string name="hardcore_blocks_clock">Keep the clock on network time so it can\'t be moved past the alarm.</string>
+    <string name="hardcore_limits">What it can\'t stop: holding the power button ~10 s forces a hardware reboot — the alarm then rings again right after boot. Letting the battery die also works, so keep the phone plugged in.</string>
+    <string name="hardcore_how_to_enable">Turning it on needs a computer with adb, once. Android only allows it on a phone with no accounts:</string>
+    <string name="hardcore_step_accounts">Remove every account (Google, Xiaomi…) and any second space/user from the phone.</string>
+    <string name="hardcore_step_usb_debug">Enable USB debugging in Developer options and plug the phone in.</string>
+    <string name="hardcore_step_command">Run this command, then come back to this screen:</string>
+    <string name="hardcore_release_button">Turn hardcore mode off</string>
+    <string name="hardcore_release_refused_ringing">Not while the alarm is ringing.</string>
+    <string name="hardcore_release_confirm_title">Turn hardcore mode off?</string>
+    <string name="hardcore_release_confirm_text">The power menu will work again during alarms. Turning it back on needs adb and a phone with no accounts again.</string>
+    <string name="hardcore_release_confirm_button">Turn off</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">If you don\'t get up, whether the phone is off through the deadline or the alarm just rings for hours with no dismiss, Aube texts one of these numbers. With several contacts, it picks at random and skips whoever was texted last time.</string>
-    <string name="accountability_permission_missing">SMS permission required</string>
-    <string name="accountability_add_hint">Phone number</string>
-    <string name="accountability_pick_contact_button">Choose from contacts</string>
-    <string name="accountability_manual_entry_label">Or type a number by hand</string>
-    <string name="accountability_add_button">Add contact</string>
-    <string name="accountability_invalid_number">That doesn\'t look like a valid phone number</string>
-    <string name="accountability_last_send_failed">The last message couldn\'t be delivered. Check the number and the SMS permission.</string>
-    <string name="accountability_message_label">Message</string>
-    <string name="accountability_message_placeholder">I didn\'t wake up on time.</string>
-    <string name="accountability_signature_note">Always ends with: \"%1$s\"</string>
-    <string name="accountability_default_message">I didn\'t wake up on time.</string>
-    <string name="accountability_sms_signature">— sent automatically by the %1$s app</string>
-    <string name="cd_delete_contact">Remove this contact</string>
+    <string name="notif_channel_charge_name">Charge guard</string>
+    <string name="notif_channel_charge_desc">Reminders to plug the alarm phone in before the battery runs out</string>
+    <string name="charge_notif_title">Plug the phone in</string>
+    <string name="charge_notif_text_low">Battery at %1$s%%. The alarm dies with the battery — it will keep chirping until the phone is charging.</string>
+    <string name="charge_notif_text_night">The alarm phone must be charging for the night. It will keep chirping until it is plugged in.</string>
+    <string name="charge_chirp_text">Plug the phone in to stop this.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Exact alarms</string>
@@ -145,8 +157,6 @@
     <string name="onboarding_feature_qr_desc">A QR code to scan to stop it, volume locked while it rings.</string>
     <string name="onboarding_feature_routine_title">A routine afterward</string>
     <string name="onboarding_feature_routine_desc">Water, light, breakfast reminders, at your own pace.</string>
-    <string name="onboarding_feature_accountability_title">Accountability contacts</string>
-    <string name="onboarding_feature_accountability_desc">Texts someone you trust if you don\'t get up.</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">What time do you need to be up?</string>
@@ -162,12 +172,6 @@
     <string name="onboarding_qr_body">This QR code is already active, with nothing to set up. Print it now and stick it far from your bed — or choose a different QR code later in Settings.</string>
     <string name="onboarding_qr_personalize_hint">This default code is the same on every install of Aube. For a ritual nothing but you can defeat, swap it for your own barcode later in Settings.</string>
     <string name="onboarding_qr_print_now">Print now</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">If you don\'t get up, someone finds out</string>
-    <string name="onboarding_accountability_subtitle">Phone off through the deadline, or the alarm ringing for hours with no dismiss: Aube can text someone you trust either way.</string>
-    <string name="onboarding_accountability_body">Optional, and off by default. Add it anytime later from Settings.</string>
-    <string name="onboarding_accountability_setup_button">Set up contacts</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">To make it really work tonight</string>

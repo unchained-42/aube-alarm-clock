@@ -1,7 +1,9 @@
 package com.reveil.aube.ringing
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +37,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.reveil.aube.R
 import com.reveil.aube.alarm.AlarmScheduler
+import com.reveil.aube.kiosk.KioskPolicy
 import com.reveil.aube.qr.DEFAULT_QR_PAYLOAD
 import com.reveil.aube.routine.PostWakeReminderScheduler
 import com.reveil.aube.settings.LocaleHelper
@@ -53,6 +56,27 @@ private const val TAG = "AubeAlarmActivity"
 class AlarmActivity : ComponentActivity() {
 
     private lateinit var settingsRepository: SettingsRepository
+    // Once true, no command other than the dismiss itself leaves this Activity — the Compose
+    // loops below keep ticking for the ~1 s finish() takes in lock task, and a single
+    // SET_VOLUME reaching the service after it stopped used to recreate it as a fresh
+    // instance that relaunched the whole alarm (see AlarmRingingService.onStartCommand).
+    private var dismissSent = false
+
+    private val ringEndedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            // The service ended the ring without going through a scan here (auto-stop
+            // ceiling, debug hook). Nothing is ringing any more, so leave — quietly, without
+            // re-sending a dismiss the service has already processed.
+            if (isFinishing) return
+            dismissSent = true
+            AlarmRingingService.dismissRequested = true
+            try {
+                stopLockTask()
+            } catch (_: IllegalArgumentException) {
+            }
+            finish()
+        }
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -64,9 +88,14 @@ class AlarmActivity : ComponentActivity() {
 
         showOverLockScreen()
         enableEdgeToEdge()
+        ContextCompat.registerReceiver(
+            this, ringEndedReceiver, IntentFilter(AlarmRingingService.ACTION_RING_ENDED),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
 
         val dawnStart = intent.getLongExtra(EXTRA_DAWN_START_MILLIS, System.currentTimeMillis())
         val dawnEnd = intent.getLongExtra(EXTRA_DAWN_END_MILLIS, System.currentTimeMillis())
+        val resumedAfterReboot = intent.getBooleanExtra(EXTRA_RESUMED_AFTER_REBOOT, false)
 
         // Registers the window with the service right away (before anything else needs it)
         // so that if this Activity's task later gets closed from a recents/"active apps"
@@ -76,12 +105,18 @@ class AlarmActivity : ComponentActivity() {
             putExtra(EXTRA_DAWN_END_MILLIS, dawnEnd)
         }
 
-        // Screen pinning: standard Android API, no root/device-owner/factory-reset needed.
-        // While pinned, Home and Recents/"active apps" are inert (the OS shows an "unpin to
-        // leave" hint instead of actually leaving), which is what closing this from the
-        // active-apps list defeated last time. It isn't absolute — a deliberate long-press
-        // back+recents (or the equivalent gesture) still unpins — but it closes the casual
-        // "swipe it away" path. Released only in handleDismissed(), on a real scan.
+        // Screen pinning. Two very different strengths depending on how the app is installed:
+        //  - Plain install: standard screen pinning. Home and Recents are inert, but a
+        //    deliberate long-press back+recents still unpins, and the power menu still works
+        //    — so "Power off" ends the alarm. That is the bypass that kept winning.
+        //  - Device owner ("hardcore mode", see KioskPolicy): a real lock task. No unpin
+        //    gesture, and with LOCK_TASK_FEATURE_NONE SystemUI drops the power menu, status
+        //    bar, keyguard, Home and Recents for as long as this screen is pinned. Only
+        //    stopLockTask() in handleDismissed(), after a real scan, leaves.
+        // The policy is re-applied right here, not only at startup, so the pin that follows
+        // always uses the current allowlist/features even if this is the first thing the
+        // process does after enrollment.
+        KioskPolicy.applyHardening(this)
         try {
             startLockTask()
         } catch (e: Exception) {
@@ -96,6 +131,7 @@ class AlarmActivity : ComponentActivity() {
                 AlarmScreen(
                     dawnStartMillis = dawnStart,
                     dawnEndMillis = dawnEnd,
+                    resumedAfterReboot = resumedAfterReboot,
                     settingsRepository = settingsRepository,
                     onSetBrightness = ::setScreenBrightness,
                     onStartSound = { uri, volume ->
@@ -148,6 +184,7 @@ class AlarmActivity : ComponentActivity() {
      * has any power to stop the alarm.
      */
     private fun sendRingingCommand(action: String?, build: Intent.() -> Unit = {}) {
+        if (dismissSent && action != AlarmRingingService.ACTION_DISMISS) return
         val serviceIntent = Intent(this, AlarmRingingService::class.java).apply {
             this.action = action
             build()
@@ -159,8 +196,8 @@ class AlarmActivity : ComponentActivity() {
     // light), not just once it's fully ringing — so the hardware volume keys must be locked
     // out for the whole screen, not only once phase reaches RINGING. Otherwise the dawn
     // ramp can just be muted away before it ever amounts to anything. The power button can't
-    // be intercepted this way (Android reserves it at the system level), so that limitation
-    // is real and stays.
+    // be intercepted this way (Android reserves it at the system level) — its long-press menu
+    // is only ever closed by the device-owner lock task, see KioskPolicy.
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (event.keyCode in VOLUME_KEYS) {
             return true
@@ -210,6 +247,7 @@ class AlarmActivity : ComponentActivity() {
         // AlarmRingingService.ACTION_DISMISS. This Activity finishing, by any other route,
         // must not be able to do this.
         sendRingingCommand(AlarmRingingService.ACTION_DISMISS)
+        dismissSent = true
         try {
             stopLockTask()
         } catch (_: IllegalArgumentException) {
@@ -226,6 +264,15 @@ class AlarmActivity : ComponentActivity() {
             AlarmScheduler(applicationContext).scheduleNext(settings)
         }
         finish()
+    }
+
+    override fun onDestroy() {
+        try {
+            unregisterReceiver(ringEndedReceiver)
+        } catch (_: IllegalArgumentException) {
+            // Never registered — fine.
+        }
+        super.onDestroy()
     }
 
     private companion object {
@@ -245,6 +292,7 @@ private const val MUTE_DURATION_SECONDS = 120
 private fun AlarmScreen(
     dawnStartMillis: Long,
     dawnEndMillis: Long,
+    resumedAfterReboot: Boolean,
     settingsRepository: SettingsRepository,
     onSetBrightness: (Float) -> Unit,
     onStartSound: (String?, Float) -> Unit,
@@ -268,7 +316,10 @@ private fun AlarmScreen(
     // "no snooze at all" (what you asked for originally) and being able to silence a
     // sudden blast of sound for a moment. Once the countdown ends it rings again at full
     // volume and stays on — muting is spent, only the QR scan stops it after that.
-    var muteUsed by remember { mutableStateOf(false) }
+    // A ring resumed after the device went down mid-ring gets no mute at all: a forced
+    // reboot (the one thing no software can block) already bought a minute of silence, and
+    // handing out two more on top of it would make rebooting the cheapest snooze there is.
+    var muteUsed by remember { mutableStateOf(resumedAfterReboot) }
     var muteSecondsLeft by remember { mutableStateOf(0) }
     var isMuting by remember { mutableStateOf(false) }
 

@@ -67,22 +67,36 @@
     <string name="settings_permissions_label">権限</string>
     <string name="settings_permissions_ok">問題なし ›</string>
     <string name="settings_permissions_pending">要設定 ›</string>
-    <string name="settings_accountability_label">連絡先（未起床時通知）</string>
-    <string name="settings_accountability_suffix">未解除でSMS ›</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="settings_hardcore_label">ハードコアモード</string>
+    <string name="settings_hardcore_active">有効 ›</string>
+    <string name="settings_hardcore_inactive">オフ ›</string>
+    <string name="hardcore_title">ハードコアモード</string>
+    <string name="hardcore_status_active">有効 — アラーム中はスマホの電源を切れません。</string>
+    <string name="hardcore_status_inactive">オフ — 電源メニューでアラームを終了できてしまいます。</string>
+    <string name="hardcore_what_it_does">アラームが鳴っている間、ハードコアモードは Android 自体に次を行わせます：</string>
+    <string name="hardcore_blocks_power_menu">電源メニューを隠す（電源ボタンの長押しは何も起こしません）。</string>
+    <string name="hardcore_blocks_leave_screen">アラーム画面を固定：ホームも、履歴も、ステータスバーも、ロック画面もなし。</string>
+    <string name="hardcore_blocks_force_stop">設定からの強制停止、データ削除、アンインストールを拒否。</string>
+    <string name="hardcore_blocks_safe_mode">セーフモードと設定からの初期化を拒否。</string>
+    <string name="hardcore_blocks_clock">時計をネットワーク時刻に固定し、アラームより先に進められないようにする。</string>
+    <string name="hardcore_limits">防げないこと：電源ボタンを約10秒押し続けるとハードウェア再起動になります — その場合、起動直後にアラームが再び鳴ります。バッテリー切れも有効なので、スマホは充電したままにしてください。</string>
+    <string name="hardcore_how_to_enable">有効化には adb の入ったパソコンが一度だけ必要です。Android はアカウントのないスマホでのみ許可します：</string>
+    <string name="hardcore_step_accounts">すべてのアカウント（Google、Xiaomi…）とセカンドスペース/ユーザーをスマホから削除する。</string>
+    <string name="hardcore_step_usb_debug">開発者向けオプションで USB デバッグを有効にし、スマホを接続する。</string>
+    <string name="hardcore_step_command">このコマンドを実行し、この画面に戻る：</string>
+    <string name="hardcore_release_button">ハードコアモードをオフにする</string>
+    <string name="hardcore_release_refused_ringing">アラームが鳴っている間はできません。</string>
+    <string name="hardcore_release_confirm_title">ハードコアモードをオフにしますか？</string>
+    <string name="hardcore_release_confirm_text">アラーム中に電源メニューが再び使えるようになります。再有効化には再び adb とアカウントのないスマホが必要です。</string>
+    <string name="hardcore_release_confirm_button">オフにする</string>
 
-    <!-- Accountability contacts -->
-    <string name="accountability_intro">期限を過ぎても解除されない場合（電源オフで何も実行できない状態）、Aubeはこれらの番号にSMSを送ります。電源が切れた後も有効な唯一の対策です。</string>
-    <string name="accountability_permission_missing">SMSの権限が必要です</string>
-    <string name="accountability_add_hint">電話番号</string>
-    <string name="accountability_pick_contact_button">連絡先から選択</string>
-    <string name="accountability_manual_entry_label">または番号を手入力</string>
-    <string name="accountability_add_button">連絡先を追加</string>
-    <string name="accountability_message_label">メッセージ</string>
-    <string name="accountability_message_placeholder">時間通りに起きられませんでした。</string>
-    <string name="accountability_signature_note">末尾に必ず追加されます：「%1$s」</string>
-    <string name="accountability_default_message">時間通りに起きられませんでした。</string>
-    <string name="accountability_sms_signature">— %1$sアプリから自動送信</string>
-    <string name="cd_delete_contact">この連絡先を削除</string>
+    <string name="notif_channel_charge_name">充電ガード</string>
+    <string name="notif_channel_charge_desc">バッテリーが切れる前にアラーム用スマホを充電するよう促す通知</string>
+    <string name="charge_notif_title">スマホを充電してください</string>
+    <string name="charge_notif_text_low">バッテリー %1$s%%。バッテリーが切れるとアラームも止まります — 充電されるまで鳴り続けます。</string>
+    <string name="charge_notif_text_night">アラーム用スマホは夜間充電しておく必要があります。接続されるまで鳴り続けます。</string>
+    <string name="charge_chirp_text">止めるにはスマホを充電してください。</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">正確なアラーム</string>
@@ -137,8 +151,6 @@
     <string name="onboarding_feature_qr_desc">停止にはQRコードのスキャンが必要で、鳴動中は音量がロックされます。</string>
     <string name="onboarding_feature_routine_title">その後のルーティン</string>
     <string name="onboarding_feature_routine_desc">自分のペースで水分・光・朝食のリマインダー。</string>
-    <string name="onboarding_feature_accountability_title">連絡先（未起床時通知）</string>
-    <string name="onboarding_feature_accountability_desc">起きなければ信頼できる人にSMSを送ります。</string>
 
     <!-- Onboarding: wake time -->
     <string name="onboarding_wake_headline">何時に起きる必要がありますか？</string>
@@ -153,12 +165,6 @@
     <string name="onboarding_qr_subtitle">「見た」ボタンもスヌーズもありません。アラームは物理的なQRコードをスキャンした時だけ停止します — 届く場所まで起き上がる必要があります。</string>
     <string name="onboarding_qr_body">このQRコードは何も設定せずにすでに有効です。今すぐ印刷してベッドから離れた場所に貼るか、後で設定から別のQRコードを選んでください。</string>
     <string name="onboarding_qr_print_now">今すぐ印刷</string>
-
-    <!-- Onboarding: accountability -->
-    <string name="onboarding_accountability_headline">電源を切っても逃れられない対策</string>
-    <string name="onboarding_accountability_subtitle">期限を完全に過ぎてしまった場合（電源オフで何も実行できない状態）、Aubeは信頼できる人にSMSを送れます。</string>
-    <string name="onboarding_accountability_body">任意機能で、初期状態ではオフです。後からいつでも設定で追加できます。</string>
-    <string name="onboarding_accountability_setup_button">連絡先を設定</string>
 
     <!-- Onboarding: reliability -->
     <string name="onboarding_reliability_headline">今夜、本当に機能させるために</string>

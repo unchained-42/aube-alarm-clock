@@ -5,12 +5,15 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.reveil.aube.NotifChannels
 import com.reveil.aube.R
 
 private const val FULL_SCREEN_NOTIF_ID = 42
 const val EXTRA_DAWN_START_MILLIS = "extra_dawn_start_millis"
 const val EXTRA_DAWN_END_MILLIS = "extra_dawn_end_millis"
+/** Set when a ring is being resumed after the device went down mid-ring — see [resumeAlarmAfterBoot]. */
+const val EXTRA_RESUMED_AFTER_REBOOT = "extra_resumed_after_reboot"
 
 /**
  * Wakes the device and shows [AlarmActivity]. Uses both a full-screen-intent notification
@@ -68,6 +71,31 @@ fun launchAlarm(context: Context, dawnStartMillis: Long, dawnEndMillis: Long, di
     if (directLaunch) {
         context.startActivity(fullScreenIntent)
     }
+}
+
+/**
+ * The boot-time counterpart of [launchAlarm], for a ring the device went down in the middle
+ * of. The one thing that can't be blocked on any phone is the hardware forced reboot (power
+ * held ~10 s, handled by the power-management chip before the OS is involved), so the answer
+ * is to make it pointless: sound comes back from the service itself, right now, in the first
+ * seconds after boot — not from a screen that may never appear. A full-screen notification
+ * alone (the previous approach) was confirmed on a real device to leave nothing but a silent
+ * "Time to get up" in the tray when the OEM declined to show it right after boot. The
+ * service then brings the pinned screen back a few seconds later, once the system has
+ * settled — see [AlarmRingingService.ACTION_RESUME_AFTER_BOOT] — and, because the ring is
+ * a resumption, the one-time mute is already spent (see [EXTRA_RESUMED_AFTER_REBOOT]).
+ */
+fun resumeAlarmAfterBoot(context: Context, musicUri: String?, vibrationEnabled: Boolean) {
+    val now = System.currentTimeMillis()
+    launchAlarm(context, dawnStartMillis = now, dawnEndMillis = now, directLaunch = false)
+    val serviceIntent = Intent(context, AlarmRingingService::class.java).apply {
+        action = AlarmRingingService.ACTION_RESUME_AFTER_BOOT
+        putExtra(EXTRA_DAWN_START_MILLIS, now)
+        putExtra(EXTRA_DAWN_END_MILLIS, now)
+        putExtra(AlarmRingingService.EXTRA_URI, musicUri)
+        putExtra(AlarmRingingService.EXTRA_VIBRATE, vibrationEnabled)
+    }
+    ContextCompat.startForegroundService(context, serviceIntent)
 }
 
 fun dismissAlarmNotification(context: Context) {
