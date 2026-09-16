@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">Recordatorio de carga</string>
     <string name="settings_charge_reminder_at">Desde las %1$s hasta enchufarlo ›</string>
     <string name="settings_charge_reminder_off">Desactivado — solo suena con batería baja</string>
+    <string name="sleep_lock_body">Noche. El teléfono permanece bloqueado hasta la alarma.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmas exactas</string>

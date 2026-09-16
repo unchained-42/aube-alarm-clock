@@ -11,6 +11,7 @@
                 <action android:name="com.reveil.aube.debug.FIRE" />
                 <action android:name="com.reveil.aube.debug.STOP" />
                 <action android:name="com.reveil.aube.debug.GUARD" />
+                <action android:name="com.reveil.aube.debug.NIGHT" />
                 <action android:name="com.reveil.aube.debug.CONFIG" />
             </intent-filter>
         </receiver>

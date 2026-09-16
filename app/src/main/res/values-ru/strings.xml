@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">Напоминание о зарядке</string>
     <string name="settings_charge_reminder_at">С %1$s до подключения ›</string>
     <string name="settings_charge_reminder_off">Выключено — сигнал только при низком заряде</string>
+    <string name="sleep_lock_body">Ночь. Телефон заблокирован до будильника.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Точные будильники</string>

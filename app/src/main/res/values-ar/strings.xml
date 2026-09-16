@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">تذكير الشحن</string>
     <string name="settings_charge_reminder_at">من %1$s حتى وصل الشاحن ›</string>
     <string name="settings_charge_reminder_off">متوقف — البطارية الضعيفة فقط تنبّه</string>
+    <string name="sleep_lock_body">ليل. يبقى الهاتف مقفلًا حتى المنبّه.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">المنبهات الدقيقة</string>

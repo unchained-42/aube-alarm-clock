@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.UserManager
 import android.util.Log
 import com.reveil.aube.charge.ChargeGuard
-import com.reveil.aube.ringing.launchAlarm
 import com.reveil.aube.ringing.resumeAlarmAfterBoot
 import com.reveil.aube.settings.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -98,12 +97,11 @@ class BootReceiver : BroadcastReceiver() {
                     // ring; this is the same bypass one step earlier: turn the phone off
                     // before the alarm, back on once you're already up, and a plain
                     // reschedule would silently arm tomorrow instead, with today's alarm
-                    // never having rung at all. So it rings now instead.
-                    // directLaunch=false: see launchAlarm's doc — a direct startActivity()
-                    // this soon after boot lost a focus race against the lock screen's own
-                    // window (confirmed via the ANR trace), so this leans on the notification's
-                    // full-screen intent alone here instead.
-                    launchAlarm(context, dawnStartMillis = now, dawnEndMillis = now, directLaunch = false)
+                    // never having rung at all. So it rings now instead — the same way as the
+                    // interrupted-ring branch above: a notification alone was confirmed to sit
+                    // silently in the tray ("Time to get up", no sound, no screen) when the OEM
+                    // declined its full-screen intent right after boot.
+                    resumeAlarmAfterBoot(context, settings.musicUri, settings.vibrationEnabled)
                 } else {
                     scheduler.scheduleNext(settings)
                 }

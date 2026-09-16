@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">Rappel de branchement</string>
     <string name="settings_charge_reminder_at">À partir de %1$s jusqu\'au branchement ›</string>
     <string name="settings_charge_reminder_off">Désactivé — seule une batterie faible bipe</string>
+    <string name="sleep_lock_body">Nuit. Le téléphone reste verrouillé jusqu\'au réveil.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmes exactes</string>

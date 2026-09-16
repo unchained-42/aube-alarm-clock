@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import com.reveil.aube.NotifChannels
 import com.reveil.aube.R
 import com.reveil.aube.alarm.AlarmScheduler
+import com.reveil.aube.kiosk.SleepLock
 import com.reveil.aube.settings.LocaleHelper
 import com.reveil.aube.settings.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -185,6 +186,9 @@ class AlarmRingingService : Service() {
      */
     private fun notifyRingEnded() {
         sendBroadcast(Intent(ACTION_RING_ENDED).setPackage(packageName))
+        // The night screen may be sitting under the alarm screen; the day has been handled,
+        // so it must leave rather than reappear when the alarm screen finishes.
+        sendBroadcast(Intent(SleepLock.ACTION_RECHECK).setPackage(packageName))
     }
 
     private fun postMissedNotification() {

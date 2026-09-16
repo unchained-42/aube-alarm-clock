@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">Lembrete de carga</string>
     <string name="settings_charge_reminder_at">Das %1$s até ligar o carregador ›</string>
     <string name="settings_charge_reminder_off">Desligado — só a bateria fraca apita</string>
+    <string name="sleep_lock_body">Noite. O telefone fica bloqueado até o alarme.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Alarmes exatos</string>

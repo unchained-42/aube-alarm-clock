@@ -55,6 +55,21 @@
             android:lockTaskMode="if_whitelisted"
             android:theme="@style/Theme.Aube.Alarm" />
 
+        <!-- Hardcore mode's night screen: pinned from bedtime until the ring takes over, so the
+             power menu is unavailable all night, not just while ringing. See kiosk/SleepLock. -->
+        <activity
+            android:name=".kiosk.SleepLockActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:lockTaskMode="if_whitelisted"
+            android:theme="@style/Theme.Aube.Alarm" />
+
+        <receiver
+            android:name=".kiosk.SleepLockReceiver"
+            android:exported="false" />
+
         <receiver
             android:name=".alarm.AlarmReceiver"
             android:exported="false" />

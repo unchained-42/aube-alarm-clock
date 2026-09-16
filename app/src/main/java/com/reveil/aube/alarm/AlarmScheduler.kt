@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.reveil.aube.NotifChannels
 import com.reveil.aube.R
+import com.reveil.aube.kiosk.SleepLock
 import com.reveil.aube.permissions.PermissionsHelper
 import com.reveil.aube.settings.AlarmSettings
 import java.time.DayOfWeek
@@ -43,6 +44,8 @@ class AlarmScheduler(private val context: Context) {
     fun scheduleNext(settings: AlarmSettings) {
         cancelAll()
         if (!settings.alarmEnabled) return
+        // Hardcore mode's night screen follows the same schedule (no-op without device owner).
+        runCatching { SleepLock.ensure(context, settings) }
 
         val now = ZonedDateTime.now()
         val (earliest, latest) = nextWindow(settings, now)
@@ -95,6 +98,7 @@ class AlarmScheduler(private val context: Context) {
     fun cancelAll() {
         alarmManager.cancel(trackingPendingIntent(0L, 0L, 0))
         alarmManager.cancel(safetyNetPendingIntent(0L))
+        runCatching { SleepLock.cancel(context) }
     }
 
     /**

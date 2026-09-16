@@ -110,6 +110,7 @@
     <string name="settings_charge_reminder_label">Plug-in reminder</string>
     <string name="settings_charge_reminder_at">From %1$s until plugged in ›</string>
     <string name="settings_charge_reminder_off">Off — only a low battery chirps</string>
+    <string name="sleep_lock_body">Night. The phone stays locked until the alarm.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Exact alarms</string>

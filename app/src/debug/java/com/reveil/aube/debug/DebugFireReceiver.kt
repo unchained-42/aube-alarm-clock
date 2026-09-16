@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.reveil.aube.alarm.AlarmScheduler
 import com.reveil.aube.charge.ChargeGuard
+import com.reveil.aube.kiosk.SleepLock
 import com.reveil.aube.ringing.AlarmRingingService
 import com.reveil.aube.ringing.dismissAlarmNotification
 import com.reveil.aube.ringing.launchAlarm
@@ -27,6 +28,7 @@ class DebugFireReceiver : BroadcastReceiver() {
         when (intent.action) {
             ACTION_FIRE -> launchAlarm(app, dawnStartMillis = now, dawnEndMillis = now)
             ACTION_GUARD -> runBlocking { ChargeGuard.evaluate(app) }
+            ACTION_NIGHT -> SleepLock.start(app)
             // adb shell am broadcast -a com.reveil.aube.debug.CONFIG --ei latest 600 --ei earliest 570 \
             //   --ei sleep 480 --ez weekend false [--ei reminder 1320|-1] [--es lastHandled 2026-09-15] \
             //   -n com.reveil.aube/.debug.DebugFireReceiver
@@ -73,6 +75,7 @@ class DebugFireReceiver : BroadcastReceiver() {
         const val ACTION_FIRE = "com.reveil.aube.debug.FIRE"
         const val ACTION_STOP = "com.reveil.aube.debug.STOP"
         const val ACTION_GUARD = "com.reveil.aube.debug.GUARD"
+        const val ACTION_NIGHT = "com.reveil.aube.debug.NIGHT"
         const val ACTION_CONFIG = "com.reveil.aube.debug.CONFIG"
     }
 }

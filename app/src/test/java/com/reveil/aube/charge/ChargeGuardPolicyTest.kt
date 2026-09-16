@@ -35,8 +35,11 @@ class ChargeGuardPolicyTest {
     }
 
     @Test
-    fun `before bedtime, unplugged nags a healthy battery, but low battery keeps its own cadence`() {
-        assertEquals(ChargeGuardPolicy.PRE_SLEEP_INTERVAL_MS, ChargeGuardPolicy.nagIntervalMillis(80, false, Phase.PRE_SLEEP))
+    fun `the evening reminder nags at or below 50 percent only, and low battery keeps its own cadence`() {
+        assertNull(ChargeGuardPolicy.nagIntervalMillis(80, false, Phase.PRE_SLEEP))
+        assertNull(ChargeGuardPolicy.nagIntervalMillis(51, false, Phase.PRE_SLEEP))
+        assertEquals(ChargeGuardPolicy.PRE_SLEEP_INTERVAL_MS, ChargeGuardPolicy.nagIntervalMillis(50, false, Phase.PRE_SLEEP))
+        assertEquals(ChargeGuardPolicy.PRE_SLEEP_INTERVAL_MS, ChargeGuardPolicy.nagIntervalMillis(41, false, Phase.PRE_SLEEP))
         // 4%: the battery-preserving 30 min wins over the 3 min pre-sleep cadence.
         assertEquals(30 * minute, ChargeGuardPolicy.nagIntervalMillis(4, false, Phase.PRE_SLEEP))
         // 35%: 1 min is already faster than the pre-sleep cadence.

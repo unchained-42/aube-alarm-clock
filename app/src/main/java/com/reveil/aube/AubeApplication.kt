@@ -14,12 +14,14 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.reveil.aube.alarm.AlarmWatchdogWorker
 import com.reveil.aube.charge.ChargeGuard
+import com.reveil.aube.kiosk.SleepLock
 import com.reveil.aube.kiosk.KioskPolicy
 import com.reveil.aube.settings.LocaleHelper
 import com.reveil.aube.settings.SettingsRepository
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** Channel ids referenced across the app. */
@@ -51,6 +53,12 @@ class AubeApplication : Application() {
     private fun evaluateChargeGuard() {
         CoroutineScope(Dispatchers.IO).launch {
             runCatching { ChargeGuard.evaluate(applicationContext) }
+            // Same trigger for the night screen: a process start inside the sleep window (a
+            // crash, a reboot the boot receiver didn't catch) must put it back up.
+            runCatching {
+                val settings = SettingsRepository(applicationContext).settings.first()
+                if (SleepLock.shouldBeLocked(applicationContext, settings)) SleepLock.start(applicationContext)
+            }
         }
     }
 

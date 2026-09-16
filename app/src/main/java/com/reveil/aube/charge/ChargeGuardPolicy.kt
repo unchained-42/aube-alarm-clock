@@ -34,8 +34,15 @@ object ChargeGuardPolicy {
 
     private const val MINUTE = 60_000L
 
-    /** Interval between nags while unplugged before bedtime with a healthy battery. */
+    /** Interval between nags while unplugged at the evening reminder, battery permitting. */
     const val PRE_SLEEP_INTERVAL_MS = 3 * MINUTE
+    /**
+     * Above this, the evening reminder stays quiet: a phone at 80% will make it through the
+     * night, the dawn ramp and the ring, so chirping about it would just be noise at the one
+     * time of day noise is least welcome. Between this and [LOW_BATTERY_PERCENT] the evening
+     * reminder is the only thing that nags — the daytime rules don't.
+     */
+    const val PRE_SLEEP_BATTERY_PERCENT = 50
 
     /** How long a reminder window lasts at minimum, even when the chosen time is at or past bedtime. */
     const val REMINDER_MIN_WINDOW_MINUTES = 30L
@@ -58,7 +65,7 @@ object ChargeGuardPolicy {
             // Low battery wins over the pre-sleep cadence even when it's *slower*: at 4% the
             // point is to still have a phone at wake-up time, not to nag every 3 minutes.
             byBattery != null -> byBattery
-            phase == Phase.PRE_SLEEP -> PRE_SLEEP_INTERVAL_MS
+            phase == Phase.PRE_SLEEP && batteryPercent <= PRE_SLEEP_BATTERY_PERCENT -> PRE_SLEEP_INTERVAL_MS
             else -> null
         }
     }

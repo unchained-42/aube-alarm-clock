@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">充电提醒</string>
     <string name="settings_charge_reminder_at">从 %1$s 起直到充电 ›</string>
     <string name="settings_charge_reminder_off">已关闭 — 仅低电量时提醒</string>
+    <string name="sleep_lock_body">夜间。手机将保持锁定直到闹钟响起。</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">精确闹钟</string>

@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">चार्जिंग अनुस्मारक</string>
     <string name="settings_charge_reminder_at">%1$s से चार्ज पर लगाने तक ›</string>
     <string name="settings_charge_reminder_off">बंद — केवल कम बैटरी पर बजेगा</string>
+    <string name="sleep_lock_body">रात। अलार्म तक फ़ोन लॉक रहेगा।</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">सटीक अलार्म</string>

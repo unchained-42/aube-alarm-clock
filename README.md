@@ -25,8 +25,8 @@
 - 🛌 Accelerometer-based light-sleep detection: can wake you up to 45 min early if you're already stirring
 - 📱 QR/barcode dismiss: scan a code placed somewhere you have to get out of bed to reach
 - 🔐 Hard to bypass: screen pinning, full-screen overlay, volume-key lock, foreground service independent of the UI, boot-resume
-- 🧱 Hardcore mode (device owner, spare phone): power menu disabled while ringing, no Home/Recents/status bar, force-stop/clear-data/uninstall/safe-mode/factory-reset refused by the OS, ring resumes ~40 s after a forced hardware reboot with no mute
-- 🔋 Charge guard: if the phone is unplugged below 40%, or still unplugged at the evening reminder time you pick during onboarding, it chirps until someone plugs it in, more sparsely as the battery gets lower; never a sound during the sleep window itself
+- 🧱 Hardcore mode (device owner, spare phone): power menu disabled while ringing *and* all night (a pinned black "night screen" from bedtime until the alarm), no Home/Recents/status bar, force-stop/clear-data/uninstall/safe-mode/factory-reset refused by the OS, ring resumes ~40 s after a forced hardware reboot with no mute
+- 🔋 Charge guard: if the phone is unplugged below 40%, or still unplugged (and at or below 50%) at the evening reminder time you pick during onboarding, it chirps until someone plugs it in, more sparsely as the battery gets lower; never a sound during the sleep window itself
 - 🆘 Emergency fallback: long randomized-string challenge if you don't have the code, restarts from scratch on the first wrong character
 - ⏰ Bounded auto-stop: 1h ring, then pulses for a few hours, then gives up instead of running forever
 - ☀️ Optional post-wake reminders (water, light, breakfast)
@@ -79,7 +79,7 @@ Requires Android 8.0 (API 26)+.
 
 Without it, Aube is already hard to dismiss without the QR code, but the power menu still works: long-press power, tap *Power off*, alarm over. Android only lets one kind of app disable that menu, a **device owner** in lock task mode, and only lets an app become device owner on a phone with no accounts and no other users, over adb. That is a one-time setup, and the reason this mode is for a spare phone.
 
-What it does while the alarm rings: hides the power menu (long-press does nothing), pins the alarm screen (no Home, Recents, status bar or lock screen, and the unpin gesture is disabled), and keeps the clock on network time. Permanently: force stop, clear data, uninstall, disable, safe mode and factory reset from Settings are all refused by the OS (also via adb), the lock screen is removed so the alarm can resume within seconds of a reboot, and the screen stays on while plugged in.
+What it does while the alarm rings: hides the power menu (long-press does nothing), pins the alarm screen (no Home, Recents, status bar or lock screen, and the unpin gesture is disabled), and keeps the clock on network time. From bedtime (wake deadline minus your target sleep) until the alarm takes over, a black night screen with a dim clock is pinned the same way, so the phone can't be powered off during the night either — the display still sleeps normally. Permanently: force stop, clear data, uninstall, disable, safe mode and factory reset from Settings are all refused by the OS (also via adb), the lock screen is removed so the alarm can resume within seconds of a reboot, and the screen stays on while plugged in.
 
 What it can't do: block the hardware forced reboot (power held ~10 s) or a dead battery. Both are handled by making them pointless: the ring resumes about 40 s after the cut, at full volume, with the one-time mute already spent, and the charge guard nags until the phone is charging. A spare phone usually has no SIM either, which is why Aube has no "text someone" fallback: everything it does happens on the device.
 
@@ -105,7 +105,7 @@ What it can't do: block the hardware forced reboot (power held ~10 s) or a dead 
 
 To turn it off later: Aube › Settings › Hardcore mode › *Turn hardcore mode off* (refused while an alarm is ringing, which is the point). Once off, the phone behaves like any other; the only other way out is a factory reset from recovery.
 
-Notes for developers: while the alarm is pinned in lock task, `adb install` may fail on OEMs that show an install-confirmation dialog (it can't appear over the pinned screen), and `am force-stop` / `pm clear` are refused for the device-owner package. Debug builds expose `adb shell am broadcast -a com.reveil.aube.debug.FIRE|STOP|GUARD -n com.reveil.aube/.debug.DebugFireReceiver` to start a ring, end one cleanly, or force a charge-guard check.
+Notes for developers: while the alarm is pinned in lock task, `adb install` may fail on OEMs that show an install-confirmation dialog (it can't appear over the pinned screen), and `am force-stop` / `pm clear` are refused for the device-owner package. Debug builds expose `adb shell am broadcast -a com.reveil.aube.debug.FIRE|STOP|GUARD|NIGHT|CONFIG -n com.reveil.aube/.debug.DebugFireReceiver` to start a ring, end one cleanly, force a charge-guard check, put the night screen up, or write a schedule (`--ei latest 600 --ei earliest 570 --ei sleep 480 --ez weekend false --ei reminder 1320`).
 
 ## Permissions
 

@@ -105,6 +105,7 @@
     <string name="settings_charge_reminder_label">Anschluss-Erinnerung</string>
     <string name="settings_charge_reminder_at">Ab %1$s bis zum Anschließen ›</string>
     <string name="settings_charge_reminder_off">Aus — nur ein niedriger Akku piept</string>
+    <string name="sleep_lock_body">Nacht. Das Telefon bleibt bis zum Wecker gesperrt.</string>
 
     <!-- Reliability checks -->
     <string name="check_exact_alarms">Exakte Alarme</string>
