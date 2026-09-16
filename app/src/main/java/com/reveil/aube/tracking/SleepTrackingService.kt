@@ -65,6 +65,7 @@ class SleepTrackingService : Service(), SensorEventListener {
 
         windowEarliestMillis = earliest
         windowLatestMillis = latest
+        activeWindowLatestMillis = latest
         dawnDurationMs = dawnMinutes * 60_000L
         dawnNaturalStartMillis = latest - dawnDurationMs
 
@@ -175,10 +176,22 @@ class SleepTrackingService : Service(), SensorEventListener {
         sensorManager?.unregisterListener(this)
         wakeLock?.let { if (it.isHeld) it.release() }
         running = false
+        activeWindowLatestMillis = 0L
         super.onDestroy()
     }
 
     companion object {
+        /**
+         * The deadline of the window this service is currently tracking, 0 when it isn't
+         * running. Read by [AlarmScheduler.scheduleNext] to stop an instance whose window
+         * no longer exists — confirmed on a real device: the schedule was moved, the exact
+         * alarms were cancelled, but the already-running service kept its old window and
+         * fired the alarm inside it twenty minutes later.
+         */
+        @Volatile
+        var activeWindowLatestMillis: Long = 0L
+            private set
+
         private const val NOTIF_ID = 7
         private const val EARLY_TRIGGER_RAMP_CAP_MS = 10 * 60_000L
     }

@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.reveil.aube.NotifChannels
 import com.reveil.aube.R
 import com.reveil.aube.kiosk.SleepLock
+import com.reveil.aube.tracking.SleepTrackingService
 import com.reveil.aube.permissions.PermissionsHelper
 import com.reveil.aube.settings.AlarmSettings
 import java.time.DayOfWeek
@@ -50,6 +51,7 @@ class AlarmScheduler(private val context: Context) {
         val now = ZonedDateTime.now()
         val (earliest, latest) = nextWindow(settings, now)
         val trackingStart = earliest.minusMinutes(settings.trackingLeadMinutes.toLong())
+        stopTrackingIfWindowChanged(latest.toInstant().toEpochMilli())
 
         setExact(
             trackingStart.toInstant().toEpochMilli(),
@@ -99,6 +101,20 @@ class AlarmScheduler(private val context: Context) {
         alarmManager.cancel(trackingPendingIntent(0L, 0L, 0))
         alarmManager.cancel(safetyNetPendingIntent(0L))
         runCatching { SleepLock.cancel(context) }
+    }
+
+    /**
+     * Cancelling the exact alarms doesn't touch a SleepTrackingService that one of them
+     * already started: it keeps sensing for its original window and launches the alarm
+     * inside it, whatever the schedule says now. So a running tracker whose deadline isn't
+     * the one being scheduled is stopped here; one that matches (the periodic watchdog
+     * re-affirming the same schedule mid-window) is left alone.
+     */
+    private fun stopTrackingIfWindowChanged(newLatestMillis: Long) {
+        val active = SleepTrackingService.activeWindowLatestMillis
+        if (active != 0L && active != newLatestMillis) {
+            context.stopService(Intent(context, SleepTrackingService::class.java))
+        }
     }
 
     /**
