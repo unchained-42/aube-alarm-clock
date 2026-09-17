@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.reveil.aube.R
+import com.reveil.aube.ringing.AlarmRingingService
 import com.reveil.aube.settings.LocaleHelper
 import com.reveil.aube.settings.SettingsRepository
 import com.reveil.aube.ui.theme.AubeTheme
@@ -55,8 +56,18 @@ class SleepLockActivity : ComponentActivity() {
 
     private lateinit var settingsRepository: SettingsRepository
 
+    // The service said the ring is over (scan, auto-stop ceiling, debug hook): the day is
+    // handled, so this screen must leave — without waiting for the settings write recording
+    // that, or for the minute tick, and regardless of the "ring active" hold in leaveIfOver
+    // (the service is still winding down when this arrives). Kept as state so a later
+    // resume/tick reaches the same conclusion if the first attempt to leave doesn't take.
+    private var ringEnded = false
+
     private val recheckReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) = leaveIfOver()
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.getBooleanExtra(SleepLock.EXTRA_RING_ENDED, false)) ringEnded = true
+            leaveIfOver()
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -93,18 +104,30 @@ class SleepLockActivity : ComponentActivity() {
     }
 
     private fun leaveIfOver() {
+        // While a ring is active the alarm screen is pinned on top of this one, in the same
+        // lock task, with this task as its root. Leaving now — stopLockTask(), or even a plain
+        // finish() emptying this task — makes the OS clear every locked task, and it finishes
+        // the alarm screen along with this one (LockTaskController.clearLockedTask →
+        // performClearTask on the other task). Confirmed on a real device: the ramp had been
+        // going for 45 s when this screen's minute tick fired, the alarm screen vanished with
+        // no dismiss, and the service was left playing at the ramp's starting volume for the
+        // rest of the morning with nothing on screen. So: stay put, hidden underneath, and
+        // only leave once the service says the ring is over (see recheckReceiver).
+        if (ringEnded) {
+            leave()
+            return
+        }
+        if (AlarmRingingService.isActive) return
         lifecycleScope.launch {
             val settings = settingsRepository.settings.first()
             if (!SleepLock.shouldBeLocked(this@SleepLockActivity, settings)) {
-                Log.i(TAG, "night over (or ring took over), leaving")
-                try {
-                    stopLockTask()
-                } catch (_: IllegalArgumentException) {
-                }
-                finish()
+                Log.i(TAG, "night over, leaving")
+                leave()
             }
         }
     }
+
+    private fun leave() = exitLockTaskAndFinish()
 
     override fun onDestroy() {
         try {

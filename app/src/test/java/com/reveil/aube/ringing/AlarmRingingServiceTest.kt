@@ -105,6 +105,63 @@ class AlarmRingingServiceTest {
         assertEquals(AlarmActivity::class.java.name, nextActivity.component?.className)
     }
 
+    /**
+     * The morning the night screen took the alarm screen down with it: with the night task as
+     * the root of the lock task, its stopLockTask() made the OS performClearTask() the alarm
+     * task too — AlarmActivity finished with no dismiss, no onTaskRemoved, and the service
+     * kept playing at the ramp's starting volume with nothing on screen. The activity now
+     * reports that as ACTIVITY_LOST and the service brings the screen back.
+     */
+    @Test
+    fun `an alarm screen lost without a dismiss is relaunched`() {
+        val controller = Robolectric.buildService(AlarmRingingService::class.java)
+        val service = controller.create().get()
+        val now = System.currentTimeMillis()
+        service.onStartCommand(
+            android.content.Intent().apply {
+                putExtra(EXTRA_DAWN_START_MILLIS, now)
+                putExtra(EXTRA_DAWN_END_MILLIS, now + 60_000L)
+            },
+            0,
+            1
+        )
+
+        service.onStartCommand(android.content.Intent(AlarmRingingService.ACTION_ACTIVITY_LOST), 0, 2)
+        shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(1))
+
+        val nextActivity = shadowOf(ApplicationProvider.getApplicationContext<Application>()).nextStartedActivity
+        assertNotNull("expected a lost alarm screen to be relaunched", nextActivity)
+        assertEquals(AlarmActivity::class.java.name, nextActivity.component?.className)
+        assertEquals(now, nextActivity.getLongExtra(EXTRA_DAWN_START_MILLIS, 0L))
+        assertEquals(now + 60_000L, nextActivity.getLongExtra(EXTRA_DAWN_END_MILLIS, 0L))
+    }
+
+    @Test
+    fun `an alarm screen lost after a real dismiss began is not relaunched`() {
+        val controller = Robolectric.buildService(AlarmRingingService::class.java)
+        val service = controller.create().get()
+        val now = System.currentTimeMillis()
+        service.onStartCommand(
+            android.content.Intent().apply {
+                putExtra(EXTRA_DAWN_START_MILLIS, now)
+                putExtra(EXTRA_DAWN_END_MILLIS, now + 60_000L)
+            },
+            0,
+            1
+        )
+
+        // A stray LOST arriving after the scan has begun ending the ring (the night screen's
+        // own stopLockTask clearing the alarm task as part of a legitimate dismiss, say).
+        AlarmRingingService.dismissRequested = true
+        service.onStartCommand(android.content.Intent(AlarmRingingService.ACTION_ACTIVITY_LOST), 0, 2)
+        shadowOf(android.os.Looper.getMainLooper()).idleFor(java.time.Duration.ofSeconds(1))
+
+        assertNull(
+            "a dismiss in progress must not be undone by a late ACTIVITY_LOST",
+            shadowOf(ApplicationProvider.getApplicationContext<Application>()).nextStartedActivity
+        )
+    }
+
     /** onCreate() must reset the companion flag — otherwise a ring that ended via
      * autoStopUnresolved (or any prior cycle) would leave the next day's fresh instance
      * looking like it was already dismissed before it ever started. */

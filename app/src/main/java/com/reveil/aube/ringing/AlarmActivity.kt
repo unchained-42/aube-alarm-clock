@@ -38,6 +38,7 @@ import androidx.lifecycle.lifecycleScope
 import com.reveil.aube.R
 import com.reveil.aube.alarm.AlarmScheduler
 import com.reveil.aube.kiosk.KioskPolicy
+import com.reveil.aube.kiosk.exitLockTaskAndFinish
 import com.reveil.aube.qr.DEFAULT_QR_PAYLOAD
 import com.reveil.aube.routine.PostWakeReminderScheduler
 import com.reveil.aube.settings.LocaleHelper
@@ -70,11 +71,7 @@ class AlarmActivity : ComponentActivity() {
             if (isFinishing) return
             dismissSent = true
             AlarmRingingService.dismissRequested = true
-            try {
-                stopLockTask()
-            } catch (_: IllegalArgumentException) {
-            }
-            finish()
+            exitLockTaskAndFinish()
         }
     }
 
@@ -170,8 +167,15 @@ class AlarmActivity : ComponentActivity() {
         // alarm looked "stopped" for a moment and then the overlay popped back up saying it
         // was still ringing (it wasn't — nothing was left to show), and its own "return to
         // the alarm" button then launched a brand new ringing episode from scratch.
-        if (!isFinishing) {
-            sendRingingCommand(AlarmRingingService.ACTION_ACTIVITY_HIDDEN)
+        when {
+            !isFinishing -> sendRingingCommand(AlarmRingingService.ACTION_ACTIVITY_HIDDEN)
+            // Finishing, but not because of a scan (handleDismissed) or a ring that ended on
+            // the service's side (ringEndedReceiver) — both set dismissSent first. Something
+            // outside this screen ended it: the OS clearing its task when the night screen
+            // under it left the lock task (seen on a real device: the ramp went on with no
+            // screen and no way to reach the scan), a system kill, etc. The ring is still the
+            // service's to keep; it brings this screen back.
+            !dismissSent -> sendRingingCommand(AlarmRingingService.ACTION_ACTIVITY_LOST)
         }
     }
 
@@ -248,11 +252,6 @@ class AlarmActivity : ComponentActivity() {
         // must not be able to do this.
         sendRingingCommand(AlarmRingingService.ACTION_DISMISS)
         dismissSent = true
-        try {
-            stopLockTask()
-        } catch (_: IllegalArgumentException) {
-            // Wasn't pinned (startLockTask failed earlier, or already unpinned) — fine.
-        }
         dismissAlarmNotification(applicationContext)
         lifecycleScope.launch {
             // Clears the flag BootReceiver checks — a reboot from here on is a normal
@@ -263,7 +262,7 @@ class AlarmActivity : ComponentActivity() {
             PostWakeReminderScheduler(applicationContext).scheduleRoutine(settings.reminders)
             AlarmScheduler(applicationContext).scheduleNext(settings)
         }
-        finish()
+        exitLockTaskAndFinish()
     }
 
     override fun onDestroy() {

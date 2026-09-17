@@ -31,6 +31,13 @@ object SleepLock {
     const val ACTION_START = "com.reveil.aube.action.SLEEP_LOCK_START"
     /** App-internal: tells a running [SleepLockActivity] to re-check whether it should still be up. */
     const val ACTION_RECHECK = "com.reveil.aube.action.SLEEP_LOCK_RECHECK"
+    /**
+     * Boolean extra on [ACTION_RECHECK]: the ring just ended, leave unconditionally. Sent by
+     * [AlarmRingingService] — while it's still alive, so [shouldBeLocked]'s "not during a
+     * ring" rule can't be what decides; and before the settings write recording the day as
+     * handled has necessarily landed.
+     */
+    const val EXTRA_RING_ENDED = "extra_ring_ended"
     private const val REQUEST_START = 4601
 
     /** The night this lock covers: [bedtime, latest] of the next wake window. */
@@ -43,6 +50,8 @@ object SleepLock {
     /**
      * Whether the night screen belongs on top right now. Not while a ring is active — the
      * alarm screen is the one pinned then — and not once today's alarm has been dismissed.
+     * Decides whether to *start* the screen; a screen already up under an active ring must
+     * not read this as "leave", see [SleepLockActivity].
      */
     fun shouldBeLocked(context: Context, settings: AlarmSettings, now: ZonedDateTime = ZonedDateTime.now()): Boolean {
         if (!KioskPolicy.isDeviceOwner(context)) return false

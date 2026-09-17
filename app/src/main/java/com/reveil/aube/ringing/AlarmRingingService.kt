@@ -130,7 +130,14 @@ class AlarmRingingService : Service() {
                 if (dismissed) return@launch
                 val end = dawnEndMillis
                 if (end <= 0L) continue
-                val elapsed = System.currentTimeMillis() - end
+                val now = System.currentTimeMillis()
+                // AlarmActivity drives the ramp once a second, but the sound must not depend
+                // on that screen staying alive: with it gone (cleared by the OS, killed) the
+                // stream used to sit at whatever its last tick set — confirmed on a real
+                // device, a whole morning at the ramp's starting volume, 1/15. Same curve as
+                // the activity's, so the two never disagree; a no-op while muted (no player).
+                if (pulseSoundOn) soundPlayer.setVolume(dawnVolume(dawnProgress(now)))
+                val elapsed = now - end
                 if (elapsed < 0L) continue // still in the dawn ramp, not ringing yet
 
                 if (elapsed >= TOTAL_AUTO_STOP_MS) {
@@ -152,6 +159,11 @@ class AlarmRingingService : Service() {
                 }
             }
         }
+    }
+
+    private fun dawnProgress(now: Long): Float {
+        val span = (dawnEndMillis - dawnStartMillis).coerceAtLeast(1L)
+        return ((now - dawnStartMillis).coerceAtLeast(0L).toFloat() / span).coerceIn(0f, 1f)
     }
 
     /** Gave up without ever being dismissed — clean up and arm the next occurrence, but skip
@@ -187,8 +199,12 @@ class AlarmRingingService : Service() {
     private fun notifyRingEnded() {
         sendBroadcast(Intent(ACTION_RING_ENDED).setPackage(packageName))
         // The night screen may be sitting under the alarm screen; the day has been handled,
-        // so it must leave rather than reappear when the alarm screen finishes.
-        sendBroadcast(Intent(SleepLock.ACTION_RECHECK).setPackage(packageName))
+        // so it must leave rather than reappear when the alarm screen finishes. Flagged as
+        // "ring ended" because isActive is still true here and its own check would otherwise
+        // (correctly) refuse to touch the lock task.
+        sendBroadcast(
+            Intent(SleepLock.ACTION_RECHECK).setPackage(packageName).putExtra(SleepLock.EXTRA_RING_ENDED, true)
+        )
     }
 
     private fun postMissedNotification() {
@@ -292,6 +308,19 @@ class AlarmRingingService : Service() {
                 activityVisible = false
                 overlay.show(dawnStartMillis, dawnEndMillis)
             }
+            // AlarmActivity is finishing without a dismiss having been sent — the OS cleared
+            // its task (LockTaskController.clearLockedTask → performClearTask when the
+            // night screen's root task left the lock task, the case actually seen), or
+            // anything else that finishes an activity from outside. Same answer as
+            // onTaskRemoved: the ring goes on untouched, and the screen comes straight back.
+            // Deferred a beat so the dying instance is out of the way before the new one
+            // starts, and skipped if a real dismiss began meanwhile.
+            ACTION_ACTIVITY_LOST -> {
+                activityVisible = false
+                mainHandler.postDelayed({
+                    if (!dismissed && !dismissRequested && !activityVisible) relaunchAlarmScreen()
+                }, RELAUNCH_DELAY_MS)
+            }
             // The one legitimate way this ever ends: a successful scan, routed here from
             // AlarmActivity.handleDismissed().
             ACTION_DISMISS -> {
@@ -347,28 +376,12 @@ class AlarmRingingService : Service() {
 
     /**
      * The delayed second half of [ACTION_RESUME_AFTER_BOOT]. Sound has been going since the
-     * command arrived; this puts the pinned screen back in front of it. Starting an activity
-     * from a service is normally restricted, but this app holds SYSTEM_ALERT_WINDOW and, in
-     * hardcore mode, is the device owner — both exemptions. The overlay goes up too, in case
-     * the launch is refused anyway: its "return to the alarm" button is the same launch,
-     * from a user tap.
+     * command arrived; this puts the pinned screen back in front of it — see
+     * [relaunchAlarmScreen] for why a service may start it at all.
      */
     private fun bringScreenBackAfterBoot() {
         if (dismissed || activityVisible) return
-        val intent = Intent(this, AlarmActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                Intent.FLAG_ACTIVITY_NO_USER_ACTION
-            putExtra(EXTRA_DAWN_START_MILLIS, dawnStartMillis)
-            putExtra(EXTRA_DAWN_END_MILLIS, dawnEndMillis)
-            putExtra(EXTRA_RESUMED_AFTER_REBOOT, true)
-        }
-        try {
-            startActivity(intent)
-        } catch (e: Exception) {
-            Log.w(TAG, "post-boot activity launch refused", e)
-        }
-        overlay.show(dawnStartMillis, dawnEndMillis)
+        relaunchAlarmScreen(resumedAfterReboot = true)
     }
 
     private fun startForegroundNotification() {
@@ -415,14 +428,31 @@ class AlarmRingingService : Service() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
         if (dismissed || dismissRequested) return
-        val relaunch = Intent(this, AlarmActivity::class.java).apply {
+        relaunchAlarmScreen()
+    }
+
+    /**
+     * Puts [AlarmActivity] back in front of a ring that is still going. Starting an activity
+     * from a service is normally restricted, but this app holds SYSTEM_ALERT_WINDOW and, in
+     * hardcore mode, is the device owner — both exemptions. The overlay goes up too, in case
+     * the launch is refused anyway: its "return to the alarm" button is the same launch,
+     * from a user tap.
+     */
+    private fun relaunchAlarmScreen(resumedAfterReboot: Boolean = false) {
+        val intent = Intent(this, AlarmActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or
                 Intent.FLAG_ACTIVITY_NO_USER_ACTION
             putExtra(EXTRA_DAWN_START_MILLIS, dawnStartMillis)
             putExtra(EXTRA_DAWN_END_MILLIS, dawnEndMillis)
+            if (resumedAfterReboot) putExtra(EXTRA_RESUMED_AFTER_REBOOT, true)
         }
-        startActivity(relaunch)
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.w(TAG, "alarm screen relaunch refused", e)
+        }
+        overlay.show(dawnStartMillis, dawnEndMillis)
     }
 
     override fun onDestroy() {
@@ -506,6 +536,9 @@ class AlarmRingingService : Service() {
         const val ACTION_STOP_SOUND = "com.reveil.aube.action.STOP_SOUND"
         const val ACTION_ACTIVITY_VISIBLE = "com.reveil.aube.action.ACTIVITY_VISIBLE"
         const val ACTION_ACTIVITY_HIDDEN = "com.reveil.aube.action.ACTIVITY_HIDDEN"
+        /** AlarmActivity is finishing with no dismiss sent — bring it back, see onStartCommand. */
+        const val ACTION_ACTIVITY_LOST = "com.reveil.aube.action.ACTIVITY_LOST"
+        private const val RELAUNCH_DELAY_MS = 500L
         const val ACTION_DISMISS = "com.reveil.aube.action.DISMISS"
         const val EXTRA_URI = "extra_uri"
         const val EXTRA_VOLUME = "extra_volume"
